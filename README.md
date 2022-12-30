@@ -1,2 +1,2 @@
 # AdventOfCode
-All my AoC submissions in one place
+All my Advenc of Code (https://adventofcode.com) submissions in one place
