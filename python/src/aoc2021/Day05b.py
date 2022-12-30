@@ -82,4 +82,4 @@ def run(f_name):
 
 
 if __name__ == '__main__':
-    run('../data/day05.txt')
+    run('../../../data/2021/day05.txt')

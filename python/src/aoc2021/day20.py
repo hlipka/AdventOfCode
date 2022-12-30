@@ -72,6 +72,6 @@ def run(f_name):
 
 
 if __name__ == '__main__':
-    run('../data/day20.txt')
+    run('../../../data/2021/day20.txt')
     # day20test.txt has the same problem as the real data set (flipping all pixels every time),
     # its known solution for 2 passes is 5326

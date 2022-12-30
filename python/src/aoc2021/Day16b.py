@@ -156,4 +156,4 @@ def run(f_name):
 # parse_packet_line("9C0141080250320F1802104A08")
 
 if __name__ == '__main__':
-    run('../data/day16.txt')
+    run('../../../data/2021/day16.txt')

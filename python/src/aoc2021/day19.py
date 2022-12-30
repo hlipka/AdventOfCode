@@ -207,4 +207,4 @@ def run(f_name):
     print(len(central_scanner.beacons))
 
 if __name__ == '__main__':
-    run('../data/day19.txt')
+    run('../../../data/2021/day19.txt')

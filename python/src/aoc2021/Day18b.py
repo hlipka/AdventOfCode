@@ -136,4 +136,4 @@ def test_reduce():
 
 if __name__ == '__main__':
     #    test_reduce()
-    run('../data/day18.txt')
+    run('../../../data/2021/day18.txt')
