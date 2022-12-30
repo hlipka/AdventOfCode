@@ -21,7 +21,7 @@ public class Day152
     {
         try
         {
-            List<Scanner> scanners = AocParseUtils.getLines("day15")
+            List<Scanner> scanners = AocParseUtils.getLines("day15", "2022")
                                                   .stream()
                                                   .map(Day152::parseScanner)
                                                   .collect(Collectors.toList());

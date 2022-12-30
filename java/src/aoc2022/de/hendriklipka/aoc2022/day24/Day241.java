@@ -30,7 +30,7 @@ public class Day241
 
     public static void main(String[] args) throws IOException
     {
-        List<List<String>> fieldData = AocParseUtils.getLinesAsChars("day24");
+        List<List<String>> fieldData = AocParseUtils.getLinesAsChars("2022", "day24");
         width=fieldData.get(0).size();
         height =fieldData.size();
         CACHESIZE=(width-2)*(height-2); // that's the max period for the blizzards

@@ -23,7 +23,7 @@ public class Day162
     {
         try
         {
-            List<String> lines = new ArrayList<>(FileUtils.readLines(new File("data/day16.txt"), StandardCharsets.UTF_8));
+            List<String> lines = new ArrayList<>(FileUtils.readLines(new File("../data/2020/day16.txt"), StandardCharsets.UTF_8));
             Iterator<String> li = lines.iterator();
             String line=li.next();
             while (StringUtils.isNotBlank(line))

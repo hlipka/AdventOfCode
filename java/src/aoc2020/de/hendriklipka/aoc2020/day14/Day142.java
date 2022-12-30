@@ -23,7 +23,7 @@ public class Day142
     {
         try
         {
-            FileUtils.readLines(new File("data/day14.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList()).forEach(Day142::process);
+            FileUtils.readLines(new File("../data/2020/day14.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList()).forEach(Day142::process);
             long sum= memory.values().stream().reduce(0L, Long::sum);
             System.out.println(sum);
         }

@@ -21,7 +21,7 @@ public class Day141
     {
         try
         {
-            FileUtils.readLines(new File("data/day14.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList()).forEach(Day141::process);
+            FileUtils.readLines(new File("../data/2020/day14.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList()).forEach(Day141::process);
             System.out.println(memory);
             long sum= memory.values().stream().reduce(0L, Long::sum);
             System.out.println(sum);

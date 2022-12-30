@@ -24,7 +24,7 @@ public class Day082
     {
         try
         {
-            FileUtils.readLines(new File("data/day8.txt"), StandardCharsets.UTF_8).forEach(Day082::parseInstr);
+            FileUtils.readLines(new File("../data/2020/day8.txt"), StandardCharsets.UTF_8).forEach(Day082::parseInstr);
             int swapped=0;
             while (true)
             {

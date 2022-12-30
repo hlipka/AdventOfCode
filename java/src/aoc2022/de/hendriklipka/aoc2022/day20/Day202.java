@@ -16,7 +16,7 @@ public class Day202
     {
         try
         {
-            List<Node> nodes = AocParseUtils.getLines("day20")
+            List<Node> nodes = AocParseUtils.getLines("day20", "2022")
                                             .stream().map(Day202::getNode)
                                             .collect(Collectors.toList());
             listLength=nodes.size();

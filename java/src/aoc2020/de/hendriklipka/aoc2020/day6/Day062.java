@@ -22,7 +22,7 @@ public class Day062
     {
         try
         {
-            Iterator<String> lines = FileUtils.readLines(new File("data/day6.txt"), StandardCharsets.UTF_8).listIterator();
+            Iterator<String> lines = FileUtils.readLines(new File("../data/2020/day6.txt"), StandardCharsets.UTF_8).listIterator();
             List<int[]> answerGroups = new ArrayList<>();
             int[] currentGroup = new int[27];
             while (lines.hasNext())

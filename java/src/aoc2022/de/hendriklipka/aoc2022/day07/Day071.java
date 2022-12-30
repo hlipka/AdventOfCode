@@ -11,7 +11,7 @@ public class Day071
     {
         try
         {
-            List<String> commands = AocParseUtils.getLines("day07");
+            List<String> commands = AocParseUtils.getLines("day07", "2022");
             commands.remove(0); // we can skip cd'ing to the root
             DirNode root = new DirNode();
             DirNode current = root;

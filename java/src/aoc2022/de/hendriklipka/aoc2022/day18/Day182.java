@@ -26,7 +26,7 @@ public class Day182
     {
         try
         {
-            List<List<Integer>> cubes = AocParseUtils.getLineIntegers("day18");
+            List<List<Integer>> cubes = AocParseUtils.getLineIntegers("day18", "2022");
             int minX = 1000, minY = 1000, minZ = 1000;
             int maxX = -1000, maxY = -1000, maxZ = -1000;
             for (List<Integer> cube : cubes)

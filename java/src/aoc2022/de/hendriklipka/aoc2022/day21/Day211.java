@@ -18,7 +18,7 @@ public class Day211
     {
         try
         {
-            List<String> monkeys = AocParseUtils.getLines("day21");
+            List<String> monkeys = AocParseUtils.getLines("day21", "2022");
             Map<String, Long> numbers = new HashMap<>();
             Set<MonkeyOp> unsolved = new HashSet<>();
             Pattern numMonkey = Pattern.compile("([a-z]+): (\\d+)");

@@ -21,7 +21,7 @@ public class Day181
     {
         try
         {
-            List<List<Integer>> cubes = AocParseUtils.getLineIntegers("day18");
+            List<List<Integer>> cubes = AocParseUtils.getLineIntegers("day18", "2022");
             for (List<Integer> cube: cubes)
             {
                 cubeCache.add(StringUtils.join(cube,"-"));

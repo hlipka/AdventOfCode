@@ -19,7 +19,7 @@ public class Day121
     {
         try
         {
-            List<List<String>> fieldData = AocParseUtils.getLinesAsChars("day12");
+            List<List<String>> fieldData = AocParseUtils.getLinesAsChars("2022", "day12");
             int width=fieldData.get(0).size();
             int height=fieldData.size();
             int startX=0;

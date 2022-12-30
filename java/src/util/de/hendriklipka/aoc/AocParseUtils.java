@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
  */
 public class AocParseUtils
 {
-    public static List<List<Integer>> getIntegerBlocks(final String dayName) throws IOException
+    public static List<List<Integer>> getIntegerBlocks(final String yearName, final String dayName) throws IOException
     {
-        List<String> lines = FileUtils.readLines(new File("data/"+ dayName +".txt"), StandardCharsets.UTF_8);
+        List<String> lines = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8);
 
         List<List<Integer>> blocks = new ArrayList<>();
         List<Integer> current = new ArrayList<>();
@@ -40,9 +40,14 @@ public class AocParseUtils
         return blocks;
     }
 
-    public static List<List<String>> getStringBlocks(final String dayName) throws IOException
+    private static File getDataFileName(final String yearName, final String dayName)
     {
-        List<String> lines = FileUtils.readLines(new File("data/" + dayName + ".txt"), StandardCharsets.UTF_8);
+        return new File("../data/" + yearName +"/" + dayName + ".txt");
+    }
+
+    public static List<List<String>> getStringBlocks(final String yearName, final String dayName) throws IOException
+    {
+        List<String> lines = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8);
 
         List<List<String>> blocks = new ArrayList<>();
         List<String> current = new ArrayList<>();
@@ -61,15 +66,15 @@ public class AocParseUtils
     }
 
 
-    public static List<List<String>> getLineWords(final String dayName) throws IOException
+    public static List<List<String>> getLineWords(final String yearName, final String dayName) throws IOException
     {
-        List<String> lines = FileUtils.readLines(new File("data/" + dayName + ".txt"), StandardCharsets.UTF_8);
+        List<String> lines = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8);
         return lines.stream().filter(StringUtils::isNotBlank).map(l->Arrays.asList(StringUtils.split(l, " "))).collect(Collectors.toList());
     }
 
-    public static List<List<Integer>> getLineIntegers(final String dayName) throws IOException
+    public static List<List<Integer>> getLineIntegers(final String dayName, final String yearName) throws IOException
     {
-        List<String> lines = FileUtils.readLines(new File("data/" + dayName + ".txt"), StandardCharsets.UTF_8);
+        List<String> lines = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8);
         return lines.stream()
                     .filter(StringUtils::isNotBlank)
                     .map(l -> Arrays.stream(StringUtils.split(l, ",")).map(Integer::parseInt).collect(
@@ -78,22 +83,22 @@ public class AocParseUtils
     }
 
 
-    public static List<String> getLines(final String dayName) throws IOException
+    public static List<String> getLines(final String dayName, final String yearName) throws IOException
     {
-        return FileUtils.readLines(new File("data/" + dayName + ".txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+        return FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
     }
 
-    public static List<List<String>> getLinesAsChars(final String dayName) throws IOException
+    public static List<List<String>> getLinesAsChars(final String yearName, final String dayName) throws IOException
     {
-        return FileUtils.readLines(new File("data/" + dayName + ".txt"), StandardCharsets.UTF_8).stream()
+        return FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream()
                 .filter(StringUtils::isNotBlank)
                 .map(l->l.chars().mapToObj(c->String.valueOf((char)c)).collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
 
-    public static List<List<Integer>> getLinesAsDigits(final String dayName) throws IOException
+    public static List<List<Integer>> getLinesAsDigits(final String yearName, final String dayName) throws IOException
     {
-        return FileUtils.readLines(new File("data/" + dayName + ".txt"), StandardCharsets.UTF_8).stream()
+        return FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream()
                 .filter(StringUtils::isNotBlank)
                 .map(l->l.chars().mapToObj(c->c-'0').collect(Collectors.toList()))
                 .collect(Collectors.toList());

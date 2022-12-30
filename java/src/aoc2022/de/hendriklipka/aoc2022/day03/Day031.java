@@ -18,7 +18,7 @@ public class Day031
     {
         try
         {
-            List<String> packs = AocParseUtils.getLines("day03");
+            List<String> packs = AocParseUtils.getLines("day03", "2022");
             List<String> dupes = packs.stream().map(Day031::findDupes).flatMap(List::stream).collect(Collectors.toList());
             int sum = dupes.stream().mapToInt(Day031::score).sum();
             System.out.println(sum);

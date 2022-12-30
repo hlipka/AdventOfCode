@@ -15,7 +15,7 @@ public class Day241b
 {
     public static void main(String[] args) throws IOException
     {
-        List<List<String>> fieldData = AocParseUtils.getLinesAsChars("day24");
+        List<List<String>> fieldData = AocParseUtils.getLinesAsChars("2022", "day24");
 
         long now=System.currentTimeMillis();
         BlizzardWorld world = new BlizzardWorld(fieldData);

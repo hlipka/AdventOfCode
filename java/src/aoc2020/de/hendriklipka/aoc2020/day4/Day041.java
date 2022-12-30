@@ -21,7 +21,7 @@ public class Day041
     {
         try
         {
-            Iterator<String> lines = FileUtils.readLines(new File("data/day4.txt"), StandardCharsets.UTF_8).listIterator();
+            Iterator<String> lines = FileUtils.readLines(new File("../data/2020/day4.txt"), StandardCharsets.UTF_8).listIterator();
             List<Passport> passports = new ArrayList<>();
             Passport currentPass = new Passport();
             while (lines.hasNext())

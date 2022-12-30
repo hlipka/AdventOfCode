@@ -16,7 +16,7 @@ public class Day012
     public static void main(String[] args) {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day1.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day1.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
             int[] values = new int[lines.size()];
             for (int i=0;i<lines.size();i++)
             {

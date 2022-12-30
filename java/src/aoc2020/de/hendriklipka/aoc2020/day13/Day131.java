@@ -26,7 +26,7 @@ public class Day131
     {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day13.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day13.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
             final int timestamp=Integer.parseInt(lines.get(0));
             final Function<? super Integer, Pair<Integer, Integer>> waitCalc = (Function<Integer, Pair<Integer, Integer>>) busID -> {
                 int waitTime = busID-(timestamp % busID);

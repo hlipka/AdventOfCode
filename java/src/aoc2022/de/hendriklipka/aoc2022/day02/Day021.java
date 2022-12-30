@@ -10,7 +10,7 @@ public class Day021
 
     public static void main(String[] args) {
         try {
-            List<List<String>> guide = AocParseUtils.getLineWords("day02");
+            List<List<String>> guide = AocParseUtils.getLineWords("2022", "day02");
             int score = guide.stream().mapToInt(p->getScore(p)).sum();
             System.out.println(score);
         }

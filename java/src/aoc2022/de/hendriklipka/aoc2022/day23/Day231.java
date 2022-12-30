@@ -15,7 +15,7 @@ public class Day231
     {
         try
         {
-            List<List<String>> fieldData = AocParseUtils.getLinesAsChars("day23");
+            List<List<String>> fieldData = AocParseUtils.getLinesAsChars("2022", "day23");
             List<Elf> elves = new ArrayList<>();
             for (int row = 0; row < fieldData.size(); row++)
             {

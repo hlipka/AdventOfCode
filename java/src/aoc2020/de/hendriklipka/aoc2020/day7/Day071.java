@@ -25,7 +25,7 @@ public class Day071
     {
         try
         {
-            FileUtils.readLines(new File("data/day7.txt"), StandardCharsets.UTF_8).forEach(Day071::parseRule);
+            FileUtils.readLines(new File("../data/2020/day7.txt"), StandardCharsets.UTF_8).forEach(Day071::parseRule);
 //            System.out.println(contains);
             Map<String, List<String>> containedIn = mapRules();
 //            System.out.println(containedIn);

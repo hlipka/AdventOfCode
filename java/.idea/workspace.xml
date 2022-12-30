@@ -4,7 +4,57 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f2160094-43d5-4dfc-86e3-873a922c823d" name="Changes" comment="" />
+    <list default="true" id="f2160094-43d5-4dfc-86e3-873a922c823d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day1/Day011.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day1/Day011.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day1/Day012.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day1/Day012.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day10/Day101.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day10/Day101.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day10/Day102.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day10/Day102.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day10/Day102a.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day10/Day102a.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day11/Day111.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day11/Day111.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day11/Day112.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day11/Day112.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day12/Day121.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day12/Day121.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day12/Day122.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day12/Day122.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day13/Day131.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day13/Day131.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day13/Day132.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day13/Day132.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day14/Day141.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day14/Day141.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day14/Day142.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day14/Day142.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day15/Day151.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day15/Day151.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day15/Day152.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day15/Day152.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day16/Day161.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day16/Day161.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day16/Day162.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day16/Day162.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day17/Day171.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day17/Day171.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day17/Day172.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day17/Day172.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day18/Day181.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day18/Day181.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day18/Day182.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day18/Day182.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day19/Day191.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day19/Day191.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day19/Day192.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day19/Day192.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day2/Day021.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day2/Day021.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day2/Day022.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day2/Day022.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day20/Day201.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day20/Day201.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day20/Day202.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day20/Day202.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day21/Day211.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day21/Day211.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day21/Day212.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day21/Day212.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day22/Day221.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day22/Day221.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day22/Day222.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day22/Day222.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day24/Day241.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day24/Day241.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day24/Day242.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day24/Day242.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day3/Day031.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day3/Day031.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day3/Day032.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day3/Day032.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day4/Day041.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day4/Day041.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day4/Day042.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day4/Day042.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day5/Day051.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day5/Day051.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day5/Day052.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day5/Day052.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day6/Day061.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day6/Day061.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day6/Day062.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day6/Day062.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day7/Day071.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day7/Day071.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day7/Day072.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day7/Day072.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day8/Day081.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day8/Day081.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day8/Day082.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day8/Day082.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day9/Day091.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day9/Day091.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day9/Day092.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2020/de/hendriklipka/aoc2020/day9/Day092.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/de/hendriklipka/aoc/AocParseUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/de/hendriklipka/aoc/AocParseUtils.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,33 +63,36 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="2JeKAO0bbA3NBQLXjyPqTfPuPUU" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "jdk.selected.JAVA_MODULE": "16",
-    "last_opened_file_path": "/home/hli/dev/aoc/java",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;16&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/hli/dev/aoc/java&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Application.Day011">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -52,6 +105,34 @@
     </configuration>
     <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+    </configuration>
+    <configuration name="Day011" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2020.day1.Day011" />
+      <module name="aoc2020" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.hendriklipka.aoc2020.day1.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Day021" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2022.day02.Day021" />
+      <module name="aoc2022" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.hendriklipka.aoc2022.day02.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -81,6 +162,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Day011" />
+        <item itemvalue="Application.Day021" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">

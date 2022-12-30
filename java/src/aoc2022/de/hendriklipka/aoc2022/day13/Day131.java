@@ -22,7 +22,7 @@ public class Day131
         int result=0;
         try
         {
-            List<List<String>> pairs = AocParseUtils.getStringBlocks("day13");
+            List<List<String>> pairs = AocParseUtils.getStringBlocks("2022", "day13");
             for (int i=0;i<pairs.size();i++)
             {
                 if (inRightOrder(pairs.get(i).get(0), pairs.get(i).get(1)))

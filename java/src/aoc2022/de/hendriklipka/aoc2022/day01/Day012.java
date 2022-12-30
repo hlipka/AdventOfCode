@@ -11,7 +11,7 @@ public class Day012
 
     public static void main(String[] args) {
         try {
-            List<List<Integer>> food = AocParseUtils.getIntegerBlocks("day01");
+            List<List<Integer>> food = AocParseUtils.getIntegerBlocks("2022", "day01");
             int calories = food.stream().map(l -> l.stream().reduce(0, Integer::sum)).sorted(Comparator.reverseOrder()).limit(3).reduce(0, Integer::sum);
             System.out.println(calories);
         }

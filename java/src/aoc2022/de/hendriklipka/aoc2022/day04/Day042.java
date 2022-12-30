@@ -19,7 +19,7 @@ public class Day042
     {
         try
         {
-            final List<String> lines = AocParseUtils.getLines("day04");
+            final List<String> lines = AocParseUtils.getLines("day04", "2022");
             long count = lines.stream().map(Day042::getRanges).filter(Day042::isOverlap).count();
             System.out.println(count);
         }

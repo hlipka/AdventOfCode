@@ -14,7 +14,7 @@ public class Day051
     {
         try
         {
-            List<List<String>> blocks = AocParseUtils.getStringBlocks("day05");
+            List<List<String>> blocks = AocParseUtils.getStringBlocks("2022", "day05");
             List<String> initialStacks = blocks.get(0);
             initialStacks.remove(initialStacks.size()-1);
             int len = initialStacks.stream().mapToInt(String::length).max().orElseThrow();

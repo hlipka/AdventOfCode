@@ -22,7 +22,7 @@ public class Day241
     {
         try
         {
-            FileUtils.readLines(new File("data/day24.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).forEach(Day241::flipTile);
+            FileUtils.readLines(new File("../data/2020/day24.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).forEach(Day241::flipTile);
             System.out.println(blackTiles.size());
         }
         catch (IOException e)

@@ -15,7 +15,7 @@ public class Day101
     {
         try
         {
-            List<Long> jolts = FileUtils.readLines(new File("data/day10.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Long::parseLong).sorted().collect(Collectors.toList());
+            List<Long> jolts = FileUtils.readLines(new File("../data/2020/day10.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Long::parseLong).sorted().collect(Collectors.toList());
             int diffs[]=new int[3];
             diffs[2]=1; //
             long current=0;

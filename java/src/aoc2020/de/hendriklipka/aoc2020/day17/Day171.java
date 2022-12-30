@@ -21,7 +21,7 @@ public class Day171
     {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day17.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day17.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
             int rows=lines.size();
             int cols=lines.get(0).length();
             int totalY = rows + 2*ITERATIONS;

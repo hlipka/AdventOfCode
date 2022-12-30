@@ -38,7 +38,7 @@ public class Day132
     {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day13.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day13.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
             List<String> busses = Arrays.stream(lines.get(1).split(",")).collect(Collectors.toList());
             // determine offsets for the busses
             List<Pair<Integer, Integer>> busTimes=getBusTimes(busses);

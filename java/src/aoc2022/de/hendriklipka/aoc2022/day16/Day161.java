@@ -20,7 +20,7 @@ public class Day161
     {
         try
         {
-            caves = AocParseUtils.getLines("day16").stream().map(Day161::parseCave).collect(Collectors.toMap(Cave::getName, c->c));
+            caves = AocParseUtils.getLines("day16", "2022").stream().map(Day161::parseCave).collect(Collectors.toMap(Cave::getName, c->c));
 
             for (Cave cave: caves.values())
             {

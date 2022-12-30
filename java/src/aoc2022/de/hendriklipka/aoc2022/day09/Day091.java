@@ -20,7 +20,7 @@ public class Day091
     {
         try
         {
-            List<String> moves = AocParseUtils.getLines("day09");
+            List<String> moves = AocParseUtils.getLines("day09", "2022");
             visit(xTail, yTail);
             for (String move : moves)
             {

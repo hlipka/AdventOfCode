@@ -24,7 +24,7 @@ public class Day191
     {
         try
         {
-            Iterator<String> lines = new ArrayList<>(FileUtils.readLines(new File("data/day19.txt"), StandardCharsets.UTF_8)).iterator();
+            Iterator<String> lines = new ArrayList<>(FileUtils.readLines(new File("../data/2020/day19.txt"), StandardCharsets.UTF_8)).iterator();
             while (true)
             {
                 String line = lines.next();

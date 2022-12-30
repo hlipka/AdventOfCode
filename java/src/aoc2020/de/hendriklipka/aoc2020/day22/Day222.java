@@ -137,7 +137,7 @@ public class Day222
     private static void parseDecks() throws IOException
     {
         int player = 0;
-        Iterator<String> lines = FileUtils.readLines(new File("data/day22.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).iterator();
+        Iterator<String> lines = FileUtils.readLines(new File("../data/2020/day22.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).iterator();
         List<Integer> currentCards = null;
         while (lines.hasNext())
         {

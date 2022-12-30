@@ -25,7 +25,7 @@ public class Day081
     {
         try
         {
-            FileUtils.readLines(new File("data/day8.txt"), StandardCharsets.UTF_8).forEach(Day081::parseInstr);
+            FileUtils.readLines(new File("../data/2020/day8.txt"), StandardCharsets.UTF_8).forEach(Day081::parseInstr);
             runCode();
             System.out.println(acc);
         }

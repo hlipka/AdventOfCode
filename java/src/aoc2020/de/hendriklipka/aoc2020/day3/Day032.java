@@ -15,7 +15,7 @@ public class Day032
     {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day3.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day3.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
             long count1=countTrees(lines, 1, 1);
             long count2=countTrees(lines, 3, 1);
             long count3=countTrees(lines, 5, 1);

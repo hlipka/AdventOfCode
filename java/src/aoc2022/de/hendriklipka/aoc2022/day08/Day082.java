@@ -11,7 +11,7 @@ public class Day082
     {
         try
         {
-            List<List<Integer>> forrest = AocParseUtils.getLinesAsDigits("day08");
+            List<List<Integer>> forrest = AocParseUtils.getLinesAsDigits("2022", "day08");
             int maxScore=0;
             for (int i=0;i<forrest.size();i++)
             {

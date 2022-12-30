@@ -20,7 +20,7 @@ public class Day181
     {
         try
         {
-            long result=FileUtils.readLines(new File("data/day18.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Day181::calculate).reduce(0L, Long::sum);
+            long result=FileUtils.readLines(new File("../data/2020/day18.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Day181::calculate).reduce(0L, Long::sum);
             System.out.println(result);
         }
         catch (IOException e)

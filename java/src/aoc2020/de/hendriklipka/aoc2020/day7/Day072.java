@@ -26,7 +26,7 @@ public class Day072
     {
         try
         {
-            FileUtils.readLines(new File("data/day7.txt"), StandardCharsets.UTF_8).forEach(Day072::parseRule);
+            FileUtils.readLines(new File("../data/2020/day7.txt"), StandardCharsets.UTF_8).forEach(Day072::parseRule);
             int count = countBags("shiny gold");
             System.out.println(count);
         }

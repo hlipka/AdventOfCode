@@ -20,7 +20,7 @@ public class Day051
     {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day5.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day5.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
             List<Integer> seatNums = lines.stream().map(Day051::calculateSeat).collect(Collectors.toList());
             System.out.println(seatNums.stream().max(Integer::compare).get());
         }

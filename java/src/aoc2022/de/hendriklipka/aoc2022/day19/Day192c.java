@@ -23,7 +23,7 @@ public class Day192c
     {
         try
         {
-            List<BluePrint> blueprints = AocParseUtils.getLines("day19")
+            List<BluePrint> blueprints = AocParseUtils.getLines("day19", "2022")
                                                       .stream()
                                                       .map(Day192c::getBluePrint).limit(3)
                                                       .collect(Collectors.toList());

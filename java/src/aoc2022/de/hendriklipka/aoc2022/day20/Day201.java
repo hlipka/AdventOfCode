@@ -12,7 +12,7 @@ public class Day201
     {
         try
         {
-            List<Node> nodes = AocParseUtils.getLines("day20")
+            List<Node> nodes = AocParseUtils.getLines("day20", "2022")
                                               .stream().map(Day201::getNode)
                                               .collect(Collectors.toList());
             /*

@@ -26,7 +26,7 @@ public class Day212
     {
         try
         {
-            FileUtils.readLines(new File("data/day21.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).forEach(Day212::parseFood);
+            FileUtils.readLines(new File("../data/2020/day21.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).forEach(Day212::parseFood);
             for (Map.Entry<String,List<List<String>>> entry: mapAllergensToIngredients.entrySet())
             {
                 String allergen=entry.getKey();

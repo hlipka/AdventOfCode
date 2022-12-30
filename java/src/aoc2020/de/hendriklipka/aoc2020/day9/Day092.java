@@ -17,7 +17,7 @@ public class Day092
     {
         try
         {
-            List<Long> nums = FileUtils.readLines(new File("data/day9.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Long::parseLong).collect(Collectors.toList());
+            List<Long> nums = FileUtils.readLines(new File("../data/2020/day9.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Long::parseLong).collect(Collectors.toList());
             for (int i = 0; i<nums.size(); i++)
             {
                 long result=findSum(nums, i, NUM);

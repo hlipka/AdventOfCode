@@ -25,7 +25,7 @@ public class Day222
     {
         try
         {
-            List<List<String>> blocks = AocParseUtils.getStringBlocks("day22");
+            List<List<String>> blocks = AocParseUtils.getStringBlocks("2022", "day22");
             List<String> mazeData = blocks.get(0);
             String cmdData = blocks.get(1).get(0);
 

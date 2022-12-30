@@ -28,7 +28,7 @@ public class Day121
     {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day12.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day12.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
             lines.stream().forEach(Day121::moveShip);
             System.out.println(dNorth+"/"+dEast+"/"+(Math.abs(dNorth)+Math.abs(dEast)));
         }

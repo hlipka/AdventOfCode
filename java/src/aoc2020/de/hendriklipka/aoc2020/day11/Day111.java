@@ -25,7 +25,7 @@ public class Day111
     {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day11.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day11.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
             int rows=lines.size();
             int cols=lines.get(0).length();
             char field[]=new char[rows*cols];

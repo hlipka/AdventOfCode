@@ -18,7 +18,7 @@ public class Day091
     {
         try
         {
-            List<Long> nums = FileUtils.readLines(new File("data/day9.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Long::parseLong).collect(Collectors.toList());
+            List<Long> nums = FileUtils.readLines(new File("../data/2020/day9.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Long::parseLong).collect(Collectors.toList());
             long[] buffer = new long[PRE_LENGTH];
             for (int i = 0; i< PRE_LENGTH; i++)
             {

@@ -16,7 +16,7 @@ public class Day151
     {
         try
         {
-            String line = FileUtils.readLines(new File("data/day15.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).findFirst().orElseThrow();
+            String line = FileUtils.readLines(new File("../data/2020/day15.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).findFirst().orElseThrow();
             List<Integer> numbers = Arrays.stream(line.split(",")).map(Integer::parseInt).collect(Collectors.toList());
             while (numbers.size() <2020)
             {

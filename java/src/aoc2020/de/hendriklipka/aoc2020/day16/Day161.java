@@ -28,7 +28,7 @@ public class Day161
     {
         try
         {
-            List<String> lines = FileUtils.readLines(new File("data/day16.txt"), StandardCharsets.UTF_8).stream().collect(Collectors.toList());
+            List<String> lines = FileUtils.readLines(new File("../data/2020/day16.txt"), StandardCharsets.UTF_8).stream().collect(Collectors.toList());
             Iterator<String> li = lines.iterator();
             String line=li.next();
             while (StringUtils.isNotBlank(line))

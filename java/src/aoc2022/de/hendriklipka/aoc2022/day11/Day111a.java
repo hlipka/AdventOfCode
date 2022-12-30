@@ -22,7 +22,7 @@ public class Day111a
     {
         try
         {
-            List<List<String>> monkeyData = AocParseUtils.getStringBlocks("day11");
+            List<List<String>> monkeyData = AocParseUtils.getStringBlocks("2022", "day11");
             List<Monkey> monkeys = parseMonkeyData(monkeyData);
             dumpItems(monkeys);
             for (int i=0;i<20;i++)

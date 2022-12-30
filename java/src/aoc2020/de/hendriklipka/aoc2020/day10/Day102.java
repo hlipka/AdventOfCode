@@ -18,7 +18,7 @@ public class Day102
     {
         try
         {
-            List<Integer> jolts = FileUtils.readLines(new File("data/day10.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Integer::parseInt).sorted().collect(Collectors.toList());
+            List<Integer> jolts = FileUtils.readLines(new File("../data/2020/day10.txt"), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Integer::parseInt).sorted().collect(Collectors.toList());
             jolts.add(0, 0);
             // brute force the possible combinations
             // Note: for the real data set this is too slow, see 'Day102a' for how to calculate the result
