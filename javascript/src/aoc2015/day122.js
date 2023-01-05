@@ -1,9 +1,9 @@
-import {getFirstLine, getLines} from '../util/parse.js';
+import {getFirstLine} from '../util/parse.js';
 
 const json=JSON.parse(getFirstLine("2015","12"));
 
 function traverse(json) {
-    if ((typeof(json)==='object') && !Array.isArray(json) && Object.entries(json).some(([key, value]) => {
+    if ((typeof(json)==='object') && !Array.isArray(json) && Object.entries(json).some(([, value]) => {
         return (value==='red');
 
         }))
@@ -11,7 +11,7 @@ function traverse(json) {
         return 0;
     }
     let result=0;
-    Object.entries(json).forEach(([key, value]) => {
+    Object.entries(json).forEach(([, value]) => {
         if (typeof(value) === 'object') {
             result+=traverse(value);
         }

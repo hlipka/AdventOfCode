@@ -1,4 +1,4 @@
-import {getFirstLine, getLines} from '../util/parse.js';
+import {getFirstLine} from '../util/parse.js';
 
 const json=JSON.parse(getFirstLine("2015","12"));
 
