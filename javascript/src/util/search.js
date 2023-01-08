@@ -1,7 +1,7 @@
 import {
     MaxPriorityQueue,
 } from './maxPriorityQueue';
-export function dfs(world) {
+export function bfs(world) {
     let statesSeen = new Set();
     // 'getScore' returns the 'goodness' value of each new state
     let statesToLookAt = new MaxPriorityQueue(world.getScore);
@@ -22,4 +22,25 @@ export function dfs(world) {
 
         world.newStates(state).forEach(s=>statesToLookAt.push(s));
     }
+}
+
+export function dfs(world) {
+    let state = world.firstState();
+
+    let states = new Set();
+    function doSearch(world, state) {
+        if (world.reachedTarget(state)) return;
+        if (world.hasOwnProperty('canPrune') && world.canPrune(state)) return;
+        if (world.hasOwnProperty('stateKey')) {
+            let key = world.stateKey(state);
+            if (states.has(key)) return;
+            states.add(key);
+        }
+        let newStates = world.newStates(state);
+        for (let s of newStates) {
+            doSearch(world, s);
+        }
+    }
+
+    doSearch(world, state);
 }
