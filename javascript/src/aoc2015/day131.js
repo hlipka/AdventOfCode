@@ -1,5 +1,5 @@
 import {getLines} from '../util/parse.js';
-import {dfs} from '../util/search.js';
+const { dfs } = require('../util/search');
 
 let happiness = new Map();
 let guests = new Set();

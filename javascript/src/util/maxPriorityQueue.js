@@ -3,7 +3,8 @@
  * @license MIT
  */
 
-const { Heap, MaxHeap } = require('@datastructures-js/heap');
+const { Heap } = require('./heap');
+const { MaxHeap } = require('./maxheap');
 
 const getMaxCompare = (getCompareValue) => (a, b) => {
     const aVal = typeof getCompareValue === 'function' ? getCompareValue(a) : a;
