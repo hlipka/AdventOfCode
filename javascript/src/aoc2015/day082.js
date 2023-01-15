@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 
 function getLen(line) {
     let line2='"'+line.replaceAll('\\','\\\\').replaceAll('"','\\"')+'"';

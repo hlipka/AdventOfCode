@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 
 let facts = new Set([
 "children: 3",

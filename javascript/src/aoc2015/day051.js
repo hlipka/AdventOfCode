@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 
 function isNice(line) {
     if (line.includes('ab')||line.includes('cd')||line.includes('pq')||line.includes('xy'))

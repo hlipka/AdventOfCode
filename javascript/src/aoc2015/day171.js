@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 
 let buckets=getLines("2015", "17").map(l=>Number(l)).sort((a,b)=>a-b);
 

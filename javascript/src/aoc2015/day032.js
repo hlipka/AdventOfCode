@@ -1,4 +1,4 @@
-import {getFirstLine} from '../util/parse.js';
+const {getFirstLine} =require("../util/parse");
 
 const line = getFirstLine("2015", "03");
 console.log(line);

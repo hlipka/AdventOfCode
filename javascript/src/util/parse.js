@@ -1,14 +1,14 @@
-import fs from "fs";
+const fs = require("fs");
 
-export function getFirstLine(year, day) {
+function getFirstLine(year, day) {
     return fs.readFileSync('../../../data/'+year+'/day'+day+'.txt').toString().split("\n")[0];
 }
 
-export function getLines(year, day) {
+function getLines(year, day) {
     return fs.readFileSync('../../../data/'+year+'/day'+day+'.txt').toString().split("\n").filter(l => l.length > 0);
 }
 
-export function getAsCharMatrix(year, day, border=null) {
+function getAsCharMatrix(year, day, border=null) {
     let lines=getLines(year, day);
     const width=lines.map(l=>l.length).reduce((a,b)=>Math.max(a,b));
     if (border) {
@@ -33,6 +33,11 @@ export function getAsCharMatrix(year, day, border=null) {
     }
 }
 
-export function getAsNumberMatrix(year, day, separator=',', border=null) {
+function getAsNumberMatrix(year, day, separator=',', border=null) {
 
 }
+
+exports.getFirstLine=getFirstLine;
+exports.getLines=getLines;
+exports.getAsCharMatrix=getAsCharMatrix;
+exports.getAsNumberMatrix=getAsNumberMatrix;

@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 
 function transform2(cmd, left, right) {
     switch(cmd) {

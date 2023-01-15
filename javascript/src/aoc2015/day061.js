@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 
 function setLight(light, from_row, from_col, to_row, to_col, value)
 {

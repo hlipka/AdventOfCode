@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 import {dfs} from '../util/search.js';
 
 let happiness = new Map();

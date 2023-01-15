@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 
 function getRoute(line) {
     let parts=line.match(/(\S+) to (\S+) = (\d+)/);

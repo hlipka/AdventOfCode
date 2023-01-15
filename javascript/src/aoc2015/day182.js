@@ -1,4 +1,4 @@
-import {getAsCharMatrix} from "../util/parse.js";
+const {getAsCharMatrix} =require("../util/parse");
 
 let world=getAsCharMatrix("2015", "18",".");
 

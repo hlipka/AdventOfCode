@@ -1,4 +1,4 @@
-import {getLines} from '../util/parse.js';
+const {getLines} =require("../util/parse");
 
 function parse(line) {
     const parts = line.match(/(\S+) can fly (\d+) km\/s for (\d+) seconds, but then must rest for (\d+) seconds./);
