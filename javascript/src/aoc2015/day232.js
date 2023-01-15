@@ -3,7 +3,7 @@ const {getLines} =require("../util/parse");
 let computer={
     code: [],
     pc: 0,
-    a:0,
+    a:1,
     b:0,
     hlf(cmd){
         if (cmd.arg1==='a') {
