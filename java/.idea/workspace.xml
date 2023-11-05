@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2160094-43d5-4dfc-86e3-873a922c823d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_codec.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day5/Day05a.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day5/Day05b.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day06/Day06a.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day06/Day06b.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/aoc2016/aoc2016.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2016/aoc2016.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/aoc2022/aoc2022.iml" beforeDir="false" afterPath="$PROJECT_DIR$/src/aoc2022/aoc2022.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,14 +65,14 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="de.hendriklipka.aoc2016.day06" />
       <recent name="de.hendriklipka.aoc2016.day5" />
       <recent name="de.hendriklipka.aoc2016.day04" />
       <recent name="de.hendriklipka.aoc2016.day03" />
       <recent name="de.hendriklipka.aoc2016.day02" />
-      <recent name="de.hendriklipka.aoc2016.day01" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Day05b">
+  <component name="RunManager" selected="Application.Day06b">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
@@ -88,34 +85,6 @@
     </configuration>
     <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
       <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
-    </configuration>
-    <configuration name="Day03b" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2016.day03.Day03b" />
-      <module name="aoc2016" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="de.hendriklipka.aoc2016.day03.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Day04a" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2016.day04.Day04a" />
-      <module name="aoc2016" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="de.hendriklipka.aoc2016.day04.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
     </configuration>
     <configuration name="Day04b" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2016.day04.Day04b" />
@@ -159,6 +128,34 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Day06a" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2016.day06.Day06a" />
+      <module name="aoc2016" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.hendriklipka.aoc2016.day06.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Day06b" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2016.day06.Day06b" />
+      <module name="aoc2016" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="de.hendriklipka.aoc2016.day06.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
@@ -189,11 +186,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Day06b" />
+        <item itemvalue="Application.Day06a" />
         <item itemvalue="Application.Day05b" />
         <item itemvalue="Application.Day05a" />
         <item itemvalue="Application.Day04b" />
-        <item itemvalue="Application.Day04a" />
-        <item itemvalue="Application.Day03b" />
       </list>
     </recent_temporary>
   </component>
