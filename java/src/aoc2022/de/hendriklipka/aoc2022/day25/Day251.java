@@ -22,7 +22,7 @@ public class Day251
         System.out.println("snafu for 12345=" + createSnafu(12345));
         System.out.println("snafu for 314159265=" + createSnafu(314159265L));
 
-        long sum = AocParseUtils.getLines("day25", "2022").stream().mapToLong(Day251::parseSnafu).sum();
+        long sum = AocParseUtils.getLines("2022", "day25").stream().mapToLong(Day251::parseSnafu).sum();
         System.out.println("sum is " + sum);
         System.out.println("entry is "+ createSnafu(sum));
     }

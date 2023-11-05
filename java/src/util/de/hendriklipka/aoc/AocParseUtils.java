@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * Date: 02.12.22
  * Time: 08:04
  */
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class AocParseUtils
 {
     public static List<List<Integer>> getIntegerBlocks(final String yearName, final String dayName) throws IOException
@@ -66,24 +67,30 @@ public class AocParseUtils
     }
 
 
-    public static List<List<String>> getLineWords(final String yearName, final String dayName) throws IOException
+    public static List<List<String>> getLineWords(final String yearName, final String dayName, final String separator) throws IOException
     {
         List<String> lines = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8);
-        return lines.stream().filter(StringUtils::isNotBlank).map(l->Arrays.asList(StringUtils.split(l, " "))).collect(Collectors.toList());
+        return lines.stream().filter(StringUtils::isNotBlank).map(l->Arrays.asList(StringUtils.split(l, separator))).collect(Collectors.toList());
     }
 
-    public static List<List<Integer>> getLineIntegers(final String dayName, final String yearName) throws IOException
+    public static List<String> getFirstLineWords(final String yearName, final String dayName, final String separator) throws IOException
+    {
+        String line = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).findFirst().get();
+        return Arrays.stream(StringUtils.split(line, separator)).map(String::trim).toList();
+    }
+
+    public static List<List<Integer>> getLineIntegers(final String yearName, final String dayName, final String separator) throws IOException
     {
         List<String> lines = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8);
         return lines.stream()
                     .filter(StringUtils::isNotBlank)
-                    .map(l -> Arrays.stream(StringUtils.split(l, ",")).map(Integer::parseInt).collect(
+                    .map(l -> Arrays.stream(StringUtils.split(l, separator)).map(Integer::parseInt).collect(
                             Collectors.toList()))
                     .collect(Collectors.toList());
     }
 
 
-    public static List<String> getLines(final String dayName, final String yearName) throws IOException
+    public static List<String> getLines(final String yearName, final String dayName) throws IOException
     {
         return FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
     }

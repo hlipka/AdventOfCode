@@ -30,6 +30,11 @@ public class Position
         return new EqualsBuilder().append(row, pos.row).append(col, pos.col).isEquals();
     }
 
+    public Position updated(int rowDiff, int colDiff)
+    {
+        return new Position(row+rowDiff, col+colDiff);
+    }
+
     @Override
     public int hashCode()
     {

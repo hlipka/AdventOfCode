@@ -17,7 +17,7 @@ public class Day092
     {
         try
         {
-            List<String> moves = AocParseUtils.getLines("day09", "2022");
+            List<String> moves = AocParseUtils.getLines("2022", "day09");
             visit(rope[9][0], rope[9][1]);
             for (String move : moves)
             {

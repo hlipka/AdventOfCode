@@ -20,7 +20,7 @@ public class Day102
     {
         try
         {
-            List<String> prg = AocParseUtils.getLines("day10", "2022");
+            List<String> prg = AocParseUtils.getLines("2022", "day10");
             for (String cmd: prg)
             {
                 execute(cmd);

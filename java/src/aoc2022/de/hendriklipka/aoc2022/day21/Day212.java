@@ -18,7 +18,7 @@ public class Day212
     {
         try
         {
-            List<String> monkeys = AocParseUtils.getLines("day21", "2022");
+            List<String> monkeys = AocParseUtils.getLines("2022", "day21");
             Map<String, Long> numbers1 = new HashMap<>();
             Set<MonkeyOp> unsolved1 = new HashSet<>();
             Map<String, MonkeyOp> tasks = new HashMap<>();

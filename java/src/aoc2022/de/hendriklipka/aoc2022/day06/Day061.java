@@ -10,7 +10,7 @@ public class Day061
     {
         try
         {
-            String line = AocParseUtils.getLines("day06", "2022").get(0);
+            String line = AocParseUtils.getLines("2022", "day06").get(0);
             int pos=0;
             while (pos<line.length()-4)
             {

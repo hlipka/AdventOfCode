@@ -25,7 +25,7 @@ public class Day141
     {
         try
         {
-            List<List<String>> lines = AocParseUtils.getLines("day14", "2022")
+            List<List<String>> lines = AocParseUtils.getLines("2022", "day14")
                                                     .stream()
                                                     .map(l -> Arrays.asList(
                                                             StringUtils.splitByWholeSeparator(l, " -> "))).collect(

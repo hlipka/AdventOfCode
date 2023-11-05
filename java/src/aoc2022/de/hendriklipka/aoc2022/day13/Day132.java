@@ -22,7 +22,7 @@ public class Day132
         int result=0;
         try
         {
-            List<List<Integer>> packets = AocParseUtils.getLines("day13", "2022").stream().map(Day132::parseList).collect(
+            List<List<Integer>> packets = AocParseUtils.getLines("2022", "day13").stream().map(Day132::parseList).collect(
                     Collectors.toList());
             List<Integer> divider1 = parseList("[[2]]");
             List<Integer> divider2 = parseList("[[6]]");

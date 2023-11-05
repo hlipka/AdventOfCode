@@ -21,7 +21,7 @@ public class Day162
     {
         try
         {
-            caves = AocParseUtils.getLines("day16", "2022")
+            caves = AocParseUtils.getLines("2022", "day16")
                                  .stream()
                                  .map(Day162::parseCave)
                                  .collect(Collectors.toMap(Cave::getName, c -> c));
