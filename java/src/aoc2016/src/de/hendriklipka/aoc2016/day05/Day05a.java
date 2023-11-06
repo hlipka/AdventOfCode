@@ -1,4 +1,4 @@
-package de.hendriklipka.aoc2016.day5;
+package de.hendriklipka.aoc2016.day05;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
