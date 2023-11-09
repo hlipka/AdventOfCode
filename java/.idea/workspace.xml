@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f2160094-43d5-4dfc-86e3-873a922c823d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day08/Day08a.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day08/Fill.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day08/Instruction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day08/RotateCol.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day08/RotateRow.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day09/Day09a.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day09/Day09b.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day10/Day10a.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day10/Day10b.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/aoc2016/src/de/hendriklipka/aoc2016/day11/Day11.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,6 +22,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -94,9 +91,6 @@
       <Host>localhost</Host>
       <Port>5050</Port>
     </configuration>
-    <configuration name="&lt;template&gt;" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" default="true" selected="false">
-      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
-    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
@@ -121,6 +115,15 @@
       </option>
       <properties />
       <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file enabled="true" id="idea.log" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
