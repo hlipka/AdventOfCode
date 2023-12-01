@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/src/aoc2016/aoc2016.iml" filepath="$PROJECT_DIR$/src/aoc2016/aoc2016.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/aoc2020/aoc2020.iml" filepath="$PROJECT_DIR$/src/aoc2020/aoc2020.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/aoc2022/aoc2022.iml" filepath="$PROJECT_DIR$/src/aoc2022/aoc2022.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/aoc2023/aoc2023.iml" filepath="$PROJECT_DIR$/src/aoc2023/aoc2023.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/util/aocutil.iml" filepath="$PROJECT_DIR$/src/util/aocutil.iml" />
     </modules>
   </component>
