@@ -109,12 +109,12 @@
       </method>
     </configuration>
     <configuration name="Day01a" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.auc2023.day01.Day01a" />
+      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2023.day01.Day01a" />
       <module name="aoc2023" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="de.hendriklipka.auc2023.day02.*" />
+          <option name="PATTERN" value="de.hendriklipka.aoc2023.day02.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -123,12 +123,12 @@
       </method>
     </configuration>
     <configuration name="Day01b" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.auc2023.day01.Day01b" />
+      <option name="MAIN_CLASS_NAME" value="de.hendriklipka.aoc2023.day01.Day01b" />
       <module name="aoc2023" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="de.hendriklipka.auc2023.day01.*" />
+          <option name="PATTERN" value="de.hendriklipka.aoc2023.day01.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
