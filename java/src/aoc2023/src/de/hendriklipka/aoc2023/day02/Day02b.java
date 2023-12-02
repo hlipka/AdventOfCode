@@ -11,18 +11,15 @@ import java.util.List;
  * Date: 01.12.23
  * Time: 00:00
  */
-public class Day02a
+public class Day02b
 {
-    final static int RED = 12;
-    final static int GREEN = 13;
-    final static int BLUE = 14;
     public static void main(String[] args)
     {
         try
         {
             final List<String> lines = AocParseUtils.getLines("2023", "day02");
             List<Game> games = lines.stream().map(Game::new).toList();
-            int sum=games.stream().filter(Game::isPossible).mapToInt(Game::getNum).sum();
+            int sum=games.stream().mapToInt(Game::getPower).sum();
             System.out.println(sum);
         }
         catch (IOException e)
@@ -53,14 +50,11 @@ public class Day02a
     }
     static class Game
     {
-        private final int num;
         private final List<List<CubeSet>> reveals = new ArrayList<>();
 
         public Game(String line)
         {
-            final String[] parts = line.split(":");
-            num = AocParseUtils.parseIntFromString(parts[0], "Game (\\d+)");
-            final String[] p = parts[1].split(";");
+            final String[] p = line.split(":")[1].split(";");
             for (String reveal: p)
             {
                 List<CubeSet> cubes = new ArrayList<>();
@@ -73,29 +67,31 @@ public class Day02a
             }
         }
 
-        public boolean isPossible()
+
+        public int getPower()
         {
-            for (List<CubeSet> reveal: reveals)
+            int red=0;
+            int green= 0;
+            int blue= 0;
+            for (List<CubeSet> reveal : reveals)
             {
-                for (CubeSet cube: reveal)
+                for (CubeSet cube : reveal)
                 {
                     switch (cube.color)
                     {
-                        case "red": if (cube.count>RED) return false;
-                        break;
-                        case "green": if (cube.count>GREEN) return false;
-                        break;
-                        case "blue": if (cube.count>BLUE) return false;
-                        break;
+                        case "red":
+                            if (cube.count > red) red = cube.count;
+                            break;
+                        case "green":
+                            if (cube.count > green) green = cube.count;
+                            break;
+                        case "blue":
+                            if (cube.count > blue) blue = cube.count;
+                            break;
                     }
                 }
             }
-            return true;
-        }
-
-        public int getNum()
-        {
-            return num;
+            return red * green * blue;
         }
     }
 }
