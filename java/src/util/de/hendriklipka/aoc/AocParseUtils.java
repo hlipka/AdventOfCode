@@ -63,6 +63,10 @@ public class AocParseUtils
             }
             current.add(line);
         }
+        if (blocks.get(blocks.size() - 1).isEmpty())
+        {
+            blocks.remove(blocks.size()-1);
+        }
         return blocks;
     }
 
@@ -148,5 +152,16 @@ public class AocParseUtils
             throw new IllegalArgumentException("No match found for '" + pattern + "' in [" + str + "]");
         }
         return Integer.parseInt(m.group(1));
+    }
+
+    public static long parseLongFromString(String str, String pattern)
+    {
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(str);
+        if (!m.matches())
+        {
+            throw new IllegalArgumentException("No match found for '" + pattern + "' in [" + str + "]");
+        }
+        return Long.parseLong(m.group(1));
     }
 }

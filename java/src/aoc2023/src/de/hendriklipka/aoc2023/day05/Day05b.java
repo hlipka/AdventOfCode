@@ -11,38 +11,50 @@ import java.util.*;
  * Date: 01.12.23
  * Time: 00:00
  */
-public class Day05a
+public class Day05b
 {
     static Map<String, Rule> rules = new HashMap<>();
     static long[] seeds;
     public static void main(String[] args)
     {
-
+        long min = Long.MAX_VALUE;
         try
         {
             List<List<String>> blocks = AocParseUtils.getStringBlocks("2023", "day05");
             parseSeeds(blocks.get(0));
             blocks.remove(0);
-            blocks.stream().map(Day05a::parseBlock).forEach(m-> rules.put(m.from, m));
-            String currentMapping = "seed";
+            blocks.stream().map(Day05b::parseBlock).forEach(m-> rules.put(m.from, m));
 
-            while(!currentMapping.equals("location"))
+            for (int i=0;i<seeds.length;i+=2)
             {
-                Rule rule = rules.get(currentMapping);
-                for (int i=0;i<seeds.length;i++)
-                {
-                    seeds[i] = rule.getMappedValue(seeds[i]);
+                long start = seeds[i];
+                long count=seeds[i+1];
+                System.out.println("new range from "+start);
+                for (long value=start;value<start+count;value++) {
+                    long location = calculateLocation(value);
+                    if (location<min) {
+                        min=location;
+                        System.out.println(min);
+                    }
                 }
-
-                currentMapping = rule.to;
-
             }
-            System.out.println(Arrays.stream(seeds).sorted().findFirst().getAsLong());
+            System.out.println(min);
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
+    }
+
+    private static long calculateLocation(long value) {
+        String currentMapping = "seed";
+        while(!currentMapping.equals("location"))
+        {
+            Rule rule = rules.get(currentMapping);
+            value = rule.getMappedValue(value);
+            currentMapping = rule.to;
+        }
+        return value;
     }
 
     private static Rule parseBlock(List<String> block) {
