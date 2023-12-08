@@ -9,8 +9,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="commons.io" level="project" />
-    <orderEntry type="library" name="apache.commons.collections4" level="project" />
-    <orderEntry type="library" name="apache.commons.lang3" level="project" />
+    <orderEntry type="library" exported="" name="apache.commons.collections4" level="project" />
+    <orderEntry type="library" exported="" name="apache.commons.lang3" level="project" />
     <orderEntry type="library" name="hamcrest" level="project" />
     <orderEntry type="module-library">
       <library name="JUnit5.8.1">
@@ -60,5 +60,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" exported="" name="apache.commons.math3" level="project" />
+    <orderEntry type="library" name="commons.codec" level="project" />
   </component>
 </module>
