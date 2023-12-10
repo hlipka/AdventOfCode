@@ -99,13 +99,22 @@ public class AocParseUtils
         return FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(Collectors.toList());
     }
 
-    public static List<List<String>> getLinesAsChars(final String yearName, final String dayName) throws IOException
+    public static List<List<String>> getLinesAsCharStrings(final String yearName, final String dayName) throws IOException
     {
         return FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream()
                 .filter(StringUtils::isNotBlank)
                 .map(l->l.chars().mapToObj(c->String.valueOf((char)c)).collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
+
+    public static List<List<Character>> getLinesAsChars(final String yearName, final String dayName) throws IOException
+    {
+        return FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream()
+                .filter(StringUtils::isNotBlank)
+                .map(l -> l.chars().mapToObj(c -> (char) c).collect(Collectors.toList()))
+                .collect(Collectors.toList());
+    }
+
 
     public static List<List<Integer>> getLinesAsDigits(final String yearName, final String dayName) throws IOException
     {

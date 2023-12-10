@@ -19,7 +19,7 @@ public class Day121b
     {
         try
         {
-            List<List<String>> fieldData = AocParseUtils.getLinesAsChars("2022", "day12");
+            List<List<String>> fieldData = AocParseUtils.getLinesAsCharStrings("2022", "day12");
             HillWorld world = new HillWorld(fieldData);
 
             AStarSearch search = new AStarSearch(world);

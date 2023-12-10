@@ -18,7 +18,7 @@ public class Day03b
     {
         try
         {
-            final List<List<String>> machine = AocParseUtils.getLinesAsChars("2023", "day03");
+            final List<List<String>> machine = AocParseUtils.getLinesAsCharStrings("2023", "day03");
             dumpMachine(machine);
             long result = calculate(machine);
             System.out.println(result); // 527352 is too low

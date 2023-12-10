@@ -17,7 +17,7 @@ public class Day032
     {
         try
         {
-            List<List<String>> packs = AocParseUtils.getLinesAsChars("2022", "day03");
+            List<List<String>> packs = AocParseUtils.getLinesAsCharStrings("2022", "day03");
             final List<List<List<String>>> groups = ListUtils.partition(packs, 3);
             int sum = groups.stream().map(Day032::findBadge).mapToInt(Day032::score).sum();
 

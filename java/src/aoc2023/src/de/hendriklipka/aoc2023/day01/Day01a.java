@@ -16,7 +16,7 @@ public class Day01a
     {
         try
         {
-            final List<List<String>> lines = AocParseUtils.getLinesAsChars("2023", "day01");
+            final List<List<String>> lines = AocParseUtils.getLinesAsCharStrings("2023", "day01");
             int sum = lines.stream().mapToInt(Day01a::lineToNum).sum();
             System.out.println(sum);
         }

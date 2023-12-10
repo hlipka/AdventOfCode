@@ -14,7 +14,7 @@ public class Day02a
 {
     public static void main(String[] args) throws IOException
     {
-        final List<List<String>> instructions = AocParseUtils.getLinesAsChars("2016", "day02");
+        final List<List<String>> instructions = AocParseUtils.getLinesAsCharStrings("2016", "day02");
         String code = "";
         int button = 5;
         for (List<String> line : instructions)

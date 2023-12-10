@@ -64,7 +64,7 @@ public class Day172
         long start = System.currentTimeMillis();
         try
         {
-            jets = AocParseUtils.getLinesAsChars("2022", "day17").get(0);
+            jets = AocParseUtils.getLinesAsCharStrings("2022", "day17").get(0);
             // the chamber grows upwards, the first element is the bottom
             List<char[]> chamber = new ArrayList<>();
             for (long i = 0; i< ROUNDS; i++)
