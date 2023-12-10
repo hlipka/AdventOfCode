@@ -10,7 +10,7 @@ import java.util.List;
  * Date: 10.12.23
  * Time: 09:04
  */
-public class Day10
+public class Day10a
 {
     static int startRow, startColumn;
     static int rows, columns;
