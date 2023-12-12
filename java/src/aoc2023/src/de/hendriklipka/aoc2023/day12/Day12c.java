@@ -14,7 +14,7 @@ public class Day12c
     {
         try
         {
-            int sum=AocParseUtils.getLines("2023", "day12").stream().parallel().mapToInt(Day12c::countPossibilities).sum();
+            long sum=AocParseUtils.getLines("2023", "day12").stream().parallel().mapToLong(Day12c::countPossibilities).sum();
             System.out.println(sum);
         }
         catch (IOException e)
@@ -23,7 +23,7 @@ public class Day12c
         }
     }
 
-    private static int countPossibilities(String line)
+    private static long countPossibilities(String line)
     {
         String rule = AocParseUtils.parseStringFromString(line, "([.#\\?]+) .*");
         rule=rule+"?"+rule+"?"+rule+"?"+rule+"?"+rule;
@@ -49,12 +49,12 @@ public class Day12c
         pattern += "\\.*$";
         Pattern p = Pattern.compile(pattern);
         System.out.println("pattern for " + line + " is " + pattern);
-        int count = doCount(rule, p, groups);
+        long count = doCount(rule, p, groups);
         System.out.println(count);
         return count;
     }
 
-    private static int doCount(String rule, Pattern p, List<Integer> groups)
+    private static long doCount(String rule, Pattern p, List<Integer> groups)
     {
         int pos = rule.indexOf('?');
         if (-1 == pos)
@@ -78,6 +78,7 @@ public class Day12c
 
     private static int countGroups(String rule, List<Integer> groups)
     {
+        int groupCount=groups.size();
         int groupsFound=0;
         int currentGroup=-1;
         int groupLen=0;
@@ -91,6 +92,10 @@ public class Day12c
                 {
                     // start a new group
                     currentGroup++;
+                    if (currentGroup==groupCount)
+                    {
+                        return -1;
+                    }
                     groupLen = 1;
                     inGroup = true;
                     groupsFound++;

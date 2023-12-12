@@ -1,11 +1,10 @@
 package de.hendriklipka.aoc2023.day12;
 
 import de.hendriklipka.aoc.AocParseUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Day12b
@@ -14,7 +13,7 @@ public class Day12b
     {
         try
         {
-            int sum=AocParseUtils.getLines("2023", "day12").stream().mapToInt(Day12b::countPossibilities).sum();
+            long sum=AocParseUtils.getLines("2023", "day12").stream().mapToLong(Day12b::countPossibilities).sum();
             System.out.println(sum);
         }
         catch (IOException e)
@@ -23,7 +22,7 @@ public class Day12b
         }
     }
 
-    private static int countPossibilities(String line)
+    private static long countPossibilities(String line)
     {
         String rule = AocParseUtils.parseStringFromString(line, "([.#\\?]+) .*");
         rule=rule+"?"+rule+"?"+rule+"?"+rule+"?"+rule;
@@ -49,12 +48,12 @@ public class Day12b
         pattern += "\\.*$";
         Pattern p = Pattern.compile(pattern);
         System.out.println("pattern for " + line + " is " + pattern);
-        int count = doCount(rule, p, groups);
+        long count = doCount(rule, p, groups, new HashMap<>());
         System.out.println(count);
         return count;
     }
 
-    private static int doCount(String rule, Pattern p, List<Integer> groups)
+    private static long doCount(String rule, Pattern p, List<Integer> groups, Map<String, Long> cache)
     {
         int pos = rule.indexOf('?');
         if (-1 == pos)
@@ -63,7 +62,6 @@ public class Day12b
                 return 0;
             if (p.matcher(rule).matches())
             {
-//                System.out.println("found "+rule);
                 return 1;
             }
             return 0;
@@ -71,9 +69,30 @@ public class Day12b
         int countGroups = countGroups(rule.substring(0, pos), groups);
         if (countGroups > groups.size() || countGroups<0)
             return 0;
+
+        // memoize: assume that the prefix up to here is valid, we can use the current match position (so the prefix length)
+        // and the number of '#' as key. We limit this to '.' as the last char of the prefix, so we know we are not in the
+        // middle of a group
+        // the number of matches we can find below will never change, since groups cannot span the current boundary
+        String key = null;
+        if (pos>1)
+        {
+            char last= rule.charAt(pos - 1);
+            if (last=='.')
+            {
+                key= pos + "-" + StringUtils.countMatches(rule.substring(0, pos), '#');
+                if (cache.containsKey(key))
+                {
+                    return cache.get(key);
+                }
+            }
+        }
         String str1 = (0 != pos) ? (rule.substring(0, pos) + "." + rule.substring(pos + 1)) : "." + rule.substring(pos + 1);
         String str2 = (0 != pos) ? (rule.substring(0, pos) + "#" + rule.substring(pos + 1)) : "#" + rule.substring(pos + 1);
-        return doCount(str1, p, groups) + doCount(str2, p, groups);
+        long count = doCount(str1, p, groups, cache) + doCount(str2, p, groups, cache);
+        if (null!=key)
+            cache.put(key, count);
+        return count;
     }
 
     private static int countGroups(String rule, List<Integer> groups)
