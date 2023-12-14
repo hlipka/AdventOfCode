@@ -30,7 +30,7 @@ public class CharMatrix
         _defaultChar = defaultChar;
     }
 
-    public CharMatrix(char[][] data, char defaultChar)
+    private CharMatrix(char[][] data, char defaultChar)
     {
         _rows = data.length;
         _cols = data[0].length;

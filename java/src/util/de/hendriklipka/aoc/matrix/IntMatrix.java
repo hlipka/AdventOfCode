@@ -1,0 +1,162 @@
+package de.hendriklipka.aoc.matrix;
+
+import de.hendriklipka.aoc.Position;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+
+/**
+ * User: hli
+ * Date: 14.12.23
+ * Time: 18:46
+ */
+public class IntMatrix
+{
+    int[][] _data;
+    int _defaultInt;
+    int _rows;
+    int _cols;
+    public IntMatrix(List<List<Integer>> data, int defaultInt)
+    {
+        _rows = data.size();
+        _cols = data.get(0).size();
+        _data = new int[_rows][_cols];
+        for (int r = 0; r < _data.length; r++)
+        {
+            List<Integer> row = data.get(r);
+            for (int c = 0; c < row.size(); c++)
+            {
+                _data[r][c] = row.get(c);
+            }
+        }
+        _defaultInt = defaultInt;
+    }
+
+    private IntMatrix(int[][] data, int defaultChar)
+    {
+        _rows = data.length;
+        _cols = data[0].length;
+        _data = data;
+        _defaultInt = defaultChar;
+    }
+
+    public int at(Position pos)
+    {
+        return at(pos.row, pos.col);
+    }
+
+    public int at(int row, int col)
+    {
+        if (row < 0 || row >= _rows || col < 0 || col >= _cols)
+        {
+            return _defaultInt;
+        }
+
+        return _data[row][col];
+    }
+
+    public int[] column(int col)
+    {
+        int[] ints = new int[_data.length];
+        for (int i = 0; i < _data.length; i++)
+        {
+            ints[i] = at(i, col);
+        }
+        return ints;
+    }
+
+    public int[] row(int row)
+    {
+        return _data[row];
+    }
+
+    public void set(Position pos, int i)
+    {
+        _data[pos.row][pos.col] = i;
+    }
+
+    public boolean isSame(IntMatrix other)
+    {
+        for (int r = 0; r < _data.length; r++)
+        {
+            int[] row = _data[r];
+            int[] otherRow = other._data[r];
+            for (int c = 0; c < row.length; c++)
+            {
+                if (row[c] != otherRow[c])
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public IntMatrix copyOf()
+    {
+        int[][] copy = new int[_data.length][_data[0].length];
+        for (int r = 0; r < _data.length; r++)
+        {
+            int[] row = _data[r];
+            System.arraycopy(row, 0, copy[r], 0, row.length);
+        }
+        return new IntMatrix(copy, _defaultInt);
+    }
+
+    private boolean in(Position pos)
+    {
+        return pos.row >= 0 && pos.row < _rows && pos.col >= 0 && pos.col < _cols;
+    }
+
+    public int countInRow(int row, int i)
+    {
+        int count = 0;
+        int[] r = _data[row];
+        for (int col = 0; col < _cols; col++)
+        {
+            if (r[col] == i)
+                count++;
+        }
+        return count;
+    }
+
+    public int countInCol(int col, int i)
+    {
+        int count = 0;
+        for (int row = 0; row < _rows; col++)
+        {
+            if (_data[row][col] == i)
+                count++;
+        }
+        return count;
+    }
+
+    public int count(int i)
+    {
+        int count = 0;
+        for (int r = 0; r < _rows; r++)
+            for (int col = 0; col < _cols; col++)
+            {
+                if (_data[r][col] == i)
+                    count++;
+            }
+        return count;
+    }
+
+    public void print()
+    {
+        for (int[] row : _data)
+        {
+            System.out.println(StringUtils.join(row, ';'));
+        }
+        System.out.println("----");
+    }
+
+    public int rows()
+    {
+        return _rows;
+    }
+
+    public int cols()
+    {
+        return _cols;
+    }
+}
