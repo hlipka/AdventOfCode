@@ -1,10 +1,11 @@
 package de.hendriklipka.aoc2023.day14;
 
 import de.hendriklipka.aoc.AocParseUtils;
-import org.apache.commons.lang3.StringUtils;
+import de.hendriklipka.aoc.Direction;
+import de.hendriklipka.aoc.Position;
+import de.hendriklipka.aoc.matrix.CharMatrix;
 
 import java.io.IOException;
-import java.util.List;
 
 public class Day14a
 {
@@ -16,58 +17,28 @@ public class Day14a
     {
         try
         {
-            List<List<Character>> field = AocParseUtils.getLinesAsChars("2023", "day14");
-            dumpField(field);
-            int size = field.size();
-            for (int i = 1; i < size; i++)
+            CharMatrix field = AocParseUtils.getLinesAsCharMatrix("2023", "day14", '.');
+            field.print();
+            for (int r = 1; r < field.rows(); r++)
             {
-                List<Character> line = field.get(i);
-                moveNorth(line, i, field);
+                for (int c=0;c<field.cols();c++)
+                    if (field.at(r,c)==ROUND_ROCK)
+                        field.moveWhileEmpty(new Position(r, c), Direction.UP);
             }
             long sum=0;
-            for (int i = 0; i < size; i++)
+            for (int r = 0; r < field.rows(); r++)
             {
-                int weight = size - i;
-                long lineWeight = weight * field.get(i).stream().filter(c -> c == ROUND_ROCK).count();
-                System.out.println(weight);
+                int weight = field.rows() - r;
+                int rocks = field.countInRow(r, ROUND_ROCK);
+                long lineWeight = weight * (long) rocks;
                 sum+= lineWeight;
             }
-            dumpField(field);
+            field.print();
             System.out.println(sum);
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
-    }
-
-    private static void dumpField(List<List<Character>> field)
-    {
-        for (List<Character> line: field)
-        {
-            System.out.println(StringUtils.join(line,""));
-        }
-    }
-
-    private static void moveNorth(List<Character> line, int row, List<List<Character>> field)
-    {
-        for (int i=0;i<line.size();i++)
-        {
-            if (line.get(i) == ROUND_ROCK)
-            {
-                moveNorth(i, row, field);
-            }
-        }
-    }
-
-    private static void moveNorth(int col, int row, List<List<Character>> field)
-    {
-        int origRow=row;
-        while (row>0 && field.get(row-1).get(col) == FREE)
-        {
-            row--;
-        }
-        field.get(origRow).set(col, FREE);
-        field.get(row).set(col, ROUND_ROCK);
     }
 }

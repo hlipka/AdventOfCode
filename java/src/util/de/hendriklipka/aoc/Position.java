@@ -32,7 +32,31 @@ public class Position
 
     public Position updated(int rowDiff, int colDiff)
     {
-        return new Position(row+rowDiff, col+colDiff);
+        return new Position(row + rowDiff, col + colDiff);
+    }
+
+    public Position updated(Direction dir)
+    {
+        switch (dir)
+        {
+            case UP ->
+            {
+                return new Position(row - 1, col);
+            }
+            case DOWN ->
+            {
+                return new Position(row + 1, col);
+            }
+            case LEFT ->
+            {
+                return new Position(row, col - 1);
+            }
+            case RIGHT ->
+            {
+                return new Position(row, col + 1);
+            }
+        }
+        return null;
     }
 
     @Override
@@ -45,8 +69,8 @@ public class Position
     public String toString()
     {
         return "Pos{" +
-                "row=" + row +
-                ", col=" + col +
-                '}';
+               "row=" + row +
+               ", col=" + col +
+               '}';
     }
 }

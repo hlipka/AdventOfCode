@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc;
 
+import de.hendriklipka.aoc.matrix.CharMatrix;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -105,6 +106,11 @@ public class AocParseUtils
                 .filter(StringUtils::isNotBlank)
                 .map(l->l.chars().mapToObj(c->String.valueOf((char)c)).collect(Collectors.toList()))
                 .collect(Collectors.toList());
+    }
+
+    public static CharMatrix getLinesAsCharMatrix(final String yearName, final String dayName, char defaultChar) throws IOException
+    {
+        return new CharMatrix(getLinesAsChars(yearName, dayName), defaultChar);
     }
 
     public static List<List<Character>> getLinesAsChars(final String yearName, final String dayName) throws IOException
