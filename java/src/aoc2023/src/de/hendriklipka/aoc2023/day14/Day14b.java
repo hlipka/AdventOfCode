@@ -19,7 +19,7 @@ public class Day14b
         {
             int total=1000000000;
             List<List<List<Character>>> test=new ArrayList<>();
-            List<List<Character>> field = AocParseUtils.getLinesAsChars("2023", "day14");
+            List<List<Character>> field = AocParseUtils.getLinesAsChars("2023", "ex14");
             test.add(copyField(field));
             int size = field.size();
             int cycleStart=-1;

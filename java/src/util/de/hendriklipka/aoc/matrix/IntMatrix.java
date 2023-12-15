@@ -159,4 +159,24 @@ public class IntMatrix
     {
         return _cols;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        return isSame((IntMatrix) o);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        StringBuilder sb=new StringBuilder();
+        for (int r=0;r<_rows;r++)
+            sb.append(StringUtils.join(_data[r],",")).append(",");
+
+        return sb.toString().hashCode();
+    }
 }

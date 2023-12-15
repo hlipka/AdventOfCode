@@ -3,6 +3,7 @@ package de.hendriklipka.aoc.matrix;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.List;
 
@@ -186,5 +187,28 @@ public class CharMatrix
     public int cols()
     {
         return _cols;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        return isSame((CharMatrix) o);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        StringBuilder sb=new StringBuilder();
+        for (int r=0;r<_rows;r++)
+            for (int col = 0; col < _cols; col++)
+            {
+                sb.append(_data[r][col]);
+            }
+
+        return sb.toString().hashCode();
     }
 }
