@@ -101,7 +101,7 @@ public class IntMatrix
         return new IntMatrix(copy, _defaultInt);
     }
 
-    private boolean in(Position pos)
+    public boolean in(Position pos)
     {
         return pos.row >= 0 && pos.row < _rows && pos.col >= 0 && pos.col < _cols;
     }

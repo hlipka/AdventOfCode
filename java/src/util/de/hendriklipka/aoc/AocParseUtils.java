@@ -1,6 +1,7 @@
 package de.hendriklipka.aoc;
 
 import de.hendriklipka.aoc.matrix.CharMatrix;
+import de.hendriklipka.aoc.matrix.IntMatrix;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -112,6 +113,12 @@ public class AocParseUtils
     {
         return new CharMatrix(getLinesAsChars(yearName, dayName), defaultChar);
     }
+
+    public static IntMatrix getLinesAsIntMatrix(final String yearName, final String dayName, int defaultValue) throws IOException
+    {
+        return new IntMatrix(getLinesAsDigits(yearName, dayName), defaultValue);
+    }
+
 
     public static List<List<Character>> getLinesAsChars(final String yearName, final String dayName) throws IOException
     {

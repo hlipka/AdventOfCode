@@ -73,4 +73,9 @@ public class Position
                ", col=" + col +
                '}';
     }
+
+    public int dist(Position pos)
+    {
+        return Math.abs(pos.row-row)+Math.abs(pos.col-col);
+    }
 }
