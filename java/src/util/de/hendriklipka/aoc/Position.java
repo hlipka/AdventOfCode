@@ -37,23 +37,28 @@ public class Position
 
     public Position updated(Direction dir)
     {
+        return updated(dir, 1);
+    }
+
+    public Position updated(Direction dir, int count)
+    {
         switch (dir)
         {
             case UP ->
             {
-                return new Position(row - 1, col);
+                return new Position(row - count, col);
             }
             case DOWN ->
             {
-                return new Position(row + 1, col);
+                return new Position(row + count, col);
             }
             case LEFT ->
             {
-                return new Position(row, col - 1);
+                return new Position(row, col - count);
             }
             case RIGHT ->
             {
-                return new Position(row, col + 1);
+                return new Position(row, col + count);
             }
         }
         return null;
