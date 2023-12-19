@@ -3,17 +3,15 @@ package de.hendriklipka.aoc2023.day19;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
+import org.apache.commons.lang3.time.StopWatch;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Predicate;
 
 /**
- * Brute-force thr solution
+ * Brute-force the solution (more-or-less)
  *
  * better idea:
  * create 4 ranges for the x-m-a-s numbers, each [1-4000] (inclusive)
@@ -36,10 +34,12 @@ public class Day19b
         {
             List<List<String>> blocks = AocParseUtils.getStringBlocks("2023", "day19");
             rules=parseRules(blocks.get(0));
-            System.out.println(rules.size()+" rules");
-            // optimize away rule which have no effective condition
+            System.out.println(rules.size() + " rules, " + rules.values().stream().mapToInt(wf->wf.conditions.size()).sum() + " conditions");
+            // optimize away rules which have no effective condition
+            System.out.println("optimizing");
             optimizeRules(rules);
-            System.out.println("reduced to "+rules.size());
+            System.out.println(rules.size() + " rules, " + rules.values().stream().mapToInt(wf -> wf.conditions.size()).sum() + " conditions");
+//            System.out.println(StringUtils.join(rules.values(), "\n"));
             // find all boundaries for each variable
             MultiValuedMap<Character, Integer > boundaries = findBoundaries();
             // this gives ranges with "value <|=|> boundary"
@@ -54,8 +54,11 @@ public class Day19b
             mValues.sort(Integer::compareTo);
             List<Integer> aValues=new ArrayList<>(boundaries.get('a'));
             aValues.sort(Integer::compareTo);
+            StopWatch watch = new StopWatch();
+            watch.start();
             long count=countForS(sValues, xValues, mValues, aValues);
             System.out.println(count);
+            System.out.println(watch.getTime()/1000+"s");
         }
         catch (IOException e)
         {
@@ -86,21 +89,21 @@ public class Day19b
 
             (for x, we test x=9, x=10, x=20 - only the latter succeeds and gives a range of 10)
 
-            valid combinations should be
+            valid combinations are then (in multiple ranges, though)
             s=1..9, x=1..9 (81)
             s=10..12, x=20 (3)
             s=14..20, x=11..20 (7*10)
         */
 
         int rangeStart=0;
-        ExecutorService executorService = Executors.newFixedThreadPool(16);
+        ExecutorService executorService = Executors.newWorkStealingPool();
         List<Future<Long>> tasks=new ArrayList<>();
         for (int boundary: sValues)
         {
             final int rangeLength=boundary-rangeStart-1;
             Future<Long> future = executorService.submit(() -> {
-                long result=(long)rangeLength*countForX(boundary-1, xValues, mValues, aValues, rangeLength);
-                result +=countForX(boundary, xValues, mValues, aValues, 1);
+                long result=(long)rangeLength*countForX(boundary-1, xValues, mValues, aValues);
+                result +=countForX(boundary, xValues, mValues, aValues);
                 System.out.println("done for "+boundary);
                 return result;
             });
@@ -110,13 +113,12 @@ public class Day19b
         try
         {
             int rangeLength= MAX_VALUE - rangeStart;
-            long count=(long)rangeLength*countForX(MAX_VALUE, xValues, mValues, aValues, rangeLength);
+            long count=(long)rangeLength*countForX(MAX_VALUE, xValues, mValues, aValues);
             for (Future<Long> task: tasks)
             {
                 count+=task.get();
             }
             executorService.shutdownNow();
-//            executorService.awaitTermination(2, TimeUnit.HOURS);
             return count;
         }
         catch (InterruptedException | ExecutionException e)
@@ -125,77 +127,70 @@ public class Day19b
         }
     }
 
-    private static long countForX(int sValue, List<Integer> xValues, List<Integer> mValues, List<Integer> aValues, long factor)
+    private static long countForX(int sValue, List<Integer> xValues, List<Integer> mValues, List<Integer> aValues)
     {
         long count=0;
         int rangeStart=0;
         for (int boundary: xValues)
         {
             int rangeLength=boundary-rangeStart-1;
-            count+=(long)rangeLength*countForM(sValue, boundary-1, mValues, aValues, factor*rangeLength);
-            count+=countForM(sValue, boundary, mValues, aValues, factor);
+            count+=(long)rangeLength*countForM(sValue, boundary-1, mValues, aValues);
+            count+=countForM(sValue, boundary, mValues, aValues);
             rangeStart=boundary;
-            System.out.println("done for s="+sValue+", x="+boundary);
         }
         int rangeLength= MAX_VALUE - rangeStart;
-        count+=(long)rangeLength*countForM(sValue, MAX_VALUE, mValues, aValues, factor*rangeLength);
+        count+=(long)rangeLength*countForM(sValue, MAX_VALUE, mValues, aValues);
 
         return count;
     }
 
-    private static long countForM(int sValue, int xValue, List<Integer> mValues, List<Integer> aValues, long factor)
+    private static long countForM(int sValue, int xValue, List<Integer> mValues, List<Integer> aValues)
     {
         long count=0;
         int rangeStart=0;
         for (int boundary: mValues)
         {
             int rangeLength=boundary-rangeStart-1;
-            count+=(long)rangeLength*countForA(sValue, xValue, boundary-1, aValues, factor*rangeLength);
-            count+=countForA(sValue, xValue, boundary, aValues, factor);
+            count+=(long)rangeLength*countForA(sValue, xValue, boundary-1, aValues);
+            count+=countForA(sValue, xValue, boundary, aValues);
             rangeStart=boundary;
         }
         int rangeLength= MAX_VALUE - rangeStart;
-        count+=(long)rangeLength*countForA(sValue, xValue, MAX_VALUE, aValues, factor*rangeLength);
+        count+=(long)rangeLength*countForA(sValue, xValue, MAX_VALUE, aValues);
 
         return count;
     }
 
-    private static long countForA(int sValue, int xValue, int mValue, List<Integer> aValues, long factor)
+    private static long countForA(int sValue, int xValue, int mValue, List<Integer> aValues)
     {
         long count=0;
         int rangeStart=0;
         for (int boundary: aValues)
         {
             int rangeLength=boundary-rangeStart-1;
-            if (isValid(sValue, xValue, mValue, boundary-1, factor*rangeLength))
+            if (isValid(sValue, xValue, mValue, boundary-1))
                 count+= rangeLength;
-            if (isValid(sValue, xValue, mValue, boundary, factor))
+            if (isValid(sValue, xValue, mValue, boundary))
                 count++;
             rangeStart=boundary;
         }
         int rangeLength= MAX_VALUE - rangeStart;
-        if (isValid(sValue, xValue, mValue, MAX_VALUE, factor*rangeLength))
+        if (isValid(sValue, xValue, mValue, MAX_VALUE))
             count+= rangeLength;
 
         return count;
     }
 
-    public static boolean isValid(int sValue, int xValue, int mValue, int aValue, long factor)
+    public static boolean isValid(int sValue, int xValue, int mValue, int aValue)
     {
         Part part=new Part(sValue, xValue, mValue, aValue);
 
         String wf="in";
         while (true)
         {
-            Workflow w=rules.get(wf);
-            if (null==w)
-            {
-                System.out.println();
-            }
-            wf= w.getNextWorkflow(part);
+            wf= rules.get(wf).getNextWorkflow(part);
             if (wf.equals("A"))
             {
-//                System.out.println("accept s="+sValue+", x="+xValue+", m="+mValue+", a="+aValue+" worth "+factor);
                 return true;
             }
             if (wf.equals("R"))
@@ -209,7 +204,7 @@ public class Day19b
         MultiValuedMap<Character, Integer > boundaries=new HashSetValuedHashMap<>();
         for (Workflow wf: rules.values())
         {
-            for (Rule r: wf.rules)
+            for (Rule r: wf.conditions)
             {
                 if (null!=r.condition)
                 {
@@ -222,20 +217,32 @@ public class Day19b
 
     private static void optimizeRules(Map<String, Workflow> rules)
     {
-        // find WFs where the target WF is the same for all rules
-        // replace these rules by their common target
         boolean somethingReplaced;
         do
         {
             somethingReplaced = false;
             for (Workflow wf: rules.values())
             {
-                String common=wf.getCommonTarget();
-                if (null!=common)
+                while (true)
                 {
-                    somethingReplaced=true;
+                    // when the last two conditions in the workflow have the same target, the second-to-last is useless, and can be removed (they both end up at
+                    // the same target anyway)
+                    List<Rule> wfr = wf.conditions;
+                    if (wfr.size()>1 && wfr.get(wfr.size() - 2).target.equals(wfr.get(wfr.size() - 1).target))
+                    {
+                        wfr.remove(wfr.size() - 2);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                // when we now have only one condition left, it is a no-op rule, and we can optimize the workflow away
+                if (wf.conditions.size() == 1)
+                {
+                    somethingReplaced = true;
                     rules.remove(wf.name); // remove the rule
-                    replaceTarget(wf.name, common); // replace the obsolete WF with its target
+                    replaceTarget(wf.name, wf.conditions.get(0).target); // replace the obsolete WF with its only target
                     break;
                 }
             }
@@ -282,7 +289,20 @@ public class Day19b
         {
             String[] ruleParts=ruleStr.split(":");
             r.target=ruleParts[1];
-            r.condition=parseCondition(ruleParts[0]);
+            if (ruleParts[0].contains("<"))
+            {
+                String[] conditionParts= ruleParts[0].split("<");
+                r.condition = new LessThan(conditionParts[0].charAt(0), Integer.parseInt(conditionParts[1]));
+            }
+            else if (ruleParts[0].contains(">"))
+            {
+                String[] conditionParts= ruleParts[0].split(">");
+                r.condition = new GreaterThan(conditionParts[0].charAt(0), Integer.parseInt(conditionParts[1]));
+            }
+            else
+            {
+                throw new IllegalArgumentException(ruleParts[0]);
+            }
         }
         else {
             r.target=ruleStr;
@@ -290,25 +310,10 @@ public class Day19b
         return r;
     }
 
-    private static RuleCondition parseCondition(String rule)
-    {
-        if (rule.contains("<"))
-        {
-            String[] ruleParts=rule.split("<");
-            return new LessThan(ruleParts[0].charAt(0), Integer.parseInt(ruleParts[1]));
-        }
-        else if (rule.contains(">"))
-        {
-            String[] ruleParts=rule.split(">");
-            return new GreaterThan(ruleParts[0].charAt(0), Integer.parseInt(ruleParts[1]));
-        }
-        throw new IllegalArgumentException("rule");
-    }
-
     private static class Workflow
     {
         final String name;
-        final List<Rule> rules=new ArrayList<>();
+        final List<Rule> conditions =new ArrayList<>();
 
         public Workflow(String name)
         {
@@ -317,13 +322,13 @@ public class Day19b
 
         public void addRule(Rule rule)
         {
-            rules.add(rule);
+            conditions.add(rule);
         }
 
         public String getCommonTarget()
         {
-            String common=rules.get(0).target;
-            for (Rule r: rules)
+            String common= conditions.get(0).target;
+            for (Rule r: conditions)
             {
                 if (!common.equals(r.target))
                     return null;
@@ -333,7 +338,7 @@ public class Day19b
 
         public void replaceTarget(String oldTarget, String newTarget)
         {
-            for (Rule r: rules)
+            for (Rule r: conditions)
             {
                 if (r.target.equals(oldTarget))
                     r.target=newTarget;
@@ -342,7 +347,7 @@ public class Day19b
 
         public String getNextWorkflow(Part part)
         {
-            for (Rule rule: rules)
+            for (Rule rule: conditions)
             {
                 if (rule.condition==null)
                 {
@@ -361,7 +366,7 @@ public class Day19b
         {
             return "Workflow{" +
                    "name='" + name + '\'' +
-                   ", rules=" + rules +
+                   ", rules=" + conditions +
                    '}';
         }
     }
@@ -423,18 +428,26 @@ public class Day19b
 
     private static class Part
     {
-        Map<Character, Integer> values = new HashMap<>();
+        int x,m,a,s;
         public Part(int sValue, int xValue, int mValue, int aValue)
         {
-            values.put('s', sValue);
-            values.put('x', xValue);
-            values.put('m', mValue);
-            values.put('a', aValue);
+            s=sValue;
+            x=xValue;
+            m=mValue;
+            a=aValue;
         }
 
         public int get(Character name)
         {
-            return values.get(name);
+            return switch(name)
+            {
+                case 'x'->x;
+                case 'm'->m;
+                case 'a'->a;
+                case 's'->s;
+                default -> throw new IllegalStateException("Unexpected value: " + name);
+            }
+            ;
         }
     }
 
