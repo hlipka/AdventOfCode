@@ -2,6 +2,8 @@ package de.hendriklipka.aoc2023.day20;
 
 import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.MathUtils;
+import de.hendriklipka.aoc.vizualization.VizNode;
+import de.hendriklipka.aoc.vizualization.VizUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.ArrayUtils;
@@ -33,6 +35,7 @@ public class Day20b
                     ((Conjunction) chip).addWires(wires.get(chip.getName()));
                 }
             }
+            VizUtils.visualizeGraph("chips", c.chips);
             String rxIn = wires.get("rx").iterator().next();
             System.out.println("wire into rx: " + rxIn+", needs H");
             Collection<String> rmIn = wires.get(rxIn);
@@ -148,7 +151,7 @@ public class Day20b
         }
     }
 
-    private interface Chip
+    private interface Chip extends VizNode
     {
         String getName();
 
@@ -193,6 +196,18 @@ public class Day20b
             return "Broadcast{" +
                    "targets=" + Arrays.toString(targets) +
                    '}';
+        }
+
+        @Override
+        public String getNodeName()
+        {
+            return getName();
+        }
+
+        @Override
+        public Collection<String> getNodeTargets()
+        {
+            return Arrays.asList(targets);
         }
     }
 
@@ -249,6 +264,18 @@ public class Day20b
                    ", name='" + name + '\'' +
                    ", state=" + state +
                    '}';
+        }
+
+        @Override
+        public String getNodeName()
+        {
+            return "_"+getName();
+        }
+
+        @Override
+        public Collection<String> getNodeTargets()
+        {
+            return Arrays.asList(targets);
         }
     }
 
@@ -315,6 +342,18 @@ public class Day20b
                    ", _wireStates=" + _wireStates +
                    '}';
         }
+
+        @Override
+        public String getNodeName()
+        {
+            return "&"+getName();
+        }
+
+        @Override
+        public Collection<String> getNodeTargets()
+        {
+            return Arrays.asList(targets);
+        }
     }
 
     private enum Level
@@ -351,6 +390,18 @@ public class Day20b
         public String[] getTargets()
         {
             return new String[0];
+        }
+
+        @Override
+        public String getNodeName()
+        {
+            return getName();
+        }
+
+        @Override
+        public Collection<String> getNodeTargets()
+        {
+            return new ArrayList<>();
         }
     }
 }
