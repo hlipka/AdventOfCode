@@ -8,9 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -185,5 +183,35 @@ public class AocParseUtils
             throw new IllegalArgumentException("No match found for '" + pattern + "' in [" + str + "]");
         }
         return Long.parseLong(m.group(1));
+    }
+
+    public static Map<String, String> parseIntoStringMap(String string, String elementDelimiter, String partDelimiter, String boundaries)
+    {
+        string = StringUtils.replaceChars(string, boundaries, "");
+
+        Map<String, String> map = new HashMap<>();
+        String[] partParts=string.split(elementDelimiter);
+        for (String pp: partParts)
+        {
+            String[] values=pp.split(partDelimiter);
+            map.put(values[0], values[1]);
+        }
+
+        return map;
+    }
+
+    public static Map<String, Integer> parseIntoIntMap(String string, String elementDelimiter, String partDelimiter, String boundaries)
+    {
+        string = StringUtils.replaceChars(string, boundaries, "");
+
+        Map<String, Integer> map = new HashMap<>();
+        String[] partParts=string.split(elementDelimiter);
+        for (String pp: partParts)
+        {
+            String[] values=pp.split(partDelimiter);
+            map.put(values[0], Integer.parseInt(values[1]));
+        }
+
+        return map;
     }
 }
