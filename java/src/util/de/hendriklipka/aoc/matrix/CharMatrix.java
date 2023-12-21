@@ -211,4 +211,15 @@ public class CharMatrix
 
         return sb.toString().hashCode();
     }
+
+    public Position findFirst(char c)
+    {
+        for (int r = 0; r < _rows; r++)
+            for (int col = 0; col < _cols; col++)
+            {
+                if(_data[r][col]==c)
+                    return new Position(r,col);
+            }
+        return null;
+    }
 }

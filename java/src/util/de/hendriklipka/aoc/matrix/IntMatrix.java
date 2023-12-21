@@ -4,6 +4,8 @@ import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * User: hli
@@ -32,12 +34,27 @@ public class IntMatrix
         _defaultInt = defaultInt;
     }
 
-    private IntMatrix(int[][] data, int defaultChar)
+    private IntMatrix(int[][] data, int defaultValue)
     {
         _rows = data.length;
         _cols = data[0].length;
         _data = data;
-        _defaultInt = defaultChar;
+        _defaultInt = defaultValue;
+    }
+
+    public IntMatrix(int rows, int cols, int defaultValue)
+    {
+        _rows = rows;
+        _cols = cols;
+        _data = new int[_rows][_cols];
+        for (int r = 0; r < _data.length; r++)
+        {
+            for (int c = 0; c < cols; c++)
+            {
+                _data[r][c] = defaultValue;
+            }
+        }
+        _defaultInt = defaultValue;
     }
 
     public int at(Position pos)
@@ -141,6 +158,19 @@ public class IntMatrix
         return count;
     }
 
+    public int count(Predicate<Integer> condition)
+    {
+        int count = 0;
+        for (int r = 0; r < _rows; r++)
+            for (int col = 0; col < _cols; col++)
+            {
+                if (condition.test(_data[r][col]))
+                    count++;
+            }
+        return count;
+    }
+
+
     public void print()
     {
         for (int[] row : _data)
@@ -178,5 +208,12 @@ public class IntMatrix
             sb.append(StringUtils.join(_data[r],",")).append(",");
 
         return sb.toString().hashCode();
+    }
+
+    public void add(IntMatrix other)
+    {
+        for (int r = 0; r < _rows; r++)
+            for (int col = 0; col < _cols; col++)
+                _data[r][col]=_data[r][col]+other._data[r][col];
     }
 }
