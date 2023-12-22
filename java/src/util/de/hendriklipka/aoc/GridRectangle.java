@@ -1,15 +1,13 @@
 package de.hendriklipka.aoc;
 
 /**
- * User: hli
- * Date: 22.12.23
- * Time: 15:01
+ * Rectangle class which is based in tiles on a grid - so rectangles which share a corner are overlapping each other.
  */
-public class Rectangle
+public class GridRectangle
 {
     int x1,y1,x2,y2;
 
-    public Rectangle(int x1, int y1, int x2, int y2)
+    public GridRectangle(int x1, int y1, int x2, int y2)
     {
         this.x1 = x1;
         this.y1 = y1;
@@ -22,7 +20,7 @@ public class Rectangle
         return (x>=Math.min(x1,x2) &&x<=Math.max(x1,x2) && y >= Math.min(y1, y2) && y <= Math.max(y1, y2));
     }
 
-    public boolean overlaps(Rectangle other)
+    public boolean overlaps(GridRectangle other)
     {
         return (
                 (inRange(other.x1,x1,x2)

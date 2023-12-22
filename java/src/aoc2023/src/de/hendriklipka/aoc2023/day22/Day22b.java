@@ -1,7 +1,7 @@
 package de.hendriklipka.aoc2023.day22;
 
 import de.hendriklipka.aoc.AocParseUtils;
-import de.hendriklipka.aoc.Rectangle;
+import de.hendriklipka.aoc.GridRectangle;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
@@ -100,7 +100,7 @@ public class Day22b
 
     private static void moveBrick(Brick brick, List<Brick> foundation)
     {
-        Rectangle bottom=brick.getArea();
+        GridRectangle bottom=brick.getArea();
         // calculate the area the brick covers downwards
         // for each field, cast a ray downwards and see what it hits (we cannot hit anything higher than the current bottom Z)
         int topZ=0;
@@ -166,9 +166,9 @@ public class Day22b
             return zTop;
         }
 
-        public Rectangle getArea()
+        public GridRectangle getArea()
         {
-            return new Rectangle(xBottom, yBottom, xTop, yTop);
+            return new GridRectangle(xBottom, yBottom, xTop, yTop);
         }
 
         public void moveDownTo(int topZ)
