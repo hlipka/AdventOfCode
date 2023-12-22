@@ -9,86 +9,127 @@ import de.hendriklipka.aoc.matrix.IntMatrix;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.function.Predicate;
 
 /**
- * User: hli
- * Date: 21.12.23
- * Time: 06:13
+ * idea for the solution: calculate 3 additional fields outwards in the 4 directions
+ * from there we can calculate the offset (or steps cycle) for each reachable tile
+ * then we can calculate how often each tile repeats, and is part of the result:
+ * for that we work with the repetitions of the garden field
+ * walk the center up (or down), and for each repeated field we can branch out left and right
+ * since we know the offsets, we can calculate the number of tiles which are part of the result
+ * (the cycle here is 2x the offset, because of the odd/even jump)
+ * BUG: we cannot walk from the center column, since the steps stored for it are from the center line
+ * so we need to do the center on its own, and start from the columns next to it
+ * this is still TBD
  */
 public class Day21b
 {
-    private final static int STEPS = 50;
+//    private final static int STEPS = 26501365;
+    private final static int STEPS = 20;
+    private final static int GOAL = 441;
+
+    @SuppressWarnings("PointlessArithmeticExpression")
+    private static final int PARITY= STEPS % 2;
+
+    // Note to self: we have 'odd' parity now :(
+    private static final Predicate<Integer> FIELD_CONDITION = i -> i <= STEPS && PARITY == (i % 2);
 
     public static void main(String[] args) throws IOException
     {
-        CharMatrix field = AocParseUtils.getLinesAsCharMatrix("2023", "ex21", '#');
+        CharMatrix field = AocParseUtils.getLinesAsCharMatrix("2023", "ex21c", '#');
         int width = field.cols();
         int height = field.rows();
         Position start = field.findFirst('S');
         field.set(start, '.');
-        IntMatrix dists = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
+        IntMatrix center = new IntMatrix(height, width, Integer.MAX_VALUE);
         LinkedList<Position> queue = new LinkedList<>();
         queue.add(start);
-        dists.set(start, 0);
-        walk(queue, dists, field);
-        // queue is always empty now, so we can re-use it
+        center.set(start, 0);
+        walk(queue, center, field);
+        // mark non-reachable places
+        for (int row=0;row<height;row++)
+            for (int col=0;col<width;col++)
+            {
+                if (field.at(row,col)!='#' && center.at(row,col)>1000)
+                {
+                    field.set(new Position(row, col),'#');
+                }
+            }
 
         // borders of the field are all empty, so any adjacent field (when repeating the garden) is a direct step of length 1
         // go upwards
-        IntMatrix upDists = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillUpwards(width, height, queue, upDists, dists, field);
+        IntMatrix fieldUp1 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillUpwards(width, height, new LinkedList<>(), fieldUp1, center, field);
 
-        IntMatrix upDists2 = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillUpwards(width, height, queue, upDists2, upDists, field);
+        IntMatrix fieldUp2 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillUpwards(width, height, new LinkedList<>(), fieldUp2, fieldUp1, field);
 
-        IntMatrix upOffset = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillInOffsets(width, height, upOffset, upDists2, upDists, field);
+        IntMatrix fieldUp3 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillUpwards(width, height, new LinkedList<>(), fieldUp3, fieldUp2, field);
+
+        IntMatrix upOffset = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillInOffsets(width, height, upOffset, fieldUp3, fieldUp2, field);
 
         //row+1
-        IntMatrix downDists = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillDownwards(width, height, queue, downDists, dists, field);
+        IntMatrix fieldDown1 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillDownwards(width, height, new LinkedList<>(), fieldDown1, center, field);
 
-        // row+2
-        IntMatrix downDists2 = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillDownwards(width, height, queue, downDists2, downDists, field);
+        IntMatrix fieldDown2 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillDownwards(width, height, new LinkedList<>(), fieldDown2, fieldDown1, field);
 
-        IntMatrix downOffset = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillInOffsets(width, height, downOffset, downDists2, downDists, field);
+        IntMatrix fieldDown3 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillDownwards(width, height, new LinkedList<>(), fieldDown3, fieldDown2, field);
 
-        // col-1
-        IntMatrix leftDists = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillLeft(width, height, queue, leftDists, dists, field);
-
-        // col-2
-        IntMatrix leftDists2 = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillLeft(width, height, queue, leftDists2, leftDists, field);
-
-        IntMatrix leftOffset = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillInOffsets(width, height, leftOffset, leftDists2, leftDists, field);
+        IntMatrix downOffset = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillInOffsets(width, height, downOffset, fieldDown3, fieldDown2, field);
 
         // col-1
-        IntMatrix rightDists = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillRight(width, height, queue, rightDists, dists, field);
+        IntMatrix fieldLeft1 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillLeft(width, height, new LinkedList<>(), fieldLeft1, center, field);
 
-        // col-2
-        IntMatrix rightDists2 = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillRight(width, height, queue, rightDists2, rightDists, field);
+        IntMatrix fieldLeft2 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillLeft(width, height, new LinkedList<>(), fieldLeft2, fieldLeft1, field);
 
-        IntMatrix rightOffset = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
-        fillInOffsets(width, height, rightOffset, rightDists2, rightDists, field);
+        IntMatrix fieldLeft3 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillLeft(width, height, new LinkedList<>(), fieldLeft3, fieldLeft2, field);
 
-        long result = calculateFields(field, dists, upDists, upOffset, downDists, downOffset, leftDists, leftOffset, rightDists, rightOffset);
+        IntMatrix leftOffset = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillInOffsets(width, height, leftOffset, fieldLeft3, fieldLeft2, field);
+
+        // col-1
+        IntMatrix fieldRight1 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillRight(width, height, new LinkedList<>(), fieldRight1, center, field);
+
+        IntMatrix fieldRight2 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillRight(width, height, new LinkedList<>(), fieldRight2, fieldRight1, field);
+
+        IntMatrix fieldRight3 = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillRight(width, height, new LinkedList<>(), fieldRight3, fieldRight2, field);
+
+        IntMatrix rightOffset = new IntMatrix(height, width, Integer.MAX_VALUE);
+        fillInOffsets(width, height, rightOffset, fieldRight3, fieldRight2, field);
+
+        long result = calculateFields(field, center,
+                fieldUp1, upOffset,
+                fieldDown1, downOffset,
+                fieldLeft1, leftOffset,
+                fieldRight1, rightOffset);
 
         System.out.println(result);
-        System.out.println("1594 (goal)");
-        System.out.println("diff=" + (result - 1594));
+        System.out.println(GOAL+" (goal)");
+        System.out.println("diff=" + (result - GOAL));
+//        System.out.println("637085539055808 is too low");
+        // 637085539055808 is too low
     }
 
-    private static long calculateFields(CharMatrix field, IntMatrix dists, IntMatrix upDists, IntMatrix upOffset, IntMatrix downDists, IntMatrix downOffset,
-                                        IntMatrix leftDists, IntMatrix leftOffset,
-                                        IntMatrix rightDists, IntMatrix rightOffset)
+    private static long calculateFields(CharMatrix field, IntMatrix center,
+                                        IntMatrix fieldUp, IntMatrix upOffset,
+                                        IntMatrix fieldDown, IntMatrix downOffset,
+                                        IntMatrix fieldLeft, IntMatrix leftOffset,
+                                        IntMatrix fieldRight, IntMatrix rightOffset)
     {
-        long result = dists.count(i -> i <= STEPS && 0 == (i % 2));
+        long result = center.count(FIELD_CONDITION);
 
         for (int row = 0; row < field.rows(); row++)
         {
@@ -96,12 +137,12 @@ public class Day21b
             {
                 if (field.at(row, col) != '#')
                 {
-                    result += calculateUp(row, col, upDists, upOffset, leftOffset, rightOffset);
-                    result += calculateUp(row, col, downDists, downOffset, leftOffset, rightOffset);
+                    result += calculateVertical(row, col, fieldUp, upOffset, leftOffset, rightOffset);
+                    result += calculateVertical(row, col, fieldDown, downOffset, leftOffset, rightOffset);
 
                     // these are just for the middle row, the others were handled when going up/down
-                    result += calculateSide(row, col, leftDists, leftOffset);
-                    result += calculateSide(row, col, rightDists, rightOffset);
+                    result += calculateHorizontal(row, col, fieldLeft, leftOffset);
+                    result += calculateHorizontal(row, col, fieldRight, rightOffset);
                 }
             }
         }
@@ -109,22 +150,72 @@ public class Day21b
         return result;
     }
 
-    private static long calculateSide(int row, int col, IntMatrix dists, IntMatrix offsets)
+    private static long calculateVertical(int row, int col, IntMatrix startField, IntMatrix offsets, IntMatrix leftOffset, IntMatrix rightOffset)
     {
         long result = 0;
-        boolean isEven = 0 == (dists.at(row, col) % 2);
-        int currentSteps = dists.at(row, col);
+        final int leftOffsetValue = leftOffset.at(row, col);
+        final int rightOffsetValue = rightOffset.at(row, col);
+
+        // step upwards for each repeated field
+        // the step distance advances by the calculated offset
+        // we start at the first field away from the center, so we need to handle that one, and the respective row
+        // the position is calculated as 'steps away from the center'
+        final int rowOffset = offsets.at(row, col);
+        for (int currentSteps = startField.at(row, col); currentSteps <= STEPS; currentSteps += rowOffset)
+        {
+            boolean isParity = PARITY == (currentSteps % 2);
+            // for each row, we calculate the remaining steps, which we can use for a side-wards walk
+            // we can calculate how often we can go sideways
+
+            if (isParity)
+            {
+                result++;
+                // when parity matches, we can start right here, so we encounter one field for each (2*offset)
+                int remaining = STEPS - currentSteps;
+                result += remaining / (2L * leftOffsetValue);
+                result += remaining / (2L * rightOffsetValue);
+            }
+            else
+            {
+                // when parity does not match, the first field we hit is one side-ways. So we check that we can go there, and calculate from there
+                int remainingLeft = STEPS - currentSteps - leftOffsetValue;
+                if (remainingLeft >= 0)
+                {
+                    result++; // that's the field we reached via the above step calculation
+                    result += remainingLeft / (2L * leftOffsetValue); // and this calculates the remaining ones
+                }
+                // FIXME this is wrong
+                // when we are e.g. in the top left corner, we have a distance of 'side length' to the next top left corner
+                // so the new steps would be 'top_left+offset'
+                // but due to the free column in the middle of the input, the top right has the same steps as the top left
+                // so the result needs to be 'top_left+1', which means we skip fields at the borders
+                // the same issue appears with the top right when going to the left side
+                // so we need to start actually one field to the sides instead of the middle
+                int remainingRight = STEPS - currentSteps - rightOffsetValue;
+                if (remainingRight >= 0)
+                {
+                    result++;
+                    result += remainingRight / (2L * rightOffsetValue);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static long calculateHorizontal(int row, int col, IntMatrix field, IntMatrix offsets)
+    {
+        long result = 0;
+        int currentSteps = field.at(row, col);
+        boolean isParity = PARITY == (currentSteps % 2);
         final int sideOffset = offsets.at(row, col);
-        if (isEven)
+        if (isParity)
         {
             result++;
-            // for an even field, we can start right here, so we encounter one field for each (2*offset)
             int remaining = STEPS - currentSteps;
             result += remaining / (2L * sideOffset);
         }
         else
         {
-            // for an even position, the first field we hit is one sideways. So we check that we can go there, and calculate from there
             int remaining = STEPS - currentSteps - sideOffset;
             if (remaining >= 0)
             {
@@ -133,49 +224,6 @@ public class Day21b
             }
         }
 
-        return result;
-    }
-
-    private static long calculateUp(int row, int col, IntMatrix startDists, IntMatrix rowOffsets, IntMatrix leftOffset, IntMatrix rightOffset)
-    {
-        long result = 0;
-        // step upwards for each repeated field
-        // the step distance advances by the calculated offset
-        final int leftOffsetValue = leftOffset.at(row, col);
-        final int rightOffsetValue = rightOffset.at(row, col);
-        for (int upPos = startDists.at(row, col); upPos <= STEPS; upPos += rowOffsets.at(row, col))
-        {
-            boolean isEven = 0 == (upPos % 2);
-            // for each row, we calculate the remaining steps, which we can use for a side-wards walk
-            // we can calculate how often we can go sideways
-
-            // are we at an even repetition (only every second one ist)?
-            if (isEven)
-            {
-                // for 'even' repetition, the current one counts already
-                result++;
-                // for an even field, we can start right here, so we encounter one field for each (2*offset)
-                int remaining = STEPS - upPos;
-                result += remaining / (2L * leftOffsetValue);
-                result += remaining / (2L * rightOffsetValue);
-            }
-            else
-            {
-                // for an even position, the first field we hit is one sideways. So we check that we can go there, and calculate from there
-                int remainingLeft = STEPS - upPos - leftOffsetValue;
-                if (remainingLeft >= 0)
-                {
-                    result++;
-                    result += remainingLeft / (2L * leftOffsetValue);
-                }
-                int remainingRight = STEPS - upPos - rightOffsetValue;
-                if (remainingRight >= 0)
-                {
-                    result++;
-                    result += remainingRight / (2L * rightOffsetValue);
-                }
-            }
-        }
         return result;
     }
 
@@ -188,6 +236,8 @@ public class Day21b
                 Position p = new Position(row, col);
                 if (field.at(row, col) != '#')
                     target.set(p, higher.at(p) - lower.at(p));
+                else
+                    target.set(p, 0);
             }
         }
     }

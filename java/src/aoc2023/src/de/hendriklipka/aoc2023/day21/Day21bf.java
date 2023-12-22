@@ -12,18 +12,18 @@ import java.util.LinkedList;
 import java.util.function.Predicate;
 
 /**
- * this is to test the brute-force mechanism and to play with the data
+ * this is to test the brute-force mechanism and to explore the data
  */
 public class Day21bf
 {
-    private final static int STEPS = 5000;
-    private final static int GOAL = 16733044;
-    static int fieldCount=0;
+    private final static int STEPS = 20;
     private static final Predicate<Integer> FIELD_CONDITION = i -> i <= STEPS && 0 == (i % 2);
 
     public static void main(String[] args) throws IOException
     {
-        CharMatrix field = AocParseUtils.getLinesAsCharMatrix("2023", "ex21", '#');
+        // ex21c is a 11x11 field, with everything being a '.' (apart from the S in the middle)
+        // I used this to test my proposed solution, because it misses fields
+        CharMatrix field = AocParseUtils.getLinesAsCharMatrix("2023", "ex21c", '#');
         int width = field.cols();
         int height = field.rows();
         Position start = field.findFirst('S');
@@ -35,26 +35,18 @@ public class Day21bf
         center.set(start, 0);
         walk(queue, center, field);
 
-        // queue is always empty now, so we can re-use it
-
         // borders of the field are all empty, so any adjacent field (when repeating the garden) is a direct step of length 1
-        // go upwards
         IntMatrix fieldUp = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
         fillUpwards(width, height, queue, fieldUp, center, field);
 
-        //row+1
         IntMatrix fieldDown = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
         fillDownwards(width, height, queue, fieldDown, center, field);
 
-        // col-1
         IntMatrix fieldLeft = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
         fillLeft(width, height, queue, fieldLeft, center, field);
 
-        // col-1
         IntMatrix fieldRight = new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
         fillRight(width, height, queue, fieldRight, center, field);
-
-        fieldCount += 5; // we already looked at 5 fields
 
         long result = center.count(FIELD_CONDITION);
         result += fieldUp.count(FIELD_CONDITION);
@@ -70,9 +62,6 @@ public class Day21bf
 
 
         System.out.println(result+" targets found");
-        System.out.println(GOAL+" (goal)");
-        System.out.println("diff=" + (result - GOAL));
-        System.out.println(fieldCount+" fields visited");
     }
 
     private static long walkRowsUp(int width, int height, IntMatrix startField, CharMatrix field)
@@ -102,7 +91,6 @@ public class Day21bf
             // when this has nothing that matches anymore, we are done, and we also can skip the sides (because they cannot hit anything either
             if (0==count)
                 break;
-            fieldCount++;
             result +=count;
             // we also go the sides from where we are
             result += walkRowLeft(width, height, newField, field, rowUp, 0);
@@ -132,7 +120,6 @@ public class Day21bf
             // when this has nothing that matches anymore, we are done, and we also can skip the sides
             if (0 == count)
                 break;
-            fieldCount++;
             result += count;
             // we also go the sides from where we are
             result += walkRowLeft(width, height, newField, field, rowDown, 0);
@@ -160,7 +147,6 @@ public class Day21bf
             // when this has nothing that matches anymore, we are done
             if (0 == count)
                 return result;
-            fieldCount++;
             result += count;
             startField=newField;
         }
@@ -182,7 +168,6 @@ public class Day21bf
             // when this has nothing that matches anymore, we are done
             if (0 == count)
                 return result;
-            fieldCount++;
             result += count;
             startField = newField;
         }
