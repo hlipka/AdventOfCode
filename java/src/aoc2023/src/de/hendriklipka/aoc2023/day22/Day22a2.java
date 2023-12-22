@@ -9,11 +9,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * User: hli
- * Date: 22.12.23
- * Time: 14:15
+ * A more simplified (and probably even faster) version
  */
-public class Day22a
+public class Day22a2
 {
     public static void main(String[] args)
     {
@@ -22,36 +20,25 @@ public class Day22a
             // we sort the brick by their bottom Z
             // two bricks with the same Z must be next to each other and don't interfere ever
             List<Brick> bricks =
-                    AocParseUtils.getLines("2023", "day22").stream().map(Day22a::parseBrick).sorted(Comparator.comparingInt(Brick::getZBottom)).toList();
+                    AocParseUtils.getLines("2023", "day22").stream().map(Day22a2::parseBrick).sorted(Comparator.comparingInt(Brick::getZBottom)).toList();
             // let the bricks fall down from bottom to top
-            for (int i=0;i<bricks.size();i++)
+            MultiValuedMap<Integer, Brick> brickTops = new ArrayListValuedHashMap<>();
+            for (Brick brick : bricks)
             {
-                Brick brick=bricks.get(i);
-                // get the bricks below (or next to) the current brick
-                final List<Brick> foundation = new ArrayList<>(bricks.subList(0, i));
-                // the list is sorted by the top Z, so the highest brick comes first
-                foundation.sort(Comparator.comparingInt(Brick::getZTop));
-                Collections.reverse(foundation);
-                moveBrick(brick, foundation);
+                moveBrick(brick, brickTops);
             }
-            // calculate which brick is supported by which other brick, and what rests on what else
-            // note: we could actually make this part of the Brick class, this would be easier to the code
-            MultiValuedMap<Brick, Brick> supports=new ArrayListValuedHashMap<>();
-            MultiValuedMap<Brick, Brick> supportedBy=new ArrayListValuedHashMap<>();
-            calculateSupports(bricks, supports, supportedBy);
 
-            // sanity check:
-            // do we have bricks which are not supported by anything, and are not at Z=1?
-            for (Brick brick: bricks)
+            // sanity check: there should be no bricks floating around
+            for (Brick brick : bricks)
             {
-                if (!supportedBy.containsKey(brick) && brick.getZBottom()!=1)
+                if (brick.getZBottom()>1 && brick.getBricksBelow().isEmpty())
                 {
-                    System.out.println("unsupported brick in midair: "+brick);
+                    System.out.println("floating brick: "+brick);
                 }
             }
 
             // count which can be removed
-            int count=countRemoveableBrick(bricks, supports, supportedBy);
+            int count=countRemoveableBrick(bricks);
             System.out.println(count);
         }
         catch (IOException e)
@@ -60,30 +47,7 @@ public class Day22a
         }
     }
 
-    private static void calculateSupports(List<Brick> bricks, MultiValuedMap<Brick, Brick> supports, MultiValuedMap<Brick, Brick> supportedBy)
-    {
-        // remember which brick ends where (on the top side)
-        MultiValuedMap<Integer, Brick> brickTops=new ArrayListValuedHashMap<>();
-        for (Brick brick: bricks)
-        {
-            brickTops.put(brick.getZTop(), brick);
-        }
-        for (Brick brick : bricks)
-        {
-            int bottom=brick.getZBottom(); // where does it end at the bottom?
-            Collection<Brick> directlyBelow=brickTops.get(bottom-1); // all brick ending directly below
-            for (Brick other: directlyBelow)
-            {
-                if (brick.getArea().overlaps(other.getArea()))
-                {
-                    supports.put(other, brick); // the other brick supports us
-                    supportedBy.put(brick, other); // and we are supported by the other brick
-                }
-            }
-        }
-    }
-
-    private static int countRemoveableBrick(List<Brick> bricks, MultiValuedMap<Brick, Brick> supports, MultiValuedMap<Brick, Brick> supportedBy)
+    private static int countRemoveableBrick(List<Brick> bricks)
     {
         int count=0;
         // a brick can be removed if there is nothing on top or each brick on top of it is supported by more than 1 brick,
@@ -92,10 +56,10 @@ public class Day22a
         for (Brick brick : bricks)
         {
             boolean canBeRemoved=true;
-            Collection<Brick> others = supports.get(brick);
-            for (Brick other: others)
+            Collection<Brick> bricksAbove = brick.getBricksAbove();
+            for (Brick brickAbove: bricksAbove)
             {
-                if (supportedBy.get(other).size()==1)
+                if (brickAbove.getBricksBelow().size() == 1)
                 {
                     canBeRemoved=false;
                     break;
@@ -110,35 +74,35 @@ public class Day22a
         return count;
     }
 
-    private static void moveBrick(Brick brick, List<Brick> foundation)
+    private static void moveBrick(Brick brick, MultiValuedMap<Integer, Brick> settledBricks)
     {
         GridRectangle bottom=brick.getArea();
-        // calculate the area the brick covers downwards
-        // for each field, cast a ray downwards and see what it hits (we cannot hit anything higher than the current bottom Z)
-        int topZ=0;
-        // note: coordinates are _inclusive_
-        for (int x=bottom.getStartX();x<=bottom.getEndX();x++)
+        int bottomZ=brick.getZBottom();
+        while (bottomZ>1) // at bottom=1 we already touch the ground
         {
-            for (int y=bottom.getStartY(); y<=bottom.getEndY();y++)
+            Collection<Brick> bricks = settledBricks.get(bottomZ - 1); // are there any bricks directly below us?
+            boolean touchedOne=false;
+            // check _all_ bricks ending at this height whether we touch them or not
+            for (Brick brickBelow: bricks)
             {
-                for (Brick other: foundation)
+                // do we really touch this brick?
+                if (bottom.overlaps(brickBelow.getArea()))
                 {
-                    // do we hit something?
-                    if (other.getArea().contains(x,y) && other.getZTop()<brick.getZBottom())
-                    {
-                        // if so, check whether this is higher than any previous hit
-                        if (other.getZTop()>topZ)
-                        {
-                            topZ= other.getZTop();
-                        }
-                        // we can stop here - any other tile we could hit must be lower than the current one
-                        break;
-                    }
+                    // since they touch, they have a 'support' relation
+                    brick.addBrickBelow(brickBelow);
+                    brickBelow.addBrickAbove(brick);
+                    touchedOne=true;
                 }
             }
+            if (touchedOne)
+                break;
+            bottomZ--;
         }
-        // the highest Z is how deep we can fall, so move the brick (1 higher than whatever we did hit)
-        brick.moveDownTo(topZ+1);
+
+        // the highest Z is how deep we can fall, so move the brick
+        brick.moveDownTo(bottomZ);
+        // mark the brick as settled down
+        settledBricks.put(brick.getZTop(), brick);
     }
 
     private static Brick parseBrick(String line)
@@ -157,6 +121,9 @@ public class Day22a
     private static class Brick
     {
         public int xBottom,yBottom,zBottom,xTop,yTop,zTop;
+
+        Set<Brick> bricksAbove = new HashSet<>();
+        Set<Brick> bricksBelow = new HashSet<>();
 
         public Brick(int x1, int y1, int z1, int x2, int y2, int z2)
         {
@@ -193,15 +160,35 @@ public class Day22a
             }
         }
 
+        public void addBrickAbove(Brick other)
+        {
+            bricksAbove.add(other);
+        }
+
+        public void addBrickBelow(Brick other)
+        {
+            bricksBelow.add(other);
+        }
+
+        public Set<Brick> getBricksAbove()
+        {
+            return bricksAbove;
+        }
+
+        public Set<Brick> getBricksBelow()
+        {
+            return bricksBelow;
+        }
+
         @Override
         public String toString()
         {
             return "Brick{" +
-                   "xBottom=" + xBottom +
-                   ", yBottom=" + yBottom +
+                   "x1=" + xBottom +
+                   ", y1=" + yBottom +
+                   ", x2=" + xTop +
+                   ", y2=" + yTop +
                    ", zBottom=" + zBottom +
-                   ", xTop=" + xTop +
-                   ", yTop=" + yTop +
                    ", zTop=" + zTop +
                    '}';
         }
