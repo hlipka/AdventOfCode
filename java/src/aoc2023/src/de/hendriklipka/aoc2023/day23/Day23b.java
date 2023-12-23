@@ -6,6 +6,7 @@ import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
@@ -30,6 +31,8 @@ public class Day23b
         try
         {
             CharMatrix trail = AocParseUtils.getLinesAsCharMatrix("2023", "day23", '#');
+            StopWatch watch = new StopWatch();
+            watch.start();
             Position start = new Position(0, 1);
             Position end = new Position(trail.rows() - 1, trail.cols() - 2);
 
@@ -57,10 +60,11 @@ public class Day23b
                     paths.put(getName(nextJunction), Pair.of(getName(startJ), path.getRight()));
                 }
             }
-            final HashSet<String> visited1 = new HashSet<>();
-            visited1.add(getName(start));
-            long path = findPath(paths, getName(start), getName(end), visited1);
+            final HashSet<String> visitedJunctions = new HashSet<>();
+            visitedJunctions.add(getName(start));
+            long path = findPath(paths, getName(start), getName(end), visitedJunctions);
             System.out.println(path);
+            System.out.println(watch.getTime() + "ms");
         }
         catch (IOException e)
         {
@@ -91,11 +95,11 @@ public class Day23b
             if (visited.contains(target))
                 continue;
 
-            // ad the new target to the list of visited places for this variation
-            Set<String> newVisited = new HashSet<>(visited);
-            newVisited.add(target);
+            // add the new target to the list of visited places for this variation
+            visited.add(target);
             // find the longest path from here
-            final int subPathLength = findPath(allPaths, target, end, newVisited);
+            final int subPathLength = findPath(allPaths, target, end, visited);
+            visited.remove(target); // clean up the visited list
             // when the path did not find the end, do not use it
             if (subPathLength<0)
                 continue;
@@ -143,6 +147,6 @@ public class Day23b
 
     private static String getName(Position pos)
     {
-        return pos.row + "-" + pos.col;
+        return Integer.toString(pos.hashCode());
     }
 }

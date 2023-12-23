@@ -51,7 +51,7 @@ public class DepthFirstSearch<W extends SearchWorld<S>,S extends SearchState>
                 return;
         }
         List<S> newStates = world.calculateNextStates(currentState);
-        if (null!=comparator)
+        if (newStates.size()>1 && null!=comparator)
         {
             newStates.sort(comparator);
         }

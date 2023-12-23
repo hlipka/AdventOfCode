@@ -2,19 +2,18 @@ package de.hendriklipka.aoc.search;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implements a depth-first search
- * using a given 'world' model and tracking search states
+ * using a given 'world' model, but tracking search states (used when the memoization does not work because there is no good state to store)
  */
-public class DepthFirstSearchNoState<W extends SearchWorld<S>,S extends SearchState>
+public class DepthFirstSearchNoMemoize<W extends SearchWorld<S>,S extends SearchState>
 {
     private final W world;
 
     private Comparator<S> comparator;
 
-    public DepthFirstSearchNoState(W world)
+    public DepthFirstSearchNoMemoize(W world)
     {
         this.world=world;
     }

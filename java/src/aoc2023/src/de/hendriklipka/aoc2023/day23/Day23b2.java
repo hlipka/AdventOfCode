@@ -4,38 +4,39 @@ import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
-import de.hendriklipka.aoc.search.DepthFirstSearch;
+import de.hendriklipka.aoc.search.DepthFirstSearchNoMemoize;
 import de.hendriklipka.aoc.search.SearchState;
 import de.hendriklipka.aoc.search.SearchWorld;
+import org.apache.commons.lang3.time.StopWatch;
 
 import java.io.IOException;
 import java.util.*;
 
 /**
- * Make this a graph problem
- * - add start and end as graph nodes
- * - from the start, find the first junction
- * - store junction as graph node, store length at edge
- * - use junction as a new start node
- * - find next junctions from there
- * - when the junction is the end, stop this path there
- * now we have a graph of paths between junctions, we just fund the path
- * store the lengths as negative values, so we can look for the shortest path...
+ * This is a brute-force test (using the same code as for part a)
+ * It seems a generic DFS is difficult:
+ * - it is not optimized for a _pessimistic_ path
+ * - its single 'state key' does not work to ensure we do not visit a junction twice (but it makes the state list very large)
+ *
+ * runs through, takes about 1300 seconds (20 minutes) - the graph solution needs 3 seconds
  */
-public class Day23b
+public class Day23b2
 {
     public static void main(String[] args)
     {
         try
         {
             CharMatrix trail= AocParseUtils.getLinesAsCharMatrix("2023", "day23", '#');
+            StopWatch watch = new StopWatch();
+            watch.start();
             Position start=new Position(0, 1);
             Position end=new Position(trail.rows()-1, trail.cols()-2);
             TrailWorld world=new TrailWorld(trail, start, end);
-            DepthFirstSearch<TrailWorld, Trail> dfs = new DepthFirstSearch<>(world);
+            // use a DFS without memoization
+            DepthFirstSearchNoMemoize<TrailWorld, Trail> dfs = new DepthFirstSearchNoMemoize<>(world);
             dfs.search();
-            System.out.println("6194 is too low");
             System.out.println(world.longestPath);
+            System.out.println(watch.getTime() + "ms");
         }
         catch (IOException e)
         {
@@ -48,30 +49,31 @@ public class Day23b
         public Position pos;
         public Position lastPos;
         public int dist=0;
-        public Set<Position> visited =new HashSet<>();
+        public Set<Integer> visited =null;
 
         public Trail(Position pos)
         {
             this.pos=pos;
             this.lastPos = pos.updated(Direction.UP);
+            visited = new HashSet<>();
         }
 
         public Trail(Trail other, Position newPos, CharMatrix trail)
         {
             dist=other.dist+1;
             lastPos=other.pos;
+            pos = newPos;
             // we only store junctions, because the long path between them do not have information
             if (isJunction(trail, newPos))
             {
-                visited.add(other.pos);
-                visited.addAll(other.visited);
+                visited = new HashSet<>(other.visited);
+                visited.add(newPos.hashCode());
             }
             else
             {
-                // if its not a junction, we just re-use the existing list
+                // if it is not a junction, we just re-use the existing list
                 visited=other.visited;
             }
-            pos=newPos;
         }
 
         private boolean isJunction(CharMatrix trail, Position newPos)
@@ -87,11 +89,7 @@ public class Day23b
         @Override
         public String calculateStateKey()
         {
-            StringBuilder sb=new StringBuilder();
-            for (Position pos: visited)
-                sb.append(pos.row).append('-').append(pos.col).append('/');
-            sb.append(pos.row).append('-').append(pos.col);
-            return sb.toString();
+            return null;
         }
 
         @Override
@@ -134,11 +132,13 @@ public class Day23b
 
         private void addTrail(List<Trail> trails, Trail currentState, Position newPos)
         {
-            if (currentState.visited.contains(newPos))
+            // a junction we have seen already
+            if (currentState.visited.contains(newPos.hashCode()))
                 return;
+            // a wall
             if (trail.at(newPos)=='#')
                 return;
-            // do not go back
+            // do not go back (since we do not store all positions)
             if (currentState.lastPos.equals(newPos))
                 return;
             trails.add(new Trail(currentState, newPos, trail));
@@ -162,14 +162,15 @@ public class Day23b
         @Override
         public boolean canPruneBranch(Trail currentState)
         {
-            //seems we cannot prune branches
+            //we cannot prune branches - until we fill up the maze there could always be a longer path
             return false;
         }
 
         @Override
         public Comparator<Trail> getComparator()
         {
-            return (state1, state2) -> -Integer.compare(state1.dist, state2.dist);
+            // prefer going away from the target, to get longer paths first
+            return (state1, state2) -> -Integer.compare(state1.pos.dist(end), state2.pos.dist(end));
         }
     }
 }
