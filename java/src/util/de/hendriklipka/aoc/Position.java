@@ -27,7 +27,7 @@ public class Position
 
         Position pos = (Position) o;
 
-        return new EqualsBuilder().append(row, pos.row).append(col, pos.col).isEquals();
+        return row==pos.row&&col==pos.col;
     }
 
     public Position updated(int rowDiff, int colDiff)
@@ -67,7 +67,8 @@ public class Position
     @Override
     public int hashCode()
     {
-        return new HashCodeBuilder(17, 37).append(row).append(col).toHashCode();
+        // that way we can use the hash code as key directly for smaller coordinated (up to 10000)
+        return 32749*row+3*col;
     }
 
     @Override
