@@ -2,6 +2,7 @@ package de.hendriklipka.aoc.vizualization;
 
 import guru.nidi.graphviz.attribute.Font;
 import guru.nidi.graphviz.attribute.Rank;
+import guru.nidi.graphviz.engine.Engine;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Graph;
@@ -41,7 +42,7 @@ public class VizUtils
         g=g.with(gn);
         try
         {
-            Graphviz.fromGraph(g).height(1000).render(Format.PNG).toFile(new File(fileName+".png"));
+            Graphviz.fromGraph(g).engine(Engine.NEATO).height(2000).render(Format.PNG).toFile(new File(fileName + ".png"));
             Graphviz.fromGraph(g).render(Format.DOT).toFile(new File(fileName+".dot"));
         }
         catch (IOException e)
