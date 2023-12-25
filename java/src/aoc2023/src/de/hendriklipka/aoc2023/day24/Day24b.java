@@ -1,7 +1,6 @@
 package de.hendriklipka.aoc2023.day24;
 
 import de.hendriklipka.aoc.AocParseUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.geometry.euclidean.threed.Line;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
@@ -10,35 +9,45 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * we have 2 parallel lines, so we can calculate a plane from it
- * we then can choose 2 other lines, and calculate their intersection with the plane
- * from these two intersection points we can calculate the trajectory of the stone
- * also, since we know he times for these intersection points, we can calculate where the stone needs to start
+/*
+thanks to https://www.reddit.com/r/adventofcode/comments/18qexvu/2023_day_24_part_2_3d_vector_interpretation_and/
+(I had nearly all the code in place, since I thought we have two parallel hail stones. This was wrong, but using the 'moving frame of reference' introduces
+exactly that, so I just changed the code to get the 4 needed hail stones)
  */
 public class Day24b
 {
-    public static final double TOLERANCE = 0.00001;
-    public static final int DISTANCE = 100000; // distance between two points, when we need them from a single line
+    public static final double TOLERANCE = 0.000001;
+    public static final int DISTANCE = 1000000; // distance between two points, when we need them from a single line
+    private static final int SCALE = 10;
 
     public static void main(String[] args)
     {
         try
         {
             List<HailStone> stones= AocParseUtils.getLines("2023", "day24").stream().map(Day24b::parseHailStone).toList();
-            Pair<HailStone, HailStone> pair = findPair(stones);
-            HailStone hailStone1=pair.getLeft();
-            HailStone hailStone2=pair.getRight();
-            List<HailStone> otherHailStones=stones.stream().filter(s->!s.equals(hailStone1)).filter(s->!s.equals(hailStone2)).limit(2).toList();
+            // take the first stone
+            HailStone first = stones.get(0);
+            // move all stones into a reference frame using the first stone (so the first stone stays at 0,0,0)
+            HailStone hailStone1 = first.subtract(first);
+            HailStone hailStone2 = stones.get(SCALE).subtract(first);
+            HailStone otherHailStone1 = stones.get(200).subtract(first);
+            HailStone otherHailStone2 = stones.get(3).subtract(first);
+
+            // we know that the rock passes through 0,0,0 then (to hit that first stone)
+            // we use the second stone to get a plane - the rock needs to hit its path in the new reference plans
+
+            // when have this plane, we can use the next two stones to find their intersection with the plane
+            // and from there we can get the origin
 
             // calculate plane from these two hailstones
             Vector3D p1 = new Vector3D(hailStone1.x, hailStone1.y, hailStone1.z);
-            Vector3D p2 = new Vector3D(hailStone1.x+ hailStone1.dx * DISTANCE, hailStone1.y + hailStone1.dy * DISTANCE, hailStone1.z + hailStone1.dz * DISTANCE);
+            Vector3D p2 = new Vector3D(hailStone2.x+ hailStone2.dx * DISTANCE, hailStone2.y + hailStone2.dy * DISTANCE, hailStone2.z + hailStone2.dz * DISTANCE);
             Vector3D p3 = new Vector3D(hailStone2.x, hailStone2.y, hailStone2.z);
             Plane plane=new Plane(p1, p2, p3, TOLERANCE);
 
-            HailStone otherHailStone1=otherHailStones.get(0);
+            // we swap them so this stone is hit before the other one
             // find intersection of the plane with this hailstone
             Line line1 = new Line(
                     new Vector3D(otherHailStone1.x, otherHailStone1.y, otherHailStone1.z),
@@ -49,10 +58,9 @@ public class Day24b
 
             // find timestamp of this intersection
             BigDecimal t1= BigDecimal.valueOf(intersect1.getX()).subtract(new BigDecimal(otherHailStone1.x))
-                    .divide(BigDecimal.valueOf(otherHailStone1.dx), 5, RoundingMode.HALF_DOWN);
+                    .divide(BigDecimal.valueOf(otherHailStone1.dx), SCALE, RoundingMode.HALF_DOWN);
 
             // find intersection of the plane with this hailstone as well
-            HailStone otherHailStone2=otherHailStones.get(1);
             Line line2 = new Line(
                     new Vector3D(otherHailStone2.x, otherHailStone2.y, otherHailStone2.z),
                     new Vector3D(otherHailStone2.x + otherHailStone2.dx * DISTANCE, otherHailStone2.y + otherHailStone2.dy * DISTANCE, otherHailStone2.z + otherHailStone2.dz * DISTANCE),
@@ -62,7 +70,7 @@ public class Day24b
 
             // find timestamp of this intersection
             BigDecimal t2= BigDecimal.valueOf(intersect2.getX()).subtract(new BigDecimal(otherHailStone2.x))
-                    .divide(BigDecimal.valueOf(otherHailStone2.dx), 5, RoundingMode.HALF_DOWN);
+                    .divide(BigDecimal.valueOf(otherHailStone2.dx), SCALE, RoundingMode.HALF_DOWN);
 
             // sanity check: the time stamps need to be positive
             if (t1.signum()!=1 || t2.signum()!=1)
@@ -70,56 +78,32 @@ public class Day24b
                 System.err.println("one of the time is negative");
             }
 
-            // find line through these two intersection points
-            // from the points we can directly get the velocity
-            Line rockPath=new Line(intersect1, intersect2, TOLERANCE);
-            // hmm - actually this velocity should be the one of the rockPath line?
-            BigDecimal velocityX = BigDecimal.valueOf(intersect1.getX()).subtract(BigDecimal.valueOf(intersect2.getX()))
-                    .divide(t1.subtract(t2), 5, RoundingMode.HALF_DOWN);
-            System.out.println(velocityX);
+            // time the rock needs from intersect 1 to intersect 2 (which actually is time-forward)
+            BigDecimal td = t2.subtract(t1);
 
-            // with the velocity, and the timestamps, we can get the origin
-            // x0=x1-vx*t1
+            // from the two points we get the coordinate-diffs, and together with the time-diff we can get the origin
+            BigDecimal dx = BigDecimal.valueOf(intersect2.getX()).subtract(BigDecimal.valueOf(intersect1.getX()));
+            BigDecimal dy = BigDecimal.valueOf(intersect2.getY()).subtract(BigDecimal.valueOf(intersect1.getY()));
+            BigDecimal dz = BigDecimal.valueOf(intersect2.getZ()).subtract(BigDecimal.valueOf(intersect1.getZ()));
+            BigDecimal xOrig =
+                    BigDecimal.valueOf(intersect1.getX()).subtract(t1.multiply(dx).divide(td, SCALE, RoundingMode.HALF_DOWN)).add(BigDecimal.valueOf(first.x));
+            BigDecimal yOrig = BigDecimal.valueOf(intersect1.getY()).subtract(t1.multiply(dy).divide(td, SCALE, RoundingMode.HALF_DOWN)).add(
+                    BigDecimal.valueOf(first.y));
+            BigDecimal zOrig = BigDecimal.valueOf(intersect1.getZ()).subtract(t1.multiply(dz).divide(td, SCALE, RoundingMode.HALF_DOWN)).add(
+                    BigDecimal.valueOf(first.z));
 
-            System.out.println(-1);
+            System.out.println(xOrig.add(yOrig).add(zOrig));
+            // 660876089572247 too high
+            // 618930628393750
+            // 606772018765657
+            // 606772018765658
+            // 606772018765659
+
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
-    }
-
-    private static Pair<HailStone, HailStone> findPair(List<HailStone> stones)
-    {
-        for (int i=0;i<stones.size()-1;i++)
-        {
-            for (int j=i+1;j<stones.size();j++)
-            {
-                if (areParallel(stones.get(i), stones.get(j)))
-                {
-                    return Pair.of(stones.get(i), stones.get(j));
-                }
-            }
-        }
-        throw new IllegalArgumentException("no pair found");
-    }
-
-    private static boolean areParallel(HailStone stone1, HailStone stone2)
-    {
-        long a11=stone1.dx;
-        long a12=-stone2.dx;
-        long a21=stone1.dy;
-        long a22=-stone2.dy;
-
-        BigDecimal det = getDet(a11, a12, a21, a22);
-        return 0 == det.signum();
-    }
-
-    private static BigDecimal getDet(long a, long c, long b, long d)
-    {
-        BigDecimal ad=new BigDecimal(a).multiply(new BigDecimal(d));
-        BigDecimal bc=new BigDecimal(b).multiply(new BigDecimal(c));
-        return ad.subtract(bc);
     }
 
     private static HailStone parseHailStone(String line)
@@ -161,5 +145,26 @@ public class Day24b
                    ", dz=" + dz +
                    '}';
         }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            HailStone hailStone = (HailStone) o;
+            return x == hailStone.x && y == hailStone.y && z == hailStone.z && dx == hailStone.dx && dy == hailStone.dy && dz == hailStone.dz;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return Objects.hash(x, y, z, dx, dy, dz);
+        }
+
+        public HailStone subtract(HailStone first)
+        {
+            return new HailStone(x-first.x, y-first.y, z-first.z, dx-first.dx, dy-first.dy, dz-first.dz);
+        }
     }
+
 }
