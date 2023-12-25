@@ -12,5 +12,6 @@
     <orderEntry type="library" name="apache.commons.collections4" level="project" />
     <orderEntry type="module" module-name="aocutil" />
     <orderEntry type="library" name="apache.commons.math3" level="project" />
+    <orderEntry type="library" name="apache.commons.math31" level="project" />
   </component>
 </module>
