@@ -59,6 +59,9 @@ public class Day19b
             long count=countForS(sValues, xValues, mValues, aValues);
             System.out.println(count);
             System.out.println(watch.getTime()/1000+"s");
+            // AMD Ryzen 5 2600X - 12 threads, takes 491s
+            // AMD Ryzen 9 7900 - 24 threads, take 149s
+            // Intel i9-10980XE - 36 threads, take 237s
         }
         catch (IOException e)
         {
