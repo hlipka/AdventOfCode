@@ -3,7 +3,6 @@ package de.hendriklipka.aoc2017;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
