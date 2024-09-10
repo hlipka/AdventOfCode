@@ -214,4 +214,16 @@ public class AocParseUtils
 
         return map;
     }
+
+    public static List<Integer> getLineAsInteger(final String yearName, final String dayName, final String separator) throws IOException
+    {
+        List<String> lines = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8);
+        return Arrays.stream(StringUtils.split(lines.get(0), separator)).map(Integer::parseInt).collect(
+                Collectors.toList());
+    }
+
+    public static List<Integer> getLinesAsInt(final String yearName, final String dayName) throws IOException
+    {
+        return new ArrayList<>(FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(Integer::parseInt).toList());
+    }
 }

@@ -15,7 +15,7 @@ public class Day05a
     {
         try
         {
-            final List<Integer> jumps = new ArrayList<>(AocParseUtils.getLines("2017", "day05").stream().map(Integer::parseInt).toList());
+            final List<Integer> jumps = AocParseUtils.getLinesAsInt("2017", "day05");
             int count=0;
             int addr=0;
             while (addr >=0 && addr < jumps.size())

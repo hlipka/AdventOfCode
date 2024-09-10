@@ -1,9 +1,9 @@
 package de.hendriklipka.aoc2017;
 
 import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocStringUtils;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,14 +27,7 @@ public class Day04b
 
     private static List<String> sortWords(List<String> words)
     {
-        return words.stream().map(Day04b::sortWord).toList();
-    }
-
-    private static String sortWord(String word)
-    {
-        final var chars = word.toCharArray();
-        Arrays.sort(chars);
-        return new String(chars);
+        return words.stream().map(AocStringUtils::sortWord).toList();
     }
 
     private static boolean isValidPassphrase(List<String> words)
