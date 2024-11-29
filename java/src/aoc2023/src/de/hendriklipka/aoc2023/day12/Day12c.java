@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * original version of Day12b, without memoization
+ */
 public class Day12c
 {
     public static void main(String[] args)
@@ -36,7 +39,7 @@ public class Day12c
         groups.addAll(groups1);
         groups.addAll(groups1);
         System.out.println("groups="+groups);
-        String pattern = "^\\.*";
+        String pattern = "^\\.*?";
         for (int i = 0; i < groups.size(); i++)
         {
             int len = groups.get(i);
