@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Day01a
+public class Day01b
 {
     public static void main(String[] args)
     {
@@ -16,21 +16,19 @@ public class Day01a
             List<Integer> left=new ArrayList<>();
             List<Integer> right=new ArrayList<>();
             lines.stream().forEach(l->{parse(l,left,right);});
-            left.sort(Integer::compareTo);
-            right.sort(Integer::compareTo);
-            long sum=0;
-            for(int i=0; i<left.size(); i++)
-            {
-                int d=Math.abs(left.get(i)-right.get(i));
-                sum+=d;
-            }
-            System.out.println(sum);
+            long score=left.stream().mapToLong(n-> countOcc(n,right)).sum();
+            System.out.println(score);
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private static long countOcc(final int n, final List<Integer> list)
+    {
+        return n*list.stream().filter(i-> i == n).count();
     }
 
     private static void parse(String line, List<Integer> left, List<Integer> right)
