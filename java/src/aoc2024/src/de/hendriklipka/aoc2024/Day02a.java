@@ -1,0 +1,52 @@
+package de.hendriklipka.aoc2024;
+
+import de.hendriklipka.aoc.AocParseUtils;
+
+import java.io.IOException;
+import java.util.List;
+
+public class Day02a
+{
+    public static void main(String[] args)
+    {
+        try
+        {
+            final List<List<Integer>> lines = AocParseUtils.getLineIntegers("2024", "day02", " ");
+            long count = lines.stream().map(Day02a::isValid).filter(v->v).count();
+            System.out.println(count);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static boolean isValid(final List<Integer> l)
+    {
+        int current = l.get(0);
+        boolean dir=l.get(1)>current; // true for upwards
+        for (int i=1; i<l.size(); i++)
+        {
+            int next=l.get(i);
+            int diff = next-current;
+            if (diff==0)
+                return false;
+            if (dir)
+            {
+                if (diff<0)
+                    return false;
+                if (diff>3)
+                    return false;
+            }
+            else
+            {
+                if (diff>0)
+                    return false;
+                if (diff < -3)
+                    return false;
+            }
+            current=next;
+        }
+        return true;
+    }
+}
