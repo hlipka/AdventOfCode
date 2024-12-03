@@ -1,4 +1,4 @@
-package de.hendriklipka.aoc2024;
+package de.hendriklipka.aoc2024.day02;
 
 import de.hendriklipka.aoc.AocParseUtils;
 
