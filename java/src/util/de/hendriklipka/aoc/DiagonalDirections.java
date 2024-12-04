@@ -1,5 +1,7 @@
 package de.hendriklipka.aoc;
 
+import java.util.List;
+
 public enum DiagonalDirections
 {
     UP, DOWN, LEFT, RIGHT, RIGHT_UP, RIGHT_DOWN, LEFT_UP, LEFT_DOWN;
@@ -47,5 +49,10 @@ public enum DiagonalDirections
             case LEFT_UP -> UP;
             case LEFT_DOWN -> LEFT;
         };
+    }
+
+    public static List<DiagonalDirections> directions()
+    {
+        return List.of(UP, DOWN, LEFT, RIGHT, RIGHT_UP, RIGHT_DOWN, LEFT_UP, LEFT_DOWN);
     }
 }

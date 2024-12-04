@@ -1,5 +1,7 @@
 package de.hendriklipka.aoc;
 
+import java.util.List;
+
 public enum Direction
 {
     UP, DOWN, LEFT, RIGHT;
@@ -34,5 +36,10 @@ public enum Direction
             case LEFT -> UP;
             case RIGHT -> DOWN;
         };
+    }
+
+    public List<Direction> directions()
+    {
+        return List.of(UP, DOWN, LEFT, RIGHT);
     }
 }

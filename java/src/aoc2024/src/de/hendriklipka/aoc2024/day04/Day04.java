@@ -21,49 +21,14 @@ public class Day04 extends AocPuzzle
     protected Object solvePartA() throws IOException
     {
         final CharMatrix chars = AocParseUtils.getLinesAsCharMatrix(getYear(), getDay(), '.');
-        int count=0;
-        for (int row=0;row<chars.rows();row++)
-        {
-            for (int col=0;col<chars.cols();col++)
+        return chars.allPositions().stream().mapToLong(p->{
+            if (chars.at(p) == 'X')
             {
-                Position p=new Position(row,col);
-                if (chars.at(p)=='X')
-                {
-                    count +=countXmas(chars, p);
-                }
+                return DiagonalDirections.directions().stream().map(d -> new String(
+                        chars.getInDirection(p, d, 4)).equals("XMAS")).filter(x -> x == true).count();
             }
-        }
-        return count;
-    }
-
-    private int countXmas(final CharMatrix chars, final Position p)
-    {
-        int count=0;
-        if (isXmas(chars, p, DiagonalDirections.UP))
-            count++;
-        if (isXmas(chars, p, DiagonalDirections.LEFT_UP))
-            count++;
-        if (isXmas(chars, p, DiagonalDirections.LEFT))
-            count++;
-        if (isXmas(chars, p, DiagonalDirections.LEFT_DOWN))
-            count++;
-        if (isXmas(chars, p, DiagonalDirections.DOWN))
-            count++;
-        if (isXmas(chars, p, DiagonalDirections.RIGHT_DOWN))
-            count++;
-        if (isXmas(chars, p, DiagonalDirections.RIGHT))
-            count++;
-        if (isXmas(chars, p, DiagonalDirections.RIGHT_UP))
-            count++;
-        return count;
-    }
-    
-    private boolean isXmas(final CharMatrix chars, final Position p, final DiagonalDirections direction)
-    {
-        Position pM=p.updated(direction, 1);
-        Position pA=p.updated(direction, 2);
-        Position pS=p.updated(direction, 3);
-        return chars.in(pM) && chars.in(pA) && chars.in(pS) && chars.at(pM)=='M' && chars.at(pA)=='A' && chars.at(pS)=='S';
+            return 0L;
+        }).sum();
     }
 
     private boolean countCrosses(final CharMatrix chars, final Position p)
@@ -91,20 +56,7 @@ public class Day04 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         final CharMatrix chars = AocParseUtils.getLinesAsCharMatrix(getYear(), getDay(), '.');
-        int count=0;
-        // make sure to only look at valid 'A's
-        for (int row=1;row<chars.rows()-1;row++)
-        {
-            for (int col=1;col<chars.cols()-1;col++)
-            {
-                Position p=new Position(row,col);
-                if (chars.at(p)=='A')
-                {
-                    if (countCrosses(chars, p))
-                        count++;
-                }
-            }
-        }
-        return count;
+        return chars.allPositions().stream().filter(p ->
+                chars.at(p) == 'A' && countCrosses(chars, p)).count();
     }
 }

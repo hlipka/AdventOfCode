@@ -1,10 +1,13 @@
 package de.hendriklipka.aoc.matrix;
 
+import de.hendriklipka.aoc.DiagonalDirections;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CharMatrix
@@ -221,5 +224,42 @@ public class CharMatrix
                     return new Position(r,col);
             }
         return null;
+    }
+
+    public char[] getInDirection(final Position start, final DiagonalDirections direction, final int len)
+    {
+        final char[] result = new char[len];
+        Position current = start;
+        for (int i=0;i<len;i++)
+        {
+            result[i]=at(current);
+            current = current.updated(direction);
+        }
+        return result;
+    }
+
+    public char[] getInDirection(final Position start, final Direction direction, final int len)
+    {
+        final char[] result = new char[len];
+        Position current = start;
+        for (int i=0;i<len;i++)
+        {
+            result[i]=at(current);
+            current = current.updated(direction);
+        }
+        return result;
+    }
+
+    public List<Position> allPositions()
+    {
+        final List<Position> positions = new ArrayList<>(_rows * _cols);
+        for (int row = 0; row < rows(); row++)
+        {
+            for (int col = 0; col < cols(); col++)
+            {
+                positions.add(new Position(row, col));
+            }
+        }
+        return positions;
     }
 }
