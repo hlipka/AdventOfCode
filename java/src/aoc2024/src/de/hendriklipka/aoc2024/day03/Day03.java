@@ -12,7 +12,7 @@ public class Day03 extends AocPuzzle
 {
     public static void main(String[] args)
     {
-        new Day03().doPuzzle();
+        new Day03().doPuzzle(args);
     }
     public Day03()
     {

@@ -13,7 +13,7 @@ public class Day05 extends AocPuzzle
 
     public static void main(String[] args)
     {
-        new Day05().doPuzzle();
+        new Day05().doPuzzle(args);
     }
 
     @Override

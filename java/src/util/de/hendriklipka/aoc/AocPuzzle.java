@@ -14,18 +14,53 @@ public abstract class AocPuzzle
         _day = day;
     }
 
-    protected void doPuzzle()
+    protected void doPuzzle(final String[] args)
     {
+        boolean doExamples=true;
+        boolean doPartA=true;
+        for (String arg : args)
+        {
+            if (arg.equals("skipA"))
+                doPartA=false;
+            if (arg.equals("skipX"))
+                doExamples=false;
+        }
         try
         {
-            folder=_year+"s";
-            System.out.println("example A:\n"+solvePartA());
+            long startTime, endTime;
+            if (doPartA)
+            {
+                if (doExamples)
+                {
+                    folder = _year + "s";
+                    startTime = System.currentTimeMillis();
+                    final Object resultExampleA = solvePartA();
+                    endTime = System.currentTimeMillis();
+                    System.out.println("example A:\n" + resultExampleA);
+                    System.out.println("took " + (endTime - startTime) + "ms");
+                }
+                folder = _year;
+                startTime = System.currentTimeMillis();
+                final Object resultA = solvePartA();
+                endTime = System.currentTimeMillis();
+                System.out.println("result A:\n" + resultA);
+                System.out.println("took " + (endTime - startTime) + "ms");
+            }
+            if (doExamples)
+            {
+                folder = _year + "s";
+                startTime = System.currentTimeMillis();
+                final Object resultExampleB = solvePartB();
+                endTime = System.currentTimeMillis();
+                System.out.println("example B:\n" + resultExampleB);
+                System.out.println("took " + (endTime - startTime) + "ms");
+            }
             folder=_year;
-            System.out.println("result A:\n"+solvePartA());
-            folder=_year+"s";
-            System.out.println("example B:\n"+solvePartB());
-            folder=_year;
-            System.out.println("result B:\n"+solvePartB());
+            startTime = System.currentTimeMillis();
+            final Object resultB = solvePartB();
+            endTime = System.currentTimeMillis();
+            System.out.println("result B:\n" + resultB);
+            System.out.println("took " + (endTime - startTime) + "ms");
         }
         catch (IOException e)
         {
