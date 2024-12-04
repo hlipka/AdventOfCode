@@ -1,8 +1,5 @@
 package de.hendriklipka.aoc;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 /**
  * User: hli
  * Date: 25.12.22
@@ -40,6 +37,11 @@ public class Position
         return updated(dir, 1);
     }
 
+    public Position updated(DiagonalDirections dir)
+    {
+        return updated(dir, 1);
+    }
+
     public Position updated(Direction dir, int count)
     {
         switch (dir)
@@ -59,6 +61,46 @@ public class Position
             case RIGHT ->
             {
                 return new Position(row, col + count);
+            }
+        }
+        return null;
+    }
+
+    public Position updated(DiagonalDirections dir, int count)
+    {
+        switch (dir)
+        {
+            case UP ->
+            {
+                return new Position(row - count, col);
+            }
+            case DOWN ->
+            {
+                return new Position(row + count, col);
+            }
+            case LEFT ->
+            {
+                return new Position(row, col - count);
+            }
+            case RIGHT ->
+            {
+                return new Position(row, col + count);
+            }
+            case RIGHT_UP ->
+            {
+                return new Position(row - count, col + count);
+            }
+            case RIGHT_DOWN ->
+            {
+                return new Position(row + count, col + count);
+            }
+            case LEFT_UP ->
+            {
+                return new Position(row - count, col - count);
+            }
+            case LEFT_DOWN ->
+            {
+                return new Position(row + count, col - count);
             }
         }
         return null;
