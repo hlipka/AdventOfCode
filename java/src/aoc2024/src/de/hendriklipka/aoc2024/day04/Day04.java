@@ -21,17 +21,11 @@ public class Day04 extends AocPuzzle
     protected Object solvePartA() throws IOException
     {
         final CharMatrix chars = data.getLinesAsCharMatrix( '.');
-        return chars.allPositions().stream().mapToLong(p->{
-            if (chars.at(p) == 'X')
-            {
-                return DiagonalDirections.directions().stream().map(d -> new String(
-                        chars.getInDirection(p, d, 4)).equals("XMAS")).filter(x -> x == true).count();
-            }
-            return 0L;
-        }).sum();
+        return chars.allMatchingPositions('X').stream().mapToLong(p-> DiagonalDirections.directions().stream().map(d -> new String(
+                chars.getInDirection(p, d, 4)).equals("XMAS")).filter(x -> x).count()).sum();
     }
 
-    private boolean countCrosses(final CharMatrix chars, final Position p)
+    private boolean isCross(final CharMatrix chars, final Position p)
     {
         // Note: crosses must be diagonal, not up/down
         if (isCross(chars, p, DiagonalDirections.LEFT_UP))
@@ -56,7 +50,6 @@ public class Day04 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         final CharMatrix chars = data.getLinesAsCharMatrix( '.');
-        return chars.allPositions().stream().filter(p ->
-                chars.at(p) == 'A' && countCrosses(chars, p)).count();
+        return chars.allMatchingPositions('A').stream().filter(p -> isCross(chars, p)).count();
     }
 }

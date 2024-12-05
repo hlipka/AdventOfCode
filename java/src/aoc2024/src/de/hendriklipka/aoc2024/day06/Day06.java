@@ -8,7 +8,7 @@ public class Day06 extends AocPuzzle
 {
     public Day06()
     {
-        super("2024", "05");
+        super("2024", "06");
     }
 
     public static void main(String[] args)

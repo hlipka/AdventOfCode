@@ -4,10 +4,8 @@ import de.hendriklipka.aoc.DiagonalDirections;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CharMatrix
@@ -258,6 +256,22 @@ public class CharMatrix
             for (int col = 0; col < cols(); col++)
             {
                 positions.add(new Position(row, col));
+            }
+        }
+        return positions;
+    }
+
+    public List<Position> allMatchingPositions(char x)
+    {
+        final List<Position> positions = new ArrayList<>(_rows * _cols);
+        for (int row = 0; row < rows(); row++)
+        {
+            for (int col = 0; col < cols(); col++)
+            {
+                    if (_data[row][col] == x)
+                {
+                    positions.add(new Position(row, col));
+                }
             }
         }
         return positions;

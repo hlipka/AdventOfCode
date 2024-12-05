@@ -94,4 +94,14 @@ public class AocParseUtils
         return map;
     }
 
+    public static List<Integer> splitLineToInts(String line)
+    {
+        String[] nums = line.split(",");
+        final List<Integer> result=new ArrayList<>(nums.length);
+        for (String s: nums)
+            result.add(Integer.parseInt(s));
+        return result;
+
+    }
+
 }

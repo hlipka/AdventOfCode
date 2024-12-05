@@ -24,18 +24,9 @@ public class Day05 extends AocPuzzle
     {
         final List<List<String>> blocks = data.getStringBlocks();
         List<Rule> rules = blocks.get(0).stream().map(Rule::new).toList();
-        List<List<Integer>> updates = blocks.get(1).stream().map(this::parseUpdate).toList();
+        List<List<Integer>> updates = blocks.get(1).stream().map(AocParseUtils::splitLineToInts).toList();
 
         return updates.stream().filter(u-> rules.stream().allMatch(r->r.isUpdateOK(u))).mapToInt(u-> u.get(u.size() / 2)).sum();
-    }
-
-    private List<Integer> parseUpdate(final String line)
-    {
-        String[] nums = line.split(",");
-        final List<Integer> update=new ArrayList<>(nums.length);
-        for (String s: nums)
-            update.add(Integer.parseInt(s));
-        return update;
     }
 
     @Override
@@ -43,7 +34,7 @@ public class Day05 extends AocPuzzle
     {
         final List<List<String>> blocks = data.getStringBlocks();
         List<Rule> rules = blocks.get(0).stream().map(Rule::new).toList();
-        List<List<Integer>> updates = blocks.get(1).stream().map(this::parseUpdate).toList();
+        List<List<Integer>> updates = blocks.get(1).stream().map(AocParseUtils::splitLineToInts).toList();
 
         return updates.stream().filter(u-> !rules.stream().allMatch(r -> r.isUpdateOK(u))).map(u->fixUpdate(u, rules)).mapToInt(u1 -> u1.get(u1.size() / 2)).sum();
     }
