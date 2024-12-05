@@ -1,4 +1,4 @@
-package de.hendriklipka.aoc2024.day03;
+package de.hendriklipka.aoc2024;
 
 import de.hendriklipka.aoc.AocPuzzle;
 import org.apache.commons.lang3.StringUtils;
@@ -12,10 +12,6 @@ public class Day03 extends AocPuzzle
     public static void main(String[] args)
     {
         new Day03().doPuzzle(args);
-    }
-    public Day03()
-    {
-        super("2024", "03");
     }
 
     @Override

@@ -9,10 +9,13 @@ public abstract class AocPuzzle
 
     protected AocDataFileUtils data;
 
-    public AocPuzzle(String year, String day)
+    public AocPuzzle()
     {
-        _year = year;
-        _day = day;
+        String cName=getClass().getSimpleName();
+        String pName=getClass().getPackageName();
+        _day=cName.toLowerCase().replace("day","");
+        final var packages = pName.split("\\.");
+        _year= packages[packages.length-1].replace("aoc", "");
     }
 
     protected void doPuzzle(final String[] args)
@@ -33,14 +36,14 @@ public abstract class AocPuzzle
             {
                 if (doExamples)
                 {
-                    data = new AocDataFileUtils(_year + "s", _day);
+                    data = new AocDataFileUtils(_year, "ex"+_day);
                     startTime = System.currentTimeMillis();
                     final Object resultExampleA = solvePartA();
                     endTime = System.currentTimeMillis();
                     System.out.println("example A:\n" + resultExampleA);
                     System.out.println("took " + (endTime - startTime) + "ms");
                 }
-                data = new AocDataFileUtils(_year, _day);
+                data = new AocDataFileUtils(_year, "day" +_day);
                 startTime = System.currentTimeMillis();
                 final Object resultA = solvePartA();
                 endTime = System.currentTimeMillis();
@@ -49,14 +52,14 @@ public abstract class AocPuzzle
             }
             if (doExamples)
             {
-                data = new AocDataFileUtils(_year + "s", _day);
+                data = new AocDataFileUtils(_year, "ex" +_day);
                 startTime = System.currentTimeMillis();
                 final Object resultExampleB = solvePartB();
                 endTime = System.currentTimeMillis();
                 System.out.println("example B:\n" + resultExampleB);
                 System.out.println("took " + (endTime - startTime) + "ms");
             }
-            data = new AocDataFileUtils(_year, _day);
+            data = new AocDataFileUtils(_year, "day" +_day);
             startTime = System.currentTimeMillis();
             final Object resultB = solvePartB();
             endTime = System.currentTimeMillis();

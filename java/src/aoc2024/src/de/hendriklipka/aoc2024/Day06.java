@@ -1,4 +1,4 @@
-package de.hendriklipka.aoc2024.day06;
+package de.hendriklipka.aoc2024;
 
 import de.hendriklipka.aoc.AocPuzzle;
 
@@ -6,11 +6,6 @@ import java.io.IOException;
 
 public class Day06 extends AocPuzzle
 {
-    public Day06()
-    {
-        super("2024", "06");
-    }
-
     public static void main(String[] args)
     {
         new Day06().doPuzzle(args);
@@ -19,6 +14,7 @@ public class Day06 extends AocPuzzle
     @Override
     protected Object solvePartA() throws IOException
     {
+        data.getLines();
         return null;
     }
 

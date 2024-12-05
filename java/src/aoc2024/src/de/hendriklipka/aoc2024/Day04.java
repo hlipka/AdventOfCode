@@ -1,4 +1,4 @@
-package de.hendriklipka.aoc2024.day04;
+package de.hendriklipka.aoc2024;
 
 import de.hendriklipka.aoc.*;
 import de.hendriklipka.aoc.matrix.CharMatrix;
@@ -7,11 +7,6 @@ import java.io.IOException;
 
 public class Day04 extends AocPuzzle
 {
-    public Day04()
-    {
-        super("2024", "04");
-    }
-
     public static void main(String[] args)
     {
         new Day04().doPuzzle(args);
