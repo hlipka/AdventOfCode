@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2017;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class Day05b
     {
         try
         {
-            final List<Integer> jumps = new ArrayList<>(AocParseUtils.getLines("2017", "day05").stream().map(Integer::parseInt).toList());
+            final List<Integer> jumps = new ArrayList<>(AocDataFileUtils.getLines("2017", "day05").stream().map(Integer::parseInt).toList());
             int count=0;
             int addr=0;
             while (addr >=0 && addr < jumps.size())

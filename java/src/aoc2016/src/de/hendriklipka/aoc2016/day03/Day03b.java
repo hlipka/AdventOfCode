@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2016.day03;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,7 +17,7 @@ public class Day03b
         try
         {
             int valid=0;
-            final List<List<Integer>> triangles = AocParseUtils.getLineIntegers("2016", "day03", " ");
+            final List<List<Integer>> triangles = AocDataFileUtils.getLineIntegers("2016", "day03", " ");
 
             for (int i = 0; i < triangles.size(); i+=3)
             {

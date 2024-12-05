@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day20;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +16,7 @@ public class Day202
     {
         try
         {
-            List<Node> nodes = AocParseUtils.getLines("2022", "day20")
+            List<Node> nodes = AocDataFileUtils.getLines("2022", "day20")
                                             .stream().map(Day202::getNode)
                                             .collect(Collectors.toList());
             listLength=nodes.size();

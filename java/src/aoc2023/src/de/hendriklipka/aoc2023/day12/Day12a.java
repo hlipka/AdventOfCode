@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day12;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ public class Day12a
     {
         try
         {
-            int sum=AocParseUtils.getLines("2023", "day12").stream().mapToInt(Day12a::countPossibilities).sum();
+            int sum= AocDataFileUtils.getLines("2023", "day12").stream().mapToInt(Day12a::countPossibilities).sum();
             System.out.println(sum);
         }
         catch (IOException e)

@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2016.day10;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class Day10a
     {
         try
         {
-            final List<String> instructions = AocParseUtils.getLines("2016", "day10");
+            final List<String> instructions = AocDataFileUtils.getLines("2016", "day10");
             instructions.stream().filter(s->s.startsWith("bot ")).forEach(Day10a::parseBot);
             instructions.stream().filter(s -> s.startsWith("value ")).forEach(Day10a::doValue);
             // now go looking for bots with two chips

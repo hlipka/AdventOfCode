@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day11;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class Day112
     {
         try
         {
-            List<List<String>> monkeyData = AocParseUtils.getStringBlocks("2022", "day11");
+            List<List<String>> monkeyData = AocDataFileUtils.getStringBlocks("2022", "day11");
             List<Monkey> monkeys = parseMonkeyData(monkeyData);
             for (int i=0;i<10000;i++)
             {

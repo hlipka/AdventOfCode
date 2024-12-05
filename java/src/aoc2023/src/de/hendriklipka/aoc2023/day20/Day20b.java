@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day20;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.MathUtils;
 import de.hendriklipka.aoc.vizualization.VizNode;
 import de.hendriklipka.aoc.vizualization.VizUtils;
@@ -21,7 +21,7 @@ public class Day20b
         try
         {
             Circuit c=new Circuit();
-            AocParseUtils.getLines("2023", "day20").stream().map(Day20b::parseChip).forEach(chip->
+            AocDataFileUtils.getLines("2023", "day20").stream().map(Day20b::parseChip).forEach(chip->
             {
                 c.add(chip);
                 addWires(chip);

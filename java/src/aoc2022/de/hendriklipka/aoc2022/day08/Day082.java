@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day08;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +11,7 @@ public class Day082
     {
         try
         {
-            List<List<Integer>> forrest = AocParseUtils.getLinesAsDigits("2022", "day08");
+            List<List<Integer>> forrest = AocDataFileUtils.getLinesAsDigits("2022", "day08");
             int maxScore=0;
             for (int i=0;i<forrest.size();i++)
             {

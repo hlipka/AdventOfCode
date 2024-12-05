@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2024.day02;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -11,7 +11,7 @@ public class Day02a
     {
         try
         {
-            final List<List<Integer>> lines = AocParseUtils.getLineIntegers("2024", "day02", " ");
+            final List<List<Integer>> lines = AocDataFileUtils.getLineIntegers("2024", "day02", " ");
             long count = lines.stream().map(Day02a::isValid).filter(v->v).count();
             System.out.println(count);
         }

@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day24;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class Day24a
         try
         {
             int count=0;
-            List<HailStone> stones= AocParseUtils.getLines("2023", "day24").stream().map(Day24a::parseHailStone).filter(HailStone::hitsBox).toList();
+            List<HailStone> stones= AocDataFileUtils.getLines("2023", "day24").stream().map(Day24a::parseHailStone).filter(HailStone::hitsBox).toList();
             for (int i=0;i<stones.size()-1;i++)
             {
                 for (int j=i+1;j<stones.size();j++)

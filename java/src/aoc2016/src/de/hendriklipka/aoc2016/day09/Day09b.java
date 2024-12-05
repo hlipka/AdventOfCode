@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2016.day09;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class Day09b
     {
         try
         {
-            String data= AocParseUtils.getLines("2016","day09").get(0);
+            String data= AocDataFileUtils.getLines("2016","day09").get(0);
             long total=decompress(data);
             System.out.println(total);
         }

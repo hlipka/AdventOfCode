@@ -1,7 +1,7 @@
 package de.hendriklipka.aoc2017;
 
 import de.hendriklipka.aoc.AocCollectionUtils;
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class Day06a
     {
         try
         {
-            List<Integer> blocks = AocParseUtils.getLineAsInteger("2017", "day06","\t");
+            List<Integer> blocks = AocDataFileUtils.getLineAsInteger("2017", "day06","\t");
             Set<String> knownBlocks = new HashSet<>();
             knownBlocks.add(blockID(blocks));
             int count=0;

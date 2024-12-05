@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2022.day11;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,7 +23,7 @@ public class Day111a
     {
         try
         {
-            List<List<String>> monkeyData = AocParseUtils.getStringBlocks("2022", "day11");
+            List<List<String>> monkeyData = AocDataFileUtils.getStringBlocks("2022", "day11");
             List<Monkey> monkeys = parseMonkeyData(monkeyData);
             dumpItems(monkeys);
             for (int i=0;i<20;i++)

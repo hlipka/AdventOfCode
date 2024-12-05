@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day24;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -30,7 +30,7 @@ public class Day241
 
     public static void main(String[] args) throws IOException
     {
-        List<List<String>> fieldData = AocParseUtils.getLinesAsCharStrings("2022", "day24");
+        List<List<String>> fieldData = AocDataFileUtils.getLinesAsCharStrings("2022", "day24");
         width=fieldData.get(0).size();
         height =fieldData.size();
         CACHESIZE=(width-2)*(height-2); // that's the max period for the blizzards

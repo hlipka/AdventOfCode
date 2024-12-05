@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day14;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
@@ -17,7 +17,7 @@ public class Day14a
     {
         try
         {
-            CharMatrix field = AocParseUtils.getLinesAsCharMatrix("2023", "day14", '.');
+            CharMatrix field = AocDataFileUtils.getLinesAsCharMatrix("2023", "day14", '.');
             field.print();
             for (int r = 1; r < field.rows(); r++)
             {

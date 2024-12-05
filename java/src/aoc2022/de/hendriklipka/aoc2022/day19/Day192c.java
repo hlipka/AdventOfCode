@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2022.day19;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.search.DepthFirstSearch;
 import de.hendriklipka.aoc.search.SearchState;
@@ -23,7 +24,7 @@ public class Day192c
     {
         try
         {
-            List<BluePrint> blueprints = AocParseUtils.getLines("2022", "day19")
+            List<BluePrint> blueprints = AocDataFileUtils.getLines("2022", "day19")
                                                       .stream()
                                                       .map(Day192c::getBluePrint).limit(3)
                                                       .collect(Collectors.toList());

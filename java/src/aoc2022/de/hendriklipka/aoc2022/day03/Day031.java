@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day03;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.collections4.ListUtils;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class Day031
     {
         try
         {
-            List<String> packs = AocParseUtils.getLines("2022", "day03");
+            List<String> packs = AocDataFileUtils.getLines("2022", "day03");
             List<String> dupes = packs.stream().map(Day031::findDupes).flatMap(List::stream).collect(Collectors.toList());
             int sum = dupes.stream().mapToInt(Day031::score).sum();
             System.out.println(sum);

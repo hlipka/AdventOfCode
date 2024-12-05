@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day19;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class Day19a
     {
         try
         {
-            List<List<String>> blocks = AocParseUtils.getStringBlocks("2023", "day19");
+            List<List<String>> blocks = AocDataFileUtils.getStringBlocks("2023", "day19");
             rules=parseRules(blocks.get(0));
             List<Part> parts=blocks.get(1).stream().map(Day19a::parsePart).toList();
             int result=parts.stream().filter(Day19a::isValid).mapToInt(Part::value).sum();

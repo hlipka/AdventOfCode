@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day23;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
@@ -30,7 +30,7 @@ public class Day23b
     {
         try
         {
-            CharMatrix trail = AocParseUtils.getLinesAsCharMatrix("2023", "day23", '#');
+            CharMatrix trail = AocDataFileUtils.getLinesAsCharMatrix("2023", "day23", '#');
             StopWatch watch = new StopWatch();
             watch.start();
             Position start = new Position(0, 1);

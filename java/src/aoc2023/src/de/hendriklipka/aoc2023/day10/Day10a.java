@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day10;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +18,7 @@ public class Day10a
     {
         try
         {
-            List<List<Character>> area = AocParseUtils.getLinesAsChars("2023", "day10");
+            List<List<Character>> area = AocDataFileUtils.getLinesAsChars("2023", "day10");
             rows = area.size();
             columns = area.get(0).size();
             findStart(area);

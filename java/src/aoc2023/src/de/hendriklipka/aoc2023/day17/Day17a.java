@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day17;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.IntMatrix;
@@ -24,7 +24,7 @@ public class Day17a
     {
         try
         {
-            IntMatrix map = AocParseUtils.getLinesAsIntMatrix("2023", "day17", -1);
+            IntMatrix map = AocDataFileUtils.getLinesAsIntMatrix("2023", "day17", -1);
             // we have two potential start direction, which differ in how far we can travel along, so we do them both
             LavaSearchWorld world1 = new LavaSearchWorld(map, Direction.RIGHT);
             // BestFirstSearch would be better, since we already have a comparator defined for our world

@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2022.day21;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class Day212
     {
         try
         {
-            List<String> monkeys = AocParseUtils.getLines("2022", "day21");
+            List<String> monkeys = AocDataFileUtils.getLines("2022", "day21");
             Map<String, Long> numbers1 = new HashMap<>();
             Set<MonkeyOp> unsolved1 = new HashSet<>();
             Map<String, MonkeyOp> tasks = new HashMap<>();

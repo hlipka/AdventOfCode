@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day03;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class Day03a
     {
         try
         {
-            final List<List<String>> machine = AocParseUtils.getLinesAsCharStrings("2023", "day03");
+            final List<List<String>> machine = AocDataFileUtils.getLinesAsCharStrings("2023", "day03");
             dumpMachine(machine);
             int result = calculate(machine);
             System.out.println(result); // 527352 is too low

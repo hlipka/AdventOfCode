@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day13;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ public class Day13b
     {
         try
         {
-            int sum= AocParseUtils.getStringBlocks("2023", "day13").stream().mapToInt(Day13b::getReflectionValue).sum();
+            int sum= AocDataFileUtils.getStringBlocks("2023", "day13").stream().mapToInt(Day13b::getReflectionValue).sum();
             System.out.println(sum);
         }
         catch (IOException e)

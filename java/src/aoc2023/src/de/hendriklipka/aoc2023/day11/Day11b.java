@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day11;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Position;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class Day11b
     {
         try
         {
-            List<List<Character>> universe = AocParseUtils.getLinesAsChars("2023", "day11");
+            List<List<Character>> universe = AocDataFileUtils.getLinesAsChars("2023", "day11");
             boolean[] emptyColumns = getEmptyColumns(universe);
             boolean[] emptyRows = getEmptyRows(universe);
             List<Position> galaxies = findGalaxies(universe);

@@ -1,6 +1,5 @@
 package de.hendriklipka.aoc2024.day03;
 
-import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.AocPuzzle;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,7 +22,7 @@ public class Day03 extends AocPuzzle
     protected Object solvePartA() throws IOException
     {
         long result = 0;
-        String line = StringUtils.join(AocParseUtils.getLines(getYear(), getDay()));
+        String line = StringUtils.join(data.getLines());
         Pattern p = Pattern.compile("mul\\((\\d{1,3}+),(\\d{1,3}+)\\)");
         Matcher m = p.matcher(line);
         while(m.find())
@@ -40,7 +39,7 @@ public class Day03 extends AocPuzzle
     {
         long result = 0;
         boolean enabled=true;
-        String line = StringUtils.join(AocParseUtils.getLines(getYear(), getDay()));
+        String line = StringUtils.join(data.getLines());
         Pattern p = Pattern.compile("(mul\\((\\d{1,3}+),(\\d{1,3}+)\\))|(do\\(\\))|(don't\\(\\))");
         Matcher m = p.matcher(line);
         while(m.find())

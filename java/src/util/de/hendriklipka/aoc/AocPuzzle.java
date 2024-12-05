@@ -6,7 +6,8 @@ public abstract class AocPuzzle
 {
     private final String _year;
     private final String _day;
-    private String folder;
+
+    protected AocDataFileUtils data;
 
     public AocPuzzle(String year, String day)
     {
@@ -32,14 +33,14 @@ public abstract class AocPuzzle
             {
                 if (doExamples)
                 {
-                    folder = _year + "s";
+                    data = new AocDataFileUtils(_year + "s", _day);
                     startTime = System.currentTimeMillis();
                     final Object resultExampleA = solvePartA();
                     endTime = System.currentTimeMillis();
                     System.out.println("example A:\n" + resultExampleA);
                     System.out.println("took " + (endTime - startTime) + "ms");
                 }
-                folder = _year;
+                data = new AocDataFileUtils(_year, _day);
                 startTime = System.currentTimeMillis();
                 final Object resultA = solvePartA();
                 endTime = System.currentTimeMillis();
@@ -48,14 +49,14 @@ public abstract class AocPuzzle
             }
             if (doExamples)
             {
-                folder = _year + "s";
+                data = new AocDataFileUtils(_year + "s", _day);
                 startTime = System.currentTimeMillis();
                 final Object resultExampleB = solvePartB();
                 endTime = System.currentTimeMillis();
                 System.out.println("example B:\n" + resultExampleB);
                 System.out.println("took " + (endTime - startTime) + "ms");
             }
-            folder=_year;
+            data = new AocDataFileUtils(_year, _day);
             startTime = System.currentTimeMillis();
             final Object resultB = solvePartB();
             endTime = System.currentTimeMillis();
@@ -66,16 +67,6 @@ public abstract class AocPuzzle
         {
             throw new RuntimeException(e);
         }
-    }
-
-    protected String getDay()
-    {
-        return "day"+_day;
-    }
-
-    protected String getYear()
-    {
-        return folder;
     }
 
     protected abstract Object solvePartA() throws IOException;

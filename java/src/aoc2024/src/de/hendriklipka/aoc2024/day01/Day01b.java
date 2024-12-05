@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2024.day01;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ public class Day01b
     {
                 try
         {
-            final List<String> lines = AocParseUtils.getLines("2024", "day01");
+            final List<String> lines = AocDataFileUtils.getLines("2024", "day01");
             List<Integer> left=new ArrayList<>();
             List<Integer> right=new ArrayList<>();
             lines.stream().forEach(l->{parse(l,left,right);});

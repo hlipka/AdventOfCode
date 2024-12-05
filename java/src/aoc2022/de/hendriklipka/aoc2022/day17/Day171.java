@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day17;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -59,7 +59,7 @@ public class Day171
 
         try
         {
-            jets = AocParseUtils.getLinesAsCharStrings("2022", "day17").get(0);
+            jets = AocDataFileUtils.getLinesAsCharStrings("2022", "day17").get(0);
             // the chamber grows upwards, the first element is the bottom
             List<char[]> chamber = new ArrayList<>();
             for (int i = 0; i< ROUNDS; i++)

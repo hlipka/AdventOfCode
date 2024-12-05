@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day21;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
@@ -23,7 +23,7 @@ public class Day21bf
     {
         // ex21c is a 11x11 field, with everything being a '.' (apart from the S in the middle)
         // I used this to test my proposed solution, because it misses fields
-        CharMatrix field = AocParseUtils.getLinesAsCharMatrix("2023", "ex21c", '#');
+        CharMatrix field = AocDataFileUtils.getLinesAsCharMatrix("2023", "ex21c", '#');
         int width = field.cols();
         int height = field.rows();
         Position start = field.findFirst('S');

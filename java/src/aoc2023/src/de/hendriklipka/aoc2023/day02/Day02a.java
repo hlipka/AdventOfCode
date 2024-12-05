@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day02;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class Day02a
     {
         try
         {
-            final List<String> lines = AocParseUtils.getLines("2023", "day02");
+            final List<String> lines = AocDataFileUtils.getLines("2023", "day02");
             List<Game> games = lines.stream().map(Game::new).toList();
             int sum=games.stream().filter(Game::isPossible).mapToInt(Game::getNum).sum();
             System.out.println(sum);

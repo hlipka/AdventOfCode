@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day21;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
@@ -20,7 +20,7 @@ public class Day21a
     private final static int STEPS=64;
     public static void main(String[] args) throws IOException
     {
-        CharMatrix field= AocParseUtils.getLinesAsCharMatrix("2023", "day21", '#');
+        CharMatrix field= AocDataFileUtils.getLinesAsCharMatrix("2023", "day21", '#');
         Position start=field.findFirst('S');
         IntMatrix dists=new IntMatrix(field.rows(), field.cols(), Integer.MAX_VALUE);
         LinkedList<Position> queue=new LinkedList<>();

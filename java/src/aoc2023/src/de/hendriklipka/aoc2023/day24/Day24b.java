@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day24;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.math3.geometry.euclidean.threed.Line;
 import org.apache.commons.math3.geometry.euclidean.threed.Plane;
@@ -26,7 +27,7 @@ public class Day24b
     {
         try
         {
-            List<HailStone> stones= AocParseUtils.getLines("2023", "day24").stream().map(Day24b::parseHailStone).toList();
+            List<HailStone> stones= AocDataFileUtils.getLines("2023", "day24").stream().map(Day24b::parseHailStone).toList();
             // take the first stone
             HailStone first = stones.get(0);
             // move all stones into a reference frame using the first stone (so the first stone stays at 0,0,0)

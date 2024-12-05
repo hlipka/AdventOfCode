@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day25;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -22,7 +22,7 @@ public class Day251
         System.out.println("snafu for 12345=" + createSnafu(12345));
         System.out.println("snafu for 314159265=" + createSnafu(314159265L));
 
-        long sum = AocParseUtils.getLines("2022", "day25").stream().mapToLong(Day251::parseSnafu).sum();
+        long sum = AocDataFileUtils.getLines("2022", "day25").stream().mapToLong(Day251::parseSnafu).sum();
         System.out.println("sum is " + sum);
         System.out.println("entry is "+ createSnafu(sum));
     }

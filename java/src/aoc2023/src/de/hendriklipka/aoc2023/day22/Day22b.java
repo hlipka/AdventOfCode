@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day22;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.GridRectangle;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -22,7 +23,7 @@ public class Day22b
             // we sort the brick by their bottom Z
             // two bricks with the same Z must be next to each other and don't interfere ever
             List<Brick> bricks =
-                    AocParseUtils.getLines("2023", "day22").stream().map(Day22b::parseBrick).sorted(Comparator.comparingInt(Brick::getZBottom)).toList();
+                    AocDataFileUtils.getLines("2023", "day22").stream().map(Day22b::parseBrick).sorted(Comparator.comparingInt(Brick::getZBottom)).toList();
             // let the bricks fall down from bottom to top
             for (int i=0;i<bricks.size();i++)
             {

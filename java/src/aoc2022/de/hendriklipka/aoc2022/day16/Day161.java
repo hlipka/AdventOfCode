@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2022.day16;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class Day161
     {
         try
         {
-            caves = AocParseUtils.getLines("2022", "day16").stream().map(Day161::parseCave).collect(Collectors.toMap(Cave::getName, c->c));
+            caves = AocDataFileUtils.getLines("2022", "day16").stream().map(Day161::parseCave).collect(Collectors.toMap(Cave::getName, c->c));
 
             for (Cave cave: caves.values())
             {

@@ -1,10 +1,9 @@
 package de.hendriklipka.aoc2016.day12;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: hli
@@ -17,7 +16,7 @@ public class Day12a
     {
         try
         {
-            final List<Command> commands = AocParseUtils.getLines("2016", "day12").stream().map(Day12a::parseLine).toList();
+            final List<Command> commands = AocDataFileUtils.getLines("2016", "day12").stream().map(Day12a::parseLine).toList();
             int[] regs = new int[]{0,0,0,0};
             doRun(commands, regs);
             System.out.println(regs[0]);

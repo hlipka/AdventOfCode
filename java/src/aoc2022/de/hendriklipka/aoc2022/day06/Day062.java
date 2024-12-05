@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day06;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ public class Day062
     {
         try
         {
-            String line = AocParseUtils.getLines("2022", "day06").get(0);
+            String line = AocDataFileUtils.getLines("2022", "day06").get(0);
             int pos=0;
             while (pos<line.length()-14)
             {

@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day13;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class Day132
         int result=0;
         try
         {
-            List<List<Integer>> packets = AocParseUtils.getLines("2022", "day13").stream().map(Day132::parseList).collect(
+            List<List<Integer>> packets = AocDataFileUtils.getLines("2022", "day13").stream().map(Day132::parseList).collect(
                     Collectors.toList());
             List<Integer> divider1 = parseList("[[2]]");
             List<Integer> divider2 = parseList("[[6]]");

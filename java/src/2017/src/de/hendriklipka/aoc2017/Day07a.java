@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2017;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,7 +16,7 @@ public class Day07a
     {
         try
         {
-            final List<String> lines = AocParseUtils.getLines("2017", "day07");
+            final List<String> lines = AocDataFileUtils.getLines("2017", "day07");
             final List<Program> programs = lines.stream().map(Day07a::parseProgram).toList();
             Set<String> supported = new HashSet<>();
             programs.forEach(program -> supported.addAll(program.supported));

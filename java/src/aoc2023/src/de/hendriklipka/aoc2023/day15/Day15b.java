@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day15;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -18,8 +18,8 @@ public class Day15b
     {
         try
         {
-            String testLine=AocParseUtils.getLines("2023", "ex15").get(0);
-            String line=AocParseUtils.getLines("2023", "day15").get(0);
+            String testLine= AocDataFileUtils.getLines("2023", "ex15").get(0);
+            String line= AocDataFileUtils.getLines("2023", "day15").get(0);
             System.out.println(simulate(testLine));
             System.out.println(simulate(line));
         }

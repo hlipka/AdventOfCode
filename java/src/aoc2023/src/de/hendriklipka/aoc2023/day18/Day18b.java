@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day18;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
@@ -17,7 +18,7 @@ public class Day18b
         try
         {
             field.add(currentPos);
-            AocParseUtils.getLines("2023", "day18").forEach(Day18b::dig);
+            AocDataFileUtils.getLines("2023", "day18").forEach(Day18b::dig);
             System.out.println(field.size());
             long area = calculateArea();
             System.out.println(area);

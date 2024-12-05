@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day24;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.search.BestFirstSearch;
 import de.hendriklipka.aoc.search.SearchState;
 import de.hendriklipka.aoc.search.SearchWorld;
@@ -15,7 +15,7 @@ public class Day241b
 {
     public static void main(String[] args) throws IOException
     {
-        List<List<String>> fieldData = AocParseUtils.getLinesAsCharStrings("2022", "day24");
+        List<List<String>> fieldData = AocDataFileUtils.getLinesAsCharStrings("2022", "day24");
 
         long now=System.currentTimeMillis();
         BlizzardWorld world = new BlizzardWorld(fieldData);

@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day12;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +19,7 @@ public class Day121
     {
         try
         {
-            List<List<String>> fieldData = AocParseUtils.getLinesAsCharStrings("2022", "day12");
+            List<List<String>> fieldData = AocDataFileUtils.getLinesAsCharStrings("2022", "day12");
             int width=fieldData.get(0).size();
             int height=fieldData.size();
             int startX=0;

@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day02;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -10,7 +10,7 @@ public class Day021
 
     public static void main(String[] args) {
         try {
-            List<List<String>> guide = AocParseUtils.getLineWords("2022", "day02", " ");
+            List<List<String>> guide = AocDataFileUtils.getLineWords("2022", "day02", " ");
             int score = guide.stream().mapToInt(p->getScore(p)).sum();
             System.out.println(score);
         }

@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day14;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,7 +25,7 @@ public class Day141
     {
         try
         {
-            List<List<String>> lines = AocParseUtils.getLines("2022", "day14")
+            List<List<String>> lines = AocDataFileUtils.getLines("2022", "day14")
                                                     .stream()
                                                     .map(l -> Arrays.asList(
                                                             StringUtils.splitByWholeSeparator(l, " -> "))).collect(

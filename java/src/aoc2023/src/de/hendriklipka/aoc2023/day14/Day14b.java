@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day14;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class Day14b
         {
             int total=1000000000;
             List<List<List<Character>>> test=new ArrayList<>();
-            List<List<Character>> field = AocParseUtils.getLinesAsChars("2023", "ex14");
+            List<List<Character>> field = AocDataFileUtils.getLinesAsChars("2023", "ex14");
             test.add(copyField(field));
             int size = field.size();
             int cycleStart=-1;

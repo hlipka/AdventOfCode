@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2022.day15;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class Day152
     {
         try
         {
-            List<Scanner> scanners = AocParseUtils.getLines("2022", "day15")
+            List<Scanner> scanners = AocDataFileUtils.getLines("2022", "day15")
                                                   .stream()
                                                   .map(Day152::parseScanner)
                                                   .collect(Collectors.toList());

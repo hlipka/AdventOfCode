@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day04;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +19,7 @@ public class Day04b
     {
         try
         {
-            List<String> lines = AocParseUtils.getLines("2023", "day04");
+            List<String> lines = AocDataFileUtils.getLines("2023", "day04");
             List<Integer> lineCount = new ArrayList<>(Collections.nCopies(lines.size(), 1));
             calculateScore(lines, lineCount);
             System.out.println(lineCount.stream().mapToInt(Integer::intValue).sum());

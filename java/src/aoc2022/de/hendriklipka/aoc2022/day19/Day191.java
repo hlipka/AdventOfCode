@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2022.day19;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class Day191
     {
         try
         {
-            List<BluePrint> blueprints = AocParseUtils.getLines("2022", "day19")
+            List<BluePrint> blueprints = AocDataFileUtils.getLines("2022", "day19")
                                                       .stream()
                                                       .map(Day191::getBluePrint)
                                                       .collect(Collectors.toList());

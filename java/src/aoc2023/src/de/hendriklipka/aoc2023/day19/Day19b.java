@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day19;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
@@ -32,7 +33,7 @@ public class Day19b
     {
         try
         {
-            List<List<String>> blocks = AocParseUtils.getStringBlocks("2023", "day19");
+            List<List<String>> blocks = AocDataFileUtils.getStringBlocks("2023", "day19");
             rules=parseRules(blocks.get(0));
             System.out.println(rules.size() + " rules, " + rules.values().stream().mapToInt(wf->wf.conditions.size()).sum() + " conditions");
             // optimize away rules which have no effective condition

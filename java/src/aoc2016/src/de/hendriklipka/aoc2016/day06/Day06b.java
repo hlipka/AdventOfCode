@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2016.day06;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class Day06b
     {
         try
         {
-            final List<List<String>> lines = AocParseUtils.getLinesAsCharStrings("2016", "day06");
+            final List<List<String>> lines = AocDataFileUtils.getLinesAsCharStrings("2016", "day06");
             int colCount=lines.get(0).size();
             List<Map<String,Integer>> frequenciesPerColumn = new ArrayList<>(10);
             for (int i=0;i<colCount;i++)

@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day09;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class Day091
     {
         try
         {
-            List<String> moves = AocParseUtils.getLines("2022", "day09");
+            List<String> moves = AocDataFileUtils.getLines("2022", "day09");
             visit(xTail, yTail);
             for (String move : moves)
             {

@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2016.day01;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Position;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class Day01b
     {
         try
         {
-            List<String>  directions = AocParseUtils.getFirstLineWords("2016", "day01", ",");
+            List<String>  directions = AocDataFileUtils.getFirstLineWords("2016", "day01", ",");
             Position pos = new Position(0, 0);
             positions.add(pos);
             for (String direction: directions)

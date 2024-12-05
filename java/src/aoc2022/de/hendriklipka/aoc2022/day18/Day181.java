@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day18;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ public class Day181
     {
         try
         {
-            List<List<Integer>> cubes = AocParseUtils.getLineIntegers("2022", "day18", ",");
+            List<List<Integer>> cubes = AocDataFileUtils.getLineIntegers("2022", "day18", ",");
             for (List<Integer> cube: cubes)
             {
                 cubeCache.add(StringUtils.join(cube,"-"));

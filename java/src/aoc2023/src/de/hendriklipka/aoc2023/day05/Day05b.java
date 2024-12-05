@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day05;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,7 +21,7 @@ public class Day05b
         long min = Long.MAX_VALUE;
         try
         {
-            List<List<String>> blocks = AocParseUtils.getStringBlocks("2023", "day05");
+            List<List<String>> blocks = AocDataFileUtils.getStringBlocks("2023", "day05");
             parseSeeds(blocks.get(0));
             blocks.remove(0);
             blocks.stream().map(Day05b::parseBlock).forEach(m-> rules.put(m.from, m));

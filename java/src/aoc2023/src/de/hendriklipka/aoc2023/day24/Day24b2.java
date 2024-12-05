@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day24;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class Day24b2
     {
         try
         {
-            List<HailStone> stones= AocParseUtils.getLines("2023", "day24").stream().map(Day24b2::parseHailStone).toList();
+            List<HailStone> stones= AocDataFileUtils.getLines("2023", "day24").stream().map(Day24b2::parseHailStone).toList();
             // find pairs for X
             for (int i = 0; i < stones.size() - 1; i++)
             {

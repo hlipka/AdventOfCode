@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day14;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.CycleFinder;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
@@ -17,7 +17,7 @@ public class Day14b2
     {
         try
         {
-            CharMatrix field = AocParseUtils.getLinesAsCharMatrix("2023", "day14", '.');
+            CharMatrix field = AocDataFileUtils.getLinesAsCharMatrix("2023", "day14", '.');
             field.print();
             CycleFinder<CharMatrix> cf = new CycleFinder<>(Day14b2::doCycle, 1000000000);
 

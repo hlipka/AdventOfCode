@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day03;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.collections4.ListUtils;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class Day032
     {
         try
         {
-            List<List<String>> packs = AocParseUtils.getLinesAsCharStrings("2022", "day03");
+            List<List<String>> packs = AocDataFileUtils.getLinesAsCharStrings("2022", "day03");
             final List<List<List<String>>> groups = ListUtils.partition(packs, 3);
             int sum = groups.stream().map(Day032::findBadge).mapToInt(Day032::score).sum();
 

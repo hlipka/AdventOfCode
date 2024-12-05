@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day05;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class Day051
     {
         try
         {
-            List<List<String>> blocks = AocParseUtils.getStringBlocks("2022", "day05");
+            List<List<String>> blocks = AocDataFileUtils.getStringBlocks("2022", "day05");
             List<String> initialStacks = blocks.get(0);
             initialStacks.remove(initialStacks.size()-1);
             int len = initialStacks.stream().mapToInt(String::length).max().orElseThrow();

@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2016.day15;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class Day15b
     {
         try
         {
-            final List<Disc> discs = AocParseUtils.getLines("2016", "day15").stream().map(Day15b::parseDisc).toList();
+            final List<Disc> discs = AocDataFileUtils.getLines("2016", "day15").stream().map(Day15b::parseDisc).toList();
 
             int time=0;
             while (true)

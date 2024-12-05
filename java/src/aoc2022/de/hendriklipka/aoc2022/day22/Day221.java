@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day22;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class Day221
     {
         try
         {
-            List<List<String>> blocks = AocParseUtils.getStringBlocks("2022", "day22");
+            List<List<String>> blocks = AocDataFileUtils.getStringBlocks("2022", "day22");
             List<String> mazeData = blocks.get(0);
             String cmdData = blocks.get(1).get(0);
 

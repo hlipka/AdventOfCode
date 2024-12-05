@@ -22,7 +22,7 @@ public class Day05 extends AocPuzzle
     @Override
     protected Object solvePartA() throws IOException
     {
-        final List<List<String>> blocks = AocParseUtils.getStringBlocks(getYear(), getDay());
+        final List<List<String>> blocks = data.getStringBlocks();
         List<Rule> rules = blocks.get(0).stream().map(Rule::new).toList();
         List<List<Integer>> updates = blocks.get(1).stream().map(this::parseUpdate).toList();
 
@@ -41,7 +41,7 @@ public class Day05 extends AocPuzzle
     @Override
     protected Object solvePartB() throws IOException
     {
-        final List<List<String>> blocks = AocParseUtils.getStringBlocks(getYear(), getDay());
+        final List<List<String>> blocks = data.getStringBlocks();
         List<Rule> rules = blocks.get(0).stream().map(Rule::new).toList();
         List<List<Integer>> updates = blocks.get(1).stream().map(this::parseUpdate).toList();
 

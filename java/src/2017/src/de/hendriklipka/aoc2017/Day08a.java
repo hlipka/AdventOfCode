@@ -1,7 +1,7 @@
 package de.hendriklipka.aoc2017;
 
 import de.hendriklipka.aoc.AocCollectionUtils;
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class Day08a
     {
         try
         {
-            final List<Instruction> instructions = AocParseUtils.getLines("2017", "day08").stream().map(Day08a::parseLine).toList();
+            final List<Instruction> instructions = AocDataFileUtils.getLines("2017", "day08").stream().map(Day08a::parseLine).toList();
             Map<String, Integer> registers = new HashMap<>();
 
             for (Instruction instruction : instructions)

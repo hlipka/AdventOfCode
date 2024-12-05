@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day08;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
@@ -23,7 +24,7 @@ public class Day08a
         Map<String, Pair<String, String>> desert = new HashMap<>();
         try
         {
-            List<List<String>> map = AocParseUtils.getStringBlocks("2023", "day08");
+            List<List<String>> map = AocDataFileUtils.getStringBlocks("2023", "day08");
             String instr = map.get(0).get(0);
             map.get(1).stream().map(Day08a::parseLine).forEach(t->desert.put(t.getLeft(), new ImmutablePair<>(t.getMiddle(), t.getRight())));
             String node="AAA";

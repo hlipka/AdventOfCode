@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day17;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.IntMatrix;
@@ -24,7 +24,7 @@ public class Day17b
     {
         try
         {
-            IntMatrix map = AocParseUtils.getLinesAsIntMatrix("2023", "day17", -1);
+            IntMatrix map = AocDataFileUtils.getLinesAsIntMatrix("2023", "day17", -1);
             LavaSearchWorld world1 = new LavaSearchWorld(map, Direction.RIGHT);
             DepthFirstSearch<LavaSearchWorld, LavaSearchState> dfs1=new DepthFirstSearch<>(world1);
             dfs1.search();

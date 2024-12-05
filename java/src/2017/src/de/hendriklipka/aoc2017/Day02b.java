@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2017;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ public class Day02b
     {
         try
         {
-            final List<List<Integer>> sheet = AocParseUtils.getLineIntegers("2017", "day02", "\t");
+            final List<List<Integer>> sheet = AocDataFileUtils.getLineIntegers("2017", "day02", "\t");
             int sum = sheet.stream().mapToInt(Day02b::getDiff).sum();
             System.out.println(sum  );
         }

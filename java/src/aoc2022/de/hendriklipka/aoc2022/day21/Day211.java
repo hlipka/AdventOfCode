@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2022.day21;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class Day211
     {
         try
         {
-            List<String> monkeys = AocParseUtils.getLines("2022", "day21");
+            List<String> monkeys = AocDataFileUtils.getLines("2022", "day21");
             Map<String, Long> numbers = new HashMap<>();
             Set<MonkeyOp> unsolved = new HashSet<>();
             Pattern numMonkey = Pattern.compile("([a-z]+): (\\d+)");

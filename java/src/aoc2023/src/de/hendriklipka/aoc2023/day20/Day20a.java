@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day20;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +16,7 @@ public class Day20a
         try
         {
             Circuit c=new Circuit();
-            AocParseUtils.getLines("2023", "day20").stream().map(Day20a::parseChip).forEach(chip->
+            AocDataFileUtils.getLines("2023", "day20").stream().map(Day20a::parseChip).forEach(chip->
             {
                 c.add(chip);
                 addWires(chip);

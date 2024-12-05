@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day15;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 
@@ -15,8 +15,8 @@ public class Day15a
     {
         try
         {
-            String testLine=AocParseUtils.getLines("2023", "ex15").get(0);
-            String line=AocParseUtils.getLines("2023", "day15").get(0);
+            String testLine= AocDataFileUtils.getLines("2023", "ex15").get(0);
+            String line= AocDataFileUtils.getLines("2023", "day15").get(0);
             System.out.println("hash of HASH=" + hashValue("HASH"));
             System.out.println("hash of line="+hashLine(testLine));
             System.out.println("hash of line="+hashLine(line));

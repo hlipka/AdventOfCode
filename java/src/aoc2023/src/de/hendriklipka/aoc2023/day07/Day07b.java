@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2023.day07;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ public class Day07b
     {
         try
         {
-            List<Hand> hands = AocParseUtils.getLines("2023", "day07").stream().map(Day07b::parseHand).sorted().toList();
+            List<Hand> hands = AocDataFileUtils.getLines("2023", "day07").stream().map(Day07b::parseHand).sorted().toList();
             long score = 0;
             for (int i=1;i<=hands.size();i++)
             {

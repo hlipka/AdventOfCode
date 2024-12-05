@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2016.day04;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +20,7 @@ public class Day04a
     {
         try
         {
-            final List<String> rooms = AocParseUtils.getLines("2016", "day04");
+            final List<String> rooms = AocDataFileUtils.getLines("2016", "day04");
             int total=0;
             for (String room: rooms)
             {

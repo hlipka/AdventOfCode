@@ -20,7 +20,7 @@ public class Day04 extends AocPuzzle
     @Override
     protected Object solvePartA() throws IOException
     {
-        final CharMatrix chars = AocParseUtils.getLinesAsCharMatrix(getYear(), getDay(), '.');
+        final CharMatrix chars = data.getLinesAsCharMatrix( '.');
         return chars.allPositions().stream().mapToLong(p->{
             if (chars.at(p) == 'X')
             {
@@ -55,7 +55,7 @@ public class Day04 extends AocPuzzle
     @Override
     protected Object solvePartB() throws IOException
     {
-        final CharMatrix chars = AocParseUtils.getLinesAsCharMatrix(getYear(), getDay(), '.');
+        final CharMatrix chars = data.getLinesAsCharMatrix( '.');
         return chars.allPositions().stream().filter(p ->
                 chars.at(p) == 'A' && countCrosses(chars, p)).count();
     }

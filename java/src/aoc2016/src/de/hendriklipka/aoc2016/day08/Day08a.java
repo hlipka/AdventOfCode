@@ -1,11 +1,10 @@
 package de.hendriklipka.aoc2016.day08;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: hli
@@ -18,7 +17,7 @@ public class Day08a
     {
         try
         {
-            List<Instruction> instructions = AocParseUtils.getLines("2016", "day08").stream().map(Day08a::parseInstruction).toList();
+            List<Instruction> instructions = AocDataFileUtils.getLines("2016", "day08").stream().map(Day08a::parseInstruction).toList();
             Boolean[][] display = new Boolean[50][6];
             for (Boolean[] row: display)
             {

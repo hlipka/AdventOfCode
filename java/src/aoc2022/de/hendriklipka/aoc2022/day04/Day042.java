@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day04;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.Range;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,7 +19,7 @@ public class Day042
     {
         try
         {
-            final List<String> lines = AocParseUtils.getLines("2022", "day04");
+            final List<String> lines = AocDataFileUtils.getLines("2022", "day04");
             long count = lines.stream().map(Day042::getRanges).filter(Day042::isOverlap).count();
             System.out.println(count);
         }

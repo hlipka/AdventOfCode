@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2017;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +14,7 @@ public class Day04a
     {
         try
         {
-            final List<List<String>> words = AocParseUtils.getLineWords("2017", "day04", " ");
+            final List<List<String>> words = AocDataFileUtils.getLineWords("2017", "day04", " ");
             long count = words.stream().filter(Day04a::isValidPassphrase).count();
             System.out.println(count);
         }

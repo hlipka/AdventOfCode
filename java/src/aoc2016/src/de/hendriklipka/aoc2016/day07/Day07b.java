@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2016.day07;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public class Day07b
         try
         {
             int ssl = 0;
-            final List<String> addresses = AocParseUtils.getLines("2016", "day07");
+            final List<String> addresses = AocDataFileUtils.getLines("2016", "day07");
             for (String addr : addresses)
             {
                 if (canDoSSL(addr))

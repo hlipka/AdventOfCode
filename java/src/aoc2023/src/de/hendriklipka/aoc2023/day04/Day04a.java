@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day04;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,7 +21,7 @@ public class Day04a
     {
         try
         {
-            int score = AocParseUtils.getLines("2023", "day04").stream().mapToInt(Day04a::calculateScore).sum();
+            int score = AocDataFileUtils.getLines("2023", "day04").stream().mapToInt(Day04a::calculateScore).sum();
             System.out.println(score);
         }
         catch (IOException e)

@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day06;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +19,7 @@ public class Day06a
     {
         try
         {
-            final List<String> lines = AocParseUtils.getLines("2023", "day06");
+            final List<String> lines = AocDataFileUtils.getLines("2023", "day06");
             String timeStr = AocParseUtils.parseStringFromString(lines.get(0), "\\w+:(.+)");
             String distStr = AocParseUtils.parseStringFromString(lines.get(1), "\\w+:(.+)");
             int[] times= Arrays.stream(StringUtils.split(timeStr, " ")).mapToInt(Integer::parseInt).toArray();

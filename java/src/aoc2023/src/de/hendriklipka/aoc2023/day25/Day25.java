@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2023.day25;
 
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.search.GraphSearch;
 import org.apache.commons.collections4.MultiValuedMap;
@@ -20,7 +21,7 @@ public class Day25
     static MultiValuedMap<String, String> wires = new ArrayListValuedHashMap<>();
     public static void main(String[] args) throws IOException
     {
-        AocParseUtils.getLines("2023", "day25").forEach(Day25::parseLine);
+        AocDataFileUtils.getLines("2023", "day25").forEach(Day25::parseLine);
         List<String> allNodes=new ArrayList<>(wires.keySet()); // ordered list so we can access by index
 
         final GraphSearch gs = createGraph(new ArrayList<String>(wires.keySet()));

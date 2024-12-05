@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day07;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -12,7 +12,7 @@ public class Day072
     {
         try
         {
-            List<String> commands = AocParseUtils.getLines("2022", "day07");
+            List<String> commands = AocDataFileUtils.getLines("2022", "day07");
             commands.remove(0); // we can skip cd'ing to the root
             DirNode root = new DirNode();
             DirNode current = root;

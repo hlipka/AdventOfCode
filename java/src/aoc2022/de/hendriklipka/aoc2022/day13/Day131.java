@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day13;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class Day131
         int result=0;
         try
         {
-            List<List<String>> pairs = AocParseUtils.getStringBlocks("2022", "day13");
+            List<List<String>> pairs = AocDataFileUtils.getStringBlocks("2022", "day13");
             for (int i=0;i<pairs.size();i++)
             {
                 if (inRightOrder(pairs.get(i).get(0), pairs.get(i).get(1)))

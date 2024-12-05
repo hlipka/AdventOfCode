@@ -1,6 +1,6 @@
 package de.hendriklipka.aoc2022.day12;
 
-import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.search.AStarSearch;
 import de.hendriklipka.aoc.search.ArrayWorld;
 
@@ -19,7 +19,7 @@ public class Day121b
     {
         try
         {
-            List<List<String>> fieldData = AocParseUtils.getLinesAsCharStrings("2022", "day12");
+            List<List<String>> fieldData = AocDataFileUtils.getLinesAsCharStrings("2022", "day12");
             HillWorld world = new HillWorld(fieldData);
 
             AStarSearch search = new AStarSearch(world);
