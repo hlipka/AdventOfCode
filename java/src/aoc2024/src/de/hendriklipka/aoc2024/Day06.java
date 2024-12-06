@@ -40,7 +40,7 @@ public class Day06 extends AocPuzzle
         // but we need to remove the start position
         visited.remove(start);
 
-        return (int) visited.stream().parallel().filter(p -> isLoop(copyLab(lab, p), start)).count();
+        return (int) visited.stream().parallel().filter(p -> isLoop(lab, p, start)).count();
     }
 
     private static Set<Position> findVisitedPlaces(final CharMatrix lab, Position current)
@@ -67,7 +67,7 @@ public class Day06 extends AocPuzzle
         return visited;
     }
 
-    private boolean isLoop(final CharMatrix lab, final Position start)
+    private boolean isLoop(final CharMatrix lab, Position block, final Position start)
     {
         // we are in a loop when we re-visited a place while going into the same direction
         Set<Pair<Position, Direction>> visited = new HashSet<>();
@@ -84,7 +84,8 @@ public class Day06 extends AocPuzzle
             while (true)
             {
                 Position newPos = current.updated(dir);
-                if (lab.at(newPos) != '#')
+                // we track the new obstacle separately so we don't need a copy of the lab
+                if (lab.at(newPos) != '#' && !newPos.equals(block) )
                 {
                     current = newPos;
                     break;
@@ -94,12 +95,5 @@ public class Day06 extends AocPuzzle
         }
 
         return false;
-    }
-
-    private CharMatrix copyLab(final CharMatrix lab, final Position p)
-    {
-        CharMatrix copy = lab.copyOf();
-        copy.set(p, '#');
-        return copy;
     }
 }
