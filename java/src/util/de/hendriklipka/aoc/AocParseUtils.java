@@ -96,7 +96,12 @@ public class AocParseUtils
 
     public static List<Integer> splitLineToInts(String line)
     {
-        String[] nums = line.split(",");
+        return splitLineToInts(line, ',');
+    }
+
+    public static List<Integer> splitLineToInts(String line, char separator)
+    {
+        String[] nums = StringUtils.split(line, separator);
         final List<Integer> result=new ArrayList<>(nums.length);
         for (String s: nums)
             result.add(Integer.parseInt(s));
