@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
  * Date: 02.12.22
  * Time: 08:04
  */
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class AocParseUtils
 {
     public static List<String> parsePartsFromString(String str, String pattern)
