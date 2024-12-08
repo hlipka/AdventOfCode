@@ -48,7 +48,10 @@ public abstract class AocPuzzle
                 final Object resultA = solvePartA();
                 endTime = System.currentTimeMillis();
                 System.out.println("result A:\n" + resultA);
+                System.out.println("======================");
                 System.out.println("took " + (endTime - startTime) + "ms");
+                System.out.println();
+                System.out.println();
             }
             if (doExamples)
             {
@@ -64,6 +67,7 @@ public abstract class AocPuzzle
             final Object resultB = solvePartB();
             endTime = System.currentTimeMillis();
             System.out.println("result B:\n" + resultB);
+            System.out.println("======================");
             System.out.println("took " + (endTime - startTime) + "ms");
         }
         catch (IOException e)
