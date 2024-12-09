@@ -32,7 +32,7 @@ public class CharMatrix
         _defaultChar = defaultChar;
     }
 
-    private CharMatrix(char[][] data, char defaultChar)
+    public CharMatrix(char[][] data, char defaultChar)
     {
         _rows = data.length;
         _cols = data[0].length;
@@ -116,6 +116,11 @@ public class CharMatrix
     public boolean in(Position pos)
     {
         return pos.row >= 0 && pos.row < _rows && pos.col >= 0 && pos.col < _cols;
+    }
+
+    public boolean in(int row, int col)
+    {
+        return row >= 0 && row < _rows && col >= 0 && col < _cols;
     }
 
     public void moveWhileEmpty(Position pos, Direction dir)
