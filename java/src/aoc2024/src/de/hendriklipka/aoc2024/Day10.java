@@ -6,7 +6,9 @@ import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.IntMatrix;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Day10 extends AocPuzzle
 {
@@ -21,27 +23,62 @@ public class Day10 extends AocPuzzle
         final IntMatrix map = data.getLinesAsIntMatrix(100);
         List<Position> trailHeads = map.allMatchingPositions(0);
 
-        return trailHeads.stream().mapToInt(p->getScore(map,p)).sum();
+        return trailHeads.stream().mapToInt(p->
+                getScore(map, p)).sum();
     }
 
     private int getScore(final IntMatrix map, final Position p)
     {
-        int score=0;
+        Set<Position> ends = new HashSet<>();
+        findPath(map, p, ends);
+        return ends.size();
+    }
+
+    private void findPath(final IntMatrix map, final Position p, Set<Position> ends)
+    {
         int current = map.at(p);
+        if (current==9)
+        {
+            ends.add(p);
+            return;
+        }
         for (Direction d: Direction.values())
         {
             Position newPos=p.updated(d);
             if (map.at(newPos) == current+1)
             {
-                score+=getScore(map, newPos);
+                findPath(map, newPos, ends);
             }
         }
-        return score;
     }
 
     @Override
     protected Object solvePartB() throws IOException
     {
-        return 0;
+        final IntMatrix map = data.getLinesAsIntMatrix(100);
+        List<Position> trailHeads = map.allMatchingPositions(0);
+
+        return trailHeads.stream().mapToInt(p->
+                getRating(map, p)).sum();
     }
+
+    private int getRating(final IntMatrix map, final Position p)
+    {
+        int current = map.at(p);
+        if (current==9)
+        {
+            return 1;
+        }
+        int score=0;
+        for (Direction d: Direction.values())
+        {
+            Position newPos=p.updated(d);
+            if (map.at(newPos) == current+1)
+            {
+                score+=getRating(map, newPos);
+            }
+        }
+        return score;
+    }
+
 }

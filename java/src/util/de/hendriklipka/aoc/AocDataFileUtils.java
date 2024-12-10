@@ -156,6 +156,10 @@ public class AocDataFileUtils
         FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).forEach(
                 l->{
                     String[] parts = StringUtils.split(l, partSeparator);
+                    if (result.containsKey(parts[0]))
+                    {
+                        throw new IllegalArgumentException("Duplicate key: " + parts[0]);
+                    }
                     String[] lineParts = StringUtils.split(parts[1].trim(), listSeparator);
                     result.put(parts[0].trim(), Arrays.asList(lineParts));
                 }
@@ -171,9 +175,33 @@ public class AocDataFileUtils
         FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).forEach(
                 l->{
                     String[] parts = StringUtils.split(l, partSeparator);
+                    if (result.containsKey(parts[0]))
+                    {
+                        throw new IllegalArgumentException("Duplicate key: " + parts[0]);
+                    }
                     result.put(
                             parts[0].trim(),
                             AocParseUtils.splitLineToInts(parts[1].trim(), listSeparator)
+                    );
+                }
+        );
+        return result;
+    }
+
+    public static Map<String, List<Long>> getLinesIntoStringLongMap(final String yearName, final String dayName, char partSeparator, char listSeparator) throws
+            IOException
+    {
+        final Map<String, List<Long>> result = new HashMap<>();
+        FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).forEach(
+                l->{
+                    String[] parts = StringUtils.split(l, partSeparator);
+                    if (result.containsKey(parts[0]))
+                    {
+                        throw new IllegalArgumentException("Duplicate key: " + parts[0]);
+                    }
+                    result.put(
+                            parts[0].trim(),
+                            AocParseUtils.splitLineToLongs(parts[1].trim(), listSeparator)
                     );
                 }
         );
@@ -247,13 +275,18 @@ public class AocDataFileUtils
         return getLinesAsInt(yearName, dayName);
     }
 
-    public Map<String, List<String>> getLinesIntoStringMap(char partSeparator, char listSeparator)
+    public Map<String, List<String>> getLinesIntoStringMap(char partSeparator, char listSeparator) throws IOException
     {
         return getLinesIntoStringMap(yearName, dayName, partSeparator, listSeparator);
     }
 
-    public Map<String, List<Integer>> getLinesIntoStringIntMap(char partSeparator, char listSeparator)
+    public Map<String, List<Integer>> getLinesIntoStringIntMap(char partSeparator, char listSeparator) throws IOException
     {
         return getLinesIntoStringIntMap(yearName, dayName, partSeparator, listSeparator);
+    }
+
+    public Map<String, List<Long>> getLinesIntoStringLongMap(char partSeparator, char listSeparator) throws IOException
+    {
+        return getLinesIntoStringLongMap(yearName, dayName, partSeparator, listSeparator);
     }
 }

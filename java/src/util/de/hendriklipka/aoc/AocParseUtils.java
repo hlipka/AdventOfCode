@@ -105,7 +105,15 @@ public class AocParseUtils
         for (String s: nums)
             result.add(Integer.parseInt(s));
         return result;
+    }
 
+    public static List<Long> splitLineToLongs(String line, char separator)
+    {
+        String[] nums = StringUtils.split(line, separator);
+        final List<Long> result=new ArrayList<>(nums.length);
+        for (String s: nums)
+            result.add(Long.parseLong(s));
+        return result;
     }
 
 }
