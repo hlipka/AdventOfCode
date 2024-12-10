@@ -3,6 +3,7 @@ package de.hendriklipka.aoc.matrix;
 import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -170,7 +171,34 @@ public class IntMatrix
         return count;
     }
 
+    public List<Position> allPositions()
+    {
+        final List<Position> positions = new ArrayList<>(_rows * _cols);
+        for (int row = 0; row < rows(); row++)
+        {
+            for (int col = 0; col < cols(); col++)
+            {
+                positions.add(new Position(row, col));
+            }
+        }
+        return positions;
+    }
 
+    public List<Position> allMatchingPositions(int x)
+    {
+        final List<Position> positions = new ArrayList<>(_rows * _cols);
+        for (int row = 0; row < rows(); row++)
+        {
+            for (int col = 0; col < cols(); col++)
+            {
+                if (_data[row][col] == x)
+                {
+                    positions.add(new Position(row, col));
+                }
+            }
+        }
+        return positions;
+    }
     public void print()
     {
         for (int[] row : _data)
