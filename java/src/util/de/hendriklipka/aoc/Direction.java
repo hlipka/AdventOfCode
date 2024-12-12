@@ -2,7 +2,7 @@ package de.hendriklipka.aoc;
 
 import java.util.List;
 
-public enum Direction
+public enum Direction implements Keyable
 {
     UP, DOWN, LEFT, RIGHT;
     public Direction opposite()
@@ -41,5 +41,21 @@ public enum Direction
     public List<Direction> directions()
     {
         return List.of(UP, DOWN, LEFT, RIGHT);
+    }
+
+    public Direction[] perpendicular()
+    {
+        return switch (this)
+        {
+            case UP, DOWN -> new Direction[]{LEFT, RIGHT};
+            case LEFT, RIGHT -> new Direction[]{UP, DOWN};
+        };
+    }
+
+
+    @Override
+    public String getKey()
+    {
+        return name();
     }
 }

@@ -2,7 +2,7 @@ package de.hendriklipka.aoc;
 
 import java.util.List;
 
-public enum DiagonalDirections
+public enum DiagonalDirections implements Keyable
 {
     UP, DOWN, LEFT, RIGHT, RIGHT_UP, RIGHT_DOWN, LEFT_UP, LEFT_DOWN;
 
@@ -51,8 +51,26 @@ public enum DiagonalDirections
         };
     }
 
+    public DiagonalDirections[] perpendicular()
+    {
+        return switch (this)
+        {
+            case UP, DOWN -> new DiagonalDirections[]{LEFT, RIGHT};
+            case LEFT, RIGHT -> new DiagonalDirections[]{UP, DOWN};
+            case RIGHT_UP, LEFT_DOWN -> new DiagonalDirections[]{LEFT_UP, RIGHT_DOWN};
+            case RIGHT_DOWN, LEFT_UP -> new DiagonalDirections[]{LEFT_DOWN, RIGHT_UP};
+        };
+    }
+
     public static List<DiagonalDirections> directions()
     {
         return List.of(UP, DOWN, LEFT, RIGHT, RIGHT_UP, RIGHT_DOWN, LEFT_UP, LEFT_DOWN);
+    }
+
+
+    @Override
+    public String getKey()
+    {
+        return name();
     }
 }

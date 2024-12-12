@@ -5,7 +5,7 @@ package de.hendriklipka.aoc;
  * Date: 25.12.22
  * Time: 18:36
  */
-public class Position
+public class Position implements Keyable
 {
     public int row, col;
 
@@ -125,5 +125,11 @@ public class Position
     public int dist(Position pos)
     {
         return Math.abs(pos.row-row)+Math.abs(pos.col-col);
+    }
+
+    @Override
+    public String getKey()
+    {
+        return row+","+col;
     }
 }
