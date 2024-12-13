@@ -116,4 +116,38 @@ public class AocParseUtils
         return result;
     }
 
+    /**
+     * matches the line with the pattern, and returns the values for all groups from the regex
+     */
+    public static List<String> getGroupsFromLine(String line, String regex)
+    {
+        final List<String> fields = new ArrayList<>();
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(line);
+        if (m.matches())
+        {
+            int gc=m.groupCount();
+            for (int i=0;i<gc;i++)
+            {
+                fields.add(m.group(i+1));
+            }
+        }
+        return fields;
+    }
+
+    /**
+     * looks for the group regex in the line and returns all matches
+     */
+    public static List<String> getAllGroupsFromLine(String line, String groupRegex)
+    {
+        final List<String> fields = new ArrayList<>();
+        Pattern p = Pattern.compile(groupRegex);
+        Matcher m = p.matcher(line);
+        while (m.find())
+        {
+            fields.add(m.group());
+        }
+        return fields;
+
+    }
 }

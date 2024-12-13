@@ -1,18 +1,16 @@
 package de.hendriklipka.aoc.matrix;
 
+import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-/**
- * User: hli
- * Date: 14.12.23
- * Time: 18:46
- */
 public class IntMatrix
 {
     int[][] _data;
@@ -199,6 +197,7 @@ public class IntMatrix
         }
         return positions;
     }
+
     public void print()
     {
         for (int[] row : _data)
@@ -243,5 +242,24 @@ public class IntMatrix
         for (int r = 0; r < _rows; r++)
             for (int col = 0; col < _cols; col++)
                 _data[r][col]=_data[r][col]+other._data[r][col];
+    }
+
+    public Set<Position> floodFill(Position start, BiPredicate<Position, Position> canMove)
+    {
+        final Set<Position> positions = new HashSet<>(_rows * _cols);
+        final List<Position> toVisit = new ArrayList<>();
+        toVisit.add(start);
+        while (!toVisit.isEmpty())
+        {
+            Position currentPosition = toVisit.remove(0);
+            positions.add(currentPosition);
+            for (Direction d : Direction.values())
+            {
+                Position nextPos = currentPosition.updated(d);
+                if (canMove.test(currentPosition, nextPos))
+                    toVisit.add(nextPos);
+            }
+        }
+        return positions;
     }
 }

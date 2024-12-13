@@ -6,7 +6,10 @@ import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.BiPredicate;
 
 public class CharMatrix
 {
@@ -156,7 +159,7 @@ public class CharMatrix
     public int countInCol(int col, char c)
     {
         int count = 0;
-        for (int row = 0; row < _rows; col++)
+        for (int row = 0; row < _rows; row++)
         {
             if (_data[row][col] == c)
                 count++;
@@ -277,6 +280,25 @@ public class CharMatrix
                 {
                     positions.add(new Position(row, col));
                 }
+            }
+        }
+        return positions;
+    }
+
+    public Set<Position> floodFill(Position start, BiPredicate<Position, Position> canMove)
+    {
+        final Set<Position> positions = new HashSet<>(_rows * _cols);
+        final List<Position> toVisit = new ArrayList<>();
+        toVisit.add(start);
+        while (!toVisit.isEmpty())
+        {
+            Position currentPosition = toVisit.remove(0);
+            positions.add(currentPosition);
+            for (Direction d: Direction.values())
+            {
+                Position nextPos=currentPosition.updated(d);
+                if (canMove.test(currentPosition, nextPos))
+                    toVisit.add(nextPos);
             }
         }
         return positions;
