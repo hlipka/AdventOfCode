@@ -150,4 +150,9 @@ public class AocParseUtils
         return fields;
 
     }
+
+    public static List<Long> getAllNumbersFromLine(String line)
+    {
+        return getAllGroupsFromLine(line, "\\-?\\d+").stream().map(Long::parseLong).toList();
+    }
 }

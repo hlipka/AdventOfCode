@@ -5,10 +5,7 @@ import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiPredicate;
 
 public class CharMatrix
@@ -41,6 +38,17 @@ public class CharMatrix
         _cols = data[0].length;
         _data = data;
         _defaultChar = defaultChar;
+    }
+
+    public static CharMatrix filledMatrix(int rows, int cols, char fillChar, char defaultChar)
+    {
+        final char[][] data = new char[rows][cols];
+        for (int r = 0; r < data.length; r++)
+        {
+            char[] currentRow = data[r];
+            Arrays.fill(currentRow, fillChar);
+        }
+        return new CharMatrix(data, defaultChar);
     }
 
     public char at(Position pos)
