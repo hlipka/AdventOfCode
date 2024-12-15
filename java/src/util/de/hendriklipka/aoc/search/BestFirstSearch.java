@@ -1,8 +1,9 @@
 package de.hendriklipka.aoc.search;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implements a best-first search
@@ -20,7 +21,7 @@ public class BestFirstSearch<W extends SearchWorld<S>,S extends SearchState>
     public void search()
     {
         PriorityQueue<S> moves = new PriorityQueue<>(100000, world.getComparator());
-        ConcurrentHashMap<String, Object> memoize = new ConcurrentHashMap<>(100000);
+        Map<String, Object> memoize = new HashMap<>(100000);
 
         moves.add(world.getFirstState());
         while (!moves.isEmpty())

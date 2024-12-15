@@ -1,8 +1,9 @@
 package de.hendriklipka.aoc.search;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Implements a depth-first search
@@ -12,7 +13,7 @@ public class DepthFirstSearch<W extends SearchWorld<S>,S extends SearchState>
 {
     private final W world;
 
-    ConcurrentHashMap<String, Object> memoize = new ConcurrentHashMap<>(100000);
+    Map<String, Object> memoize = new HashMap<>(100000);
     private Comparator<S> comparator;
 
     public DepthFirstSearch(W world)
