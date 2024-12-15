@@ -40,6 +40,20 @@ public class CharMatrix
         _defaultChar = defaultChar;
     }
 
+    public static CharMatrix fromStringList(final List<String> strings, char defaultChar)
+    {
+        final char[][] data = new char[strings.size()][strings.get(0).length()];
+        for (int r = 0; r < data.length; r++)
+        {
+            String row = strings.get(r);
+            for (int c = 0; c < row.length(); c++)
+            {
+                data[r][c] = row.charAt(c);
+            }
+        }
+        return new CharMatrix(data, defaultChar);
+    }
+
     public static CharMatrix filledMatrix(int rows, int cols, char fillChar, char defaultChar)
     {
         final char[][] data = new char[rows][cols];
