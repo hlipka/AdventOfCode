@@ -170,6 +170,9 @@ public class Day11 {
             // of this stuff again in the elevator - this means we don't try to keep stuff in there, or keep track of what was there
             // loop over chips, take one
 
+            // FIXME when we have multiple pairs on the current floor, only ever try to use the chip or generator from one pair
+            // using the other will not result in a faster solution
+
             // use this set to track the chip combinations we already have seen
             Set<String> chipsDone=new HashSet<>();
             for (Chip c: currentFloor.chips)
@@ -250,6 +253,7 @@ public class Day11 {
         int moves = 0;
         Floor[] floors = {new Floor(), new Floor(), new Floor(), new Floor()};
         Elevator elevator= new Elevator();
+        private int _score=Integer.MIN_VALUE;
 
         @Override
         public boolean equals(Object o) {
@@ -291,6 +295,8 @@ public class Day11 {
             // this includes the stuff from the elevator (using its current floor)
             // that way we have a canonical, unique list for the states
             // we also add the floor of the elevator at the end
+            // FIXME we should treat any pair on a floor as a 'generic' pair - it does not matter which one it is
+            // any states with different pairs on the same floor are the same, essentially
             List<String> keys = new ArrayList<>();
             for (int i = 0; i < floors.length; i++)
             {
@@ -319,14 +325,14 @@ public class Day11 {
 
         public int stateScore()
         {
-            // a lower number means a preferred solution
-            // we want to prefer a solution with more things on higher floors
-            return
-             -(floors[0].chips.size()+ floors[0].generators.size()+
-                   3*(floors[1].chips.size() + floors[1].generators.size())+
-                   7*(floors[2].chips.size() + floors[2].generators.size())+
-                   13*(floors[3].chips.size() + floors[3].generators.size())+
-                   17*elevator.floorNum);
+            if (_score==Integer.MIN_VALUE)
+                _score= -(floors[0].chips.size() + floors[0].generators.size() +
+                          3 * (floors[1].chips.size() + floors[1].generators.size()) +
+                          7 * (floors[2].chips.size() + floors[2].generators.size()) +
+                          13 * (floors[3].chips.size() + floors[3].generators.size()) +
+                          17 * elevator.floorNum
+                          - 1011 * moves);
+            return _score;
         }
 
         public RTGState copyOf()
