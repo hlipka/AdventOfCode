@@ -10,14 +10,28 @@ import java.util.*;
 
 public class Day11 {
     public static void main(String[] args) {
-        System.out.println("building example");
+        long time1=System.currentTimeMillis();
         var state = getTestState();
-        System.out.println("searching example");
         var moves = simulate(state);
-        System.out.println("example moves: "+moves);
+        long time2=System.currentTimeMillis();
+        System.out.println("result example: "+moves);
+        System.out.println("took "+(time2-time1)+" ms");
+        time1 = System.currentTimeMillis();
         state = getStartState();
         moves = simulate(state);
-        System.out.println("result: "+moves); // 41 is wrong
+        time2 = System.currentTimeMillis();
+        System.out.println("result A: "+moves); // 41 is wrong
+        System.out.println("took " + (time2 - time1) + " ms");
+        time1 = System.currentTimeMillis();
+        state = getStartState();
+        state.floors[0].addChip(new Chip("elerium"));
+        state.floors[0].addChip(new Chip("dilithium"));
+        state.floors[0].addGenerator(new Generator("elerium"));
+        state.floors[0].addGenerator(new Generator("dilithium"));
+        moves = simulate(state);
+        time2 = System.currentTimeMillis();
+        System.out.println("result B: "+moves);
+        System.out.println("took " + (time2 - time1) + " ms");
     }
 
     private static int simulate(final RTGState startState)
@@ -39,18 +53,18 @@ public class Day11 {
         The fourth floor contains nothing relevant.
      */
         RTGState startState = new RTGState();
-        startState.floors[0].chips.add(new Chip("thulium"));
-        startState.floors[0].generators.add(new Generator("thulium"));
-        startState.floors[0].generators.add(new Generator("plutonium"));
-        startState.floors[0].generators.add(new Generator("strontium"));
+        startState.floors[0].addChip(new Chip("thulium"));
+        startState.floors[0].addGenerator(new Generator("thulium"));
+        startState.floors[0].addGenerator(new Generator("plutonium"));
+        startState.floors[0].addGenerator(new Generator("strontium"));
 
-        startState.floors[1].chips.add(new Chip("plutonium"));
-        startState.floors[1].chips.add(new Chip("strontium"));
+        startState.floors[1].addChip(new Chip("plutonium"));
+        startState.floors[1].addChip(new Chip("strontium"));
 
-        startState.floors[2].chips.add(new Chip("promethium"));
-        startState.floors[2].chips.add(new Chip("ruthenium"));
-        startState.floors[2].generators.add(new Generator("promethium"));
-        startState.floors[2].generators.add(new Generator("ruthenium"));
+        startState.floors[2].addChip(new Chip("promethium"));
+        startState.floors[2].addChip(new Chip("ruthenium"));
+        startState.floors[2].addGenerator(new Generator("promethium"));
+        startState.floors[2].addGenerator(new Generator("ruthenium"));
         return startState;
     }
 
@@ -64,10 +78,10 @@ public class Day11 {
         The fourth floor contains nothing relevant
      */
         RTGState startState = new RTGState();
-        startState.floors[0].chips.add(new Chip("hydrogen"));
-        startState.floors[0].chips.add(new Chip("lithium"));
-        startState.floors[1].generators.add(new Generator("hydrogen"));
-        startState.floors[2].generators.add(new Generator("lithium"));
+        startState.floors[0].addChip(new Chip("hydrogen"));
+        startState.floors[0].addChip(new Chip("lithium"));
+        startState.floors[1].addGenerator(new Generator("hydrogen"));
+        startState.floors[2].addGenerator(new Generator("lithium"));
         return startState;
     }
 
@@ -94,14 +108,6 @@ public class Day11 {
             {
                 // try to go up and down
                 // the new state must be valid, and we must not have seen it before
-                if (state.elevator.floorNum > 0)
-                {
-                    RTGState target = state.copyOf();
-                    target.elevator.floorNum--;
-                    target.moves = currentState.moves+1;
-                     if (isValid(target))
-                         targetStates.add(target);
-                }
                 if (state.elevator.floorNum < 3)
                 {
                     RTGState target = state.copyOf();
@@ -109,6 +115,14 @@ public class Day11 {
                     target.moves = currentState.moves + 1;
                     if (isValid(target))
                          targetStates.add(target);
+                }
+                if (state.elevator.floorNum > 0)
+                {
+                    RTGState target = state.copyOf();
+                    target.elevator.floorNum--;
+                    target.moves = currentState.moves+1;
+                    if (isValid(target))
+                        targetStates.add(target);
                 }
             }
             return targetStates;
@@ -121,8 +135,7 @@ public class Day11 {
             if (elevator.chips.isEmpty() && elevator.generators.isEmpty())
                 return false;
             final var currentFloor = state.floors[elevator.floorNum];
-            final List<Chip> floorChips = currentFloor.chips;
-            for (Chip c: CollectionUtils.union(floorChips, elevator.chips))
+            for (Chip c: CollectionUtils.union(currentFloor.chips, elevator.chips))
             {
                 String cName=c.name;
                 // for each chip, either the floor or the elevator must hold the corresponding generator
@@ -142,13 +155,13 @@ public class Day11 {
             // first, unload the elevator
             while (!currentState.elevator.chips.isEmpty())
             {
-                Chip c = currentState.elevator.chips.get(0);
+                Chip c = currentState.elevator.chips.iterator().next();
                 currentState.elevator.removeChip(c);
                 currentFloor.addChip(c);
             }
             while (!currentState.elevator.generators.isEmpty())
             {
-                Generator g = currentState.elevator.generators.get(0);
+                Generator g = currentState.elevator.generators.iterator().next();
                 currentState.elevator.removeGenerator(g);
                 currentFloor.addGenerator(g);
             }
@@ -210,11 +223,14 @@ public class Day11 {
 
         @Override
         public boolean reachedTarget(RTGState currentState) {
-            if (currentState.moves>10000)
-                return true;
             final var finished = currentState.floors[0].isEmpty() && currentState.floors[1].isEmpty() && currentState.floors[2].isEmpty() && currentState.elevator.floorNum == 3;
             if (finished)
-                bestMoves=currentState.moves;
+            {
+                if (currentState.moves<bestMoves)
+                {
+                    bestMoves=currentState.moves;
+                }
+            }
             return finished;
         }
 
@@ -240,7 +256,7 @@ public class Day11 {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             RTGState state = (RTGState) o;
-            return Arrays.equals(floors, state.floors) && Objects.equals(elevator, state.elevator);
+            return calculateStateKey().equals(state.calculateStateKey());
         }
 
         @Override
@@ -257,9 +273,7 @@ public class Day11 {
 
         @Override
         public int hashCode() {
-            int result = Objects.hash(elevator);
-            result = 31 * result + Arrays.hashCode(floors);
-            return result;
+            return calculateStateKey().hashCode();
         }
 
         @Override
@@ -273,43 +287,46 @@ public class Day11 {
 
         @Override
         public String calculateStateKey() {
-            // create string of the form 'floor type ID'
-            // this includes the elevator (using its current floor)
-            // that way we have a canonical, unique list for the states (and the elevator does not matter anymore)
+            // create string of the form 'floor thing_type thing_name'
+            // this includes the stuff from the elevator (using its current floor)
+            // that way we have a canonical, unique list for the states
+            // we also add the floor of the elevator at the end
             List<String> keys = new ArrayList<>();
             for (int i = 0; i < floors.length; i++)
             {
                 final Floor floor = floors[i];
                 for (Chip chip : floor.chips)
                 {
-                    keys.add(i+"c"+chip.name.substring(0,3));
+                    keys.add((i+"c"+chip.name.substring(0,3)).intern());
                 }
                 for (Generator gen : floor.generators)
                 {
-                    keys.add(i+"g"+gen.name.substring(0,3));
+                    keys.add((i+"g"+gen.name.substring(0,3)).intern());
                 }
             }
             for (Chip chip : elevator.chips)
             {
-                keys.add(elevator.floorNum+"c"+chip.name.substring(0,3));
+                keys.add((elevator.floorNum+"c"+chip.name.substring(0,3)).intern());
             }
             for (Generator gen : elevator.generators)
             {
-                keys.add(elevator.floorNum+"g"+gen.name.substring(0,3));
+                keys.add((elevator.floorNum+"g"+gen.name.substring(0,3)).intern());
             }
+            keys.add("e"+elevator.floorNum);
             keys.sort(String::compareTo);
             return StringUtils.join(keys,",");
         }
 
         public int stateScore()
         {
-            // higher score means we have more stuff at the top floor
-            // otherwise, prefer as higher elevator
-            return floors[0].chips.size()+ floors[0].generators.size()+
-                   3*(floors[0].chips.size() + floors[0].generators.size())+
-                   7*(floors[0].chips.size() + floors[0].generators.size())+
-                   13*(floors[0].chips.size() + floors[0].generators.size())+
-                   17*elevator.floorNum;
+            // a lower number means a preferred solution
+            // we want to prefer a solution with more things on higher floors
+            return
+             -(floors[0].chips.size()+ floors[0].generators.size()+
+                   3*(floors[1].chips.size() + floors[1].generators.size())+
+                   7*(floors[2].chips.size() + floors[2].generators.size())+
+                   13*(floors[3].chips.size() + floors[3].generators.size())+
+                   17*elevator.floorNum);
         }
 
         public RTGState copyOf()
@@ -329,8 +346,8 @@ public class Day11 {
     private static class Elevator
     {
         int floorNum=0;
-        List<Chip> chips = new ArrayList<>();
-        List<Generator> generators = new ArrayList<>();
+        Set<Chip> chips = new HashSet<>();
+        Set<Generator> generators = new HashSet<>();
 
         void addChip(Chip chip)
         {
@@ -378,16 +395,16 @@ public class Day11 {
         {
             final Elevator elevator = new Elevator();
             elevator.floorNum = floorNum;
-            elevator.chips = new ArrayList<>(chips);
-            elevator.generators = new ArrayList<>(generators);
+            elevator.chips.addAll(chips);
+            elevator.generators.addAll(generators);
             return elevator;
         }
     }
 
     private static class Floor
     {
-        List<Chip> chips = new ArrayList<>();
-        List<Generator> generators = new ArrayList<>();
+        Set<Chip> chips = new HashSet<>();
+        Set<Generator> generators = new HashSet<>();
 
         void addChip(Chip chip)
         {
@@ -437,8 +454,8 @@ public class Day11 {
         public Floor copyOf()
         {
             final Floor floor=new Floor();
-            floor.chips = new ArrayList<>(chips);
-            floor.generators = new ArrayList<>(generators);
+            floor.chips.addAll(chips);
+            floor.generators.addAll(generators);
             return floor;
         }
     }

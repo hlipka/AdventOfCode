@@ -39,20 +39,25 @@ public class DepthFirstSearch<W extends SearchWorld<S>,S extends SearchState>
         {
             return;
         }
-        // memoize positions which we have seen before, and skip them if this happens
+        // memoize positions which we have seen before, and skip them if the other one was better
         String key = currentState.calculateStateKey();
-        // this is an atomic set - if it returns some other than null, there was a mapping before
         Object currentCost = currentState.getCurrentCost();
-        final Object other = memoize.putIfAbsent(key, currentCost);
-        if (null != other)
+        // this is an atomic set - if it returns some other than null, there was a mapping before
+        final Object existingCost = memoize.putIfAbsent(key, currentCost);
+        if (null != existingCost)
         {
-            if(currentState.betterThan(other))
+            if(currentState.betterThan(existingCost))
+            {
                 memoize.put(key, currentCost);
+            }
             else
+            {
                 return;
+            }
         }
         List<S> newStates = world.calculateNextStates(currentState);
-        if (newStates.size()>1 && null!=comparator)
+        // if we can sort next states by preference
+        if (null!=comparator && newStates.size()>1)
         {
             newStates.sort(comparator);
         }

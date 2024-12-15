@@ -41,10 +41,10 @@ public class BestFirstSearch<W extends SearchWorld<S>,S extends SearchState>
             // this is an atomic set - if it returns some other than null, there was a mapping before
             // we just store the cost here, instead of the full state - saves memory
             Object currentCost = currentState.getCurrentCost();
-            final Object other = memoize.putIfAbsent(key, currentCost);
-            if (null != other)
+            final Object existingCost = memoize.putIfAbsent(key, currentCost);
+            if (null != existingCost)
             {
-                if (currentState.betterThan(other))
+                if (currentState.betterThan(existingCost))
                     memoize.put(key, currentCost);
                 else
                     continue;

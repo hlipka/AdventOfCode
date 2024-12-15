@@ -34,6 +34,7 @@ public interface SearchWorld<S extends SearchState>
 
     /**
      * create a comparator to sort the states according to which one should be looked at next.
+     * Lower scores are looked at first.
      * (e.g. when this is 'distance to target', do
      * Integer.compare(state1.dist, state2.dist)
      * , and reverse when a higher value should go first)
