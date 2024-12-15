@@ -12,7 +12,7 @@ public class DepthFirstSearch<W extends SearchWorld<S>,S extends SearchState>
 {
     private final W world;
 
-    ConcurrentHashMap<String, S> memoize = new ConcurrentHashMap<>(100000);
+    ConcurrentHashMap<String, Object> memoize = new ConcurrentHashMap<>(100000);
     private Comparator<S> comparator;
 
     public DepthFirstSearch(W world)
@@ -42,11 +42,12 @@ public class DepthFirstSearch<W extends SearchWorld<S>,S extends SearchState>
         // memoize positions which we have seen before, and skip them if this happens
         String key = currentState.calculateStateKey();
         // this is an atomic set - if it returns some other than null, there was a mapping before
-        final S other = memoize.putIfAbsent(key, currentState);
+        Object currentCost = currentState.getCurrentCost();
+        final Object other = memoize.putIfAbsent(key, currentCost);
         if (null != other)
         {
             if(currentState.betterThan(other))
-                memoize.put(key, currentState);
+                memoize.put(key, currentCost);
             else
                 return;
         }

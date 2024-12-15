@@ -70,9 +70,15 @@ public class Day23a
         }
 
         @Override
-        public boolean betterThan(SearchState other)
+        public boolean betterThan(Object other)
         {
-            return dist>((Trail)other).dist;
+            return dist>(Integer)other;
+        }
+
+        @Override
+        public Object getCurrentCost()
+        {
+            return dist;
         }
     }
 

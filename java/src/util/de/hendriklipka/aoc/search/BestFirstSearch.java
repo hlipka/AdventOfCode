@@ -20,7 +20,7 @@ public class BestFirstSearch<W extends SearchWorld<S>,S extends SearchState>
     public void search()
     {
         PriorityQueue<S> moves = new PriorityQueue<>(100000, world.getComparator());
-        ConcurrentHashMap<String, S> memoize = new ConcurrentHashMap<>(100000);
+        ConcurrentHashMap<String, Object> memoize = new ConcurrentHashMap<>(100000);
 
         moves.add(world.getFirstState());
         while (!moves.isEmpty())
@@ -39,11 +39,13 @@ public class BestFirstSearch<W extends SearchWorld<S>,S extends SearchState>
             // memoize positions which we have seen before, and skip them if this happens
             String key = currentState.calculateStateKey();
             // this is an atomic set - if it returns some other than null, there was a mapping before
-            final S other = memoize.putIfAbsent(key, currentState);
+            // we just store the cost here, instead of the full state - saves memory
+            Object currentCost = currentState.getCurrentCost();
+            final Object other = memoize.putIfAbsent(key, currentCost);
             if (null != other)
             {
                 if (currentState.betterThan(other))
-                    memoize.put(key, currentState);
+                    memoize.put(key, currentCost);
                 else
                     continue;
             }

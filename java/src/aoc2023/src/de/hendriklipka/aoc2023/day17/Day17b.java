@@ -161,9 +161,16 @@ public class Day17b
         }
 
         @Override
-        public boolean betterThan(SearchState other)
+        public boolean betterThan(Object other)
         {
-            return cost<((LavaSearchState)other).cost;
+            // compare accumulated heat loss to allow re-visiting with a better cost
+            return cost<(Integer)other;
+        }
+
+        @Override
+        public Object getCurrentCost()
+        {
+            return cost;
         }
 
         @Override

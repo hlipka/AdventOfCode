@@ -96,7 +96,7 @@ public class Day15 extends AocPuzzle
                 target=target.updated(dir.opposite());
             }
             robot=robot.updated(dir);
-            warehouse.set(robot,'.'); 
+            warehouse.set(robot,'.');
         }
         else // up and down
         {

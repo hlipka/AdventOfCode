@@ -14,8 +14,19 @@ public interface SearchState
      * Determine whether the current state has a better score than the other one. This is needed when a state is re-visited - it only can be ignored
      * when the current state is worse than the existing one.
      *
-     * @param other the already visited state
+     * @param otherCost the cost of the already visited state
      * @return true when the current state is better
      */
-    default boolean betterThan(SearchState other) {return false;};
+    default boolean betterThan(Object otherCost)
+    {
+        return false;
+    }
+
+    /**
+     * @return the cost value of the state (used for betterThan() comparison)
+     */
+    default Object getCurrentCost()
+    {
+        return null;
+    }
 }

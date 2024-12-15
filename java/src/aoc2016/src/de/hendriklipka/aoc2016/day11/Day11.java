@@ -1,7 +1,6 @@
 package de.hendriklipka.aoc2016.day11;
 
 import de.hendriklipka.aoc.search.BestFirstSearch;
-import de.hendriklipka.aoc.search.DepthFirstSearch;
 import de.hendriklipka.aoc.search.SearchState;
 import de.hendriklipka.aoc.search.SearchWorld;
 import org.apache.commons.collections4.CollectionUtils;
@@ -243,9 +242,15 @@ public class Day11 {
         }
 
         @Override
-        public boolean betterThan(final SearchState other)
+        public boolean betterThan(final Object other)
         {
-            return moves<((State)other).moves;
+            return moves<(Integer)other;
+        }
+
+        @Override
+        public Object getCurrentCost()
+        {
+            return moves;
         }
 
         @Override
