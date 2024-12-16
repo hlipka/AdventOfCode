@@ -16,6 +16,7 @@ public class Day11 {
         long time2=System.currentTimeMillis();
         System.out.println("result example: "+moves);
         System.out.println("took "+(time2-time1)+" ms");
+//        System.exit(1);
         time1 = System.currentTimeMillis();
         state = getStartState();
         moves = simulate(state);
@@ -24,10 +25,10 @@ public class Day11 {
         System.out.println("took " + (time2 - time1) + " ms");
         time1 = System.currentTimeMillis();
         state = getStartState();
-        state.floors[0].addChip(new Chip("elerium"));
-        state.floors[0].addChip(new Chip("dilithium"));
-        state.floors[0].addGenerator(new Generator("elerium"));
-        state.floors[0].addGenerator(new Generator("dilithium"));
+        state.floors[0].addChip("elerium");
+        state.floors[0].addChip("dilithium");
+        state.floors[0].addGenerator("elerium");
+        state.floors[0].addGenerator("dilithium");
         moves = simulate(state);
         time2 = System.currentTimeMillis();
         System.out.println("result B: "+moves);
@@ -47,24 +48,24 @@ public class Day11 {
     {
     /*
         actual input:
-        The first floor contains a thulium generator, a thulium-compatible microchip, a plutonium generator, and a strontium generator.
+        The first floor contains a thulium String, a thulium-compatible microchip, a plutonium String, and a strontium String.
         The second floor contains a plutonium-compatible microchip and a strontium-compatible microchip.
-        The third floor contains a promethium generator, a promethium-compatible microchip, a ruthenium generator, and a ruthenium-compatible microchip.
+        The third floor contains a promethium String, a promethium-compatible microchip, a ruthenium String, and a ruthenium-compatible microchip.
         The fourth floor contains nothing relevant.
      */
         RTGState startState = new RTGState();
-        startState.floors[0].addChip(new Chip("thulium"));
-        startState.floors[0].addGenerator(new Generator("thulium"));
-        startState.floors[0].addGenerator(new Generator("plutonium"));
-        startState.floors[0].addGenerator(new Generator("strontium"));
+        startState.floors[0].addChip("thulium");
+        startState.floors[0].addGenerator("thulium");
+        startState.floors[0].addGenerator("plutonium");
+        startState.floors[0].addGenerator("strontium");
 
-        startState.floors[1].addChip(new Chip("plutonium"));
-        startState.floors[1].addChip(new Chip("strontium"));
+        startState.floors[1].addChip("plutonium");
+        startState.floors[1].addChip("strontium");
 
-        startState.floors[2].addChip(new Chip("promethium"));
-        startState.floors[2].addChip(new Chip("ruthenium"));
-        startState.floors[2].addGenerator(new Generator("promethium"));
-        startState.floors[2].addGenerator(new Generator("ruthenium"));
+        startState.floors[2].addChip("promethium");
+        startState.floors[2].addChip("ruthenium");
+        startState.floors[2].addGenerator("promethium");
+        startState.floors[2].addGenerator("ruthenium");
         return startState;
     }
 
@@ -73,15 +74,15 @@ public class Day11 {
     /*
         test input:
         The first floor contains a hydrogen-compatible microchip and a lithium-compatible microchip.
-        The second floor contains a hydrogen generator.
-        The third floor contains a lithium generator.
+        The second floor contains a hydrogen String.
+        The third floor contains a lithium String.
         The fourth floor contains nothing relevant
      */
         RTGState startState = new RTGState();
-        startState.floors[0].addChip(new Chip("hydrogen"));
-        startState.floors[0].addChip(new Chip("lithium"));
-        startState.floors[1].addGenerator(new Generator("hydrogen"));
-        startState.floors[2].addGenerator(new Generator("lithium"));
+        startState.floors[0].addChip("hydrogen");
+        startState.floors[0].addChip("lithium");
+        startState.floors[1].addGenerator("hydrogen");
+        startState.floors[2].addGenerator("lithium");
         return startState;
     }
 
@@ -135,12 +136,11 @@ public class Day11 {
             if (elevator.chips.isEmpty() && elevator.generators.isEmpty())
                 return false;
             final var currentFloor = state.floors[elevator.floorNum];
-            for (Chip c: CollectionUtils.union(currentFloor.chips, elevator.chips))
+            for (String c: CollectionUtils.union(currentFloor.chips, elevator.chips))
             {
-                String cName=c.name;
-                // for each chip, either the floor or the elevator must hold the corresponding generator
+                // for each String, either the floor or the elevator must hold the corresponding String
                 final var generators = CollectionUtils.union(currentFloor.generators, elevator.generators);
-                if (!generators.isEmpty() && generators.stream().noneMatch(g->g.name.equals(cName)))
+                if (!generators.isEmpty() && generators.stream().noneMatch(g->g.equals(c)))
                     return false;
             }
             // we do not need to check the elevator contents - when it would be unsafe it would already be caught at the previous floor, or at the new one
@@ -155,13 +155,13 @@ public class Day11 {
             // first, unload the elevator
             while (!currentState.elevator.chips.isEmpty())
             {
-                Chip c = currentState.elevator.chips.iterator().next();
+                String c = currentState.elevator.chips.iterator().next();
                 currentState.elevator.removeChip(c);
                 currentFloor.addChip(c);
             }
             while (!currentState.elevator.generators.isEmpty())
             {
-                Generator g = currentState.elevator.generators.iterator().next();
+                String g = currentState.elevator.generators.iterator().next();
                 currentState.elevator.removeGenerator(g);
                 currentFloor.addGenerator(g);
             }
@@ -170,30 +170,37 @@ public class Day11 {
             // of this stuff again in the elevator - this means we don't try to keep stuff in there, or keep track of what was there
             // loop over chips, take one
 
-            // FIXME when we have multiple pairs on the current floor, only ever try to use the chip or generator from one pair
+            // when we have multiple pairs on the current floor, only ever try to use the String or String from one pair (at least for the first chip)
             // using the other will not result in a faster solution
 
-            // use this set to track the chip combinations we already have seen
+            // use this set to track the String combinations we already have seen
             Set<String> chipsDone=new HashSet<>();
-            for (Chip c: currentFloor.chips)
+            boolean chipPairSeen=false;
+            for (String c: currentFloor.chips)
             {
                 RTGState tempState = currentState.copyOf();
                 tempState.floors[currentFloorNum].removeChip(c);
                 tempState.elevator.addChip(c);
-                newStates.add(tempState); // we also try to use just one chip
-                //   loop over the remaining chips, take one
-                for (Chip c2: tempState.floors[currentFloorNum].chips)
+                newStates.add(tempState); // we also try to use just one String
+                if (tempState.floors[currentFloorNum].generators.contains(c))
                 {
-                    if (chipsDone.contains(c2.name + "-" + c.name))
+                    if (chipPairSeen)
                         continue;
-                    chipsDone.add(c.name + "-" + c2.name);
+                    chipPairSeen=true;
+                }
+                //   loop over the remaining chips, take one
+                for (String c2: tempState.floors[currentFloorNum].chips)
+                {
+                    if (chipsDone.contains(c2 + "-" + c))
+                        continue;
+                    chipsDone.add(c + "-" + c2);
                     RTGState nextState=tempState.copyOf();
                     nextState.floors[currentFloorNum].removeChip(c2);
                     nextState.elevator.addChip(c2);
                     newStates.add(nextState);
                 }
                 //   loop over the generators. take one
-                for (Generator g: tempState.floors[currentFloorNum].generators)
+                for (String g: tempState.floors[currentFloorNum].generators)
                 {
                     RTGState nextState = tempState.copyOf();
                     nextState.floors[currentFloorNum].removeGenerator(g);
@@ -203,18 +210,25 @@ public class Day11 {
             }
             // loop over the generators, take one
             Set<String> generatorsDone = new HashSet<>();
-            for (Generator g : currentFloor.generators)
+            chipPairSeen = false;
+            for (String g : currentFloor.generators)
             {
                 RTGState tempState = currentState.copyOf();
                 tempState.floors[currentFloorNum].removeGenerator(g);
                 tempState.elevator.addGenerator(g);
-                newStates.add(tempState); // we also try just one generator
-                //   loop the remaining generators, take one
-                for (Generator g2 : tempState.floors[currentFloorNum].generators)
+                newStates.add(tempState); // we also try just one String
+                if (tempState.floors[currentFloorNum].chips.contains(g))
                 {
-                    if (generatorsDone.contains(g2.name + "-" + g.name))
+                    if (chipPairSeen)
                         continue;
-                    generatorsDone.add(g.name + "-" + g2.name);
+                    chipPairSeen = true;
+                }
+                //   loop the remaining generators, take one
+                for (String g2 : tempState.floors[currentFloorNum].generators)
+                {
+                    if (generatorsDone.contains(g2 + "-" + g))
+                        continue;
+                    generatorsDone.add(g + "-" + g2);
                     RTGState nextState = tempState.copyOf();
                     nextState.floors[currentFloorNum].removeGenerator(g2);
                     nextState.elevator.addGenerator(g2);
@@ -295,28 +309,42 @@ public class Day11 {
             // this includes the stuff from the elevator (using its current floor)
             // that way we have a canonical, unique list for the states
             // we also add the floor of the elevator at the end
-            // FIXME we should treat any pair on a floor as a 'generic' pair - it does not matter which one it is
-            // any states with different pairs on the same floor are the same, essentially
+            // any states with different pairs on the same floor are the same, essentially, so we report just the number of pairs
             List<String> keys = new ArrayList<>();
             for (int i = 0; i < floors.length; i++)
             {
+                Set<String> pairs = new HashSet<>();
                 final Floor floor = floors[i];
-                for (Chip chip : floor.chips)
+                Set<String> chips = floor.chips;
+                Set<String> generators = floor.generators;
+                // when the elevator is on the current floor, we combine it into the floor data
+                if (i== elevator.floorNum)
                 {
-                    keys.add((i+"c"+chip.name.substring(0,3)).intern());
+                    chips = new HashSet<>(chips);
+                    chips.addAll(elevator.chips);
+                    generators = new HashSet<>(generators);
+                    generators.addAll(elevator.generators);
                 }
-                for (Generator gen : floor.generators)
+                for (String chip : chips)
                 {
-                    keys.add((i+"g"+gen.name.substring(0,3)).intern());
+                    // when there is a generator for this chip, don't report the chip and add it to the list of pairs
+                    if (generators.contains(chip))
+                    {
+                        pairs.add(chip);
+                        continue;
+                    }
+                    keys.add((i+"c"+chip.substring(0,3)).intern());
                 }
-            }
-            for (Chip chip : elevator.chips)
-            {
-                keys.add((elevator.floorNum+"c"+chip.name.substring(0,3)).intern());
-            }
-            for (Generator gen : elevator.generators)
-            {
-                keys.add((elevator.floorNum+"g"+gen.name.substring(0,3)).intern());
+                for (String gen : generators)
+                {
+                    // when this is part of a pair, skip it
+                    if (pairs.contains(gen))
+                        continue;
+                    keys.add((i+"g"+gen.substring(0,3)).intern());
+                }
+                // finally report the number of pairs
+                if (!pairs.isEmpty())
+                    keys.add((i + "p" + pairs.size()).intern());
             }
             keys.add("e"+elevator.floorNum);
             keys.sort(String::compareTo);
@@ -352,25 +380,25 @@ public class Day11 {
     private static class Elevator
     {
         int floorNum=0;
-        Set<Chip> chips = new HashSet<>();
-        Set<Generator> generators = new HashSet<>();
+        Set<String> chips = new HashSet<>();
+        Set<String> generators = new HashSet<>();
 
-        void addChip(Chip chip)
+        void addChip(String String)
         {
-            chips.add(chip);
+            chips.add(String);
         }
 
-        void removeChip(Chip chip)
+        void removeChip(String String)
         {
-            chips.remove(chip);
+            chips.remove(String);
         }
 
-        void addGenerator(Generator gen)
+        void addGenerator(String gen)
         {
             generators.add(gen);
         }
 
-        void removeGenerator(Generator gen)
+        void removeGenerator(String gen)
         {
             generators.remove(gen);
         }
@@ -409,25 +437,25 @@ public class Day11 {
 
     private static class Floor
     {
-        Set<Chip> chips = new HashSet<>();
-        Set<Generator> generators = new HashSet<>();
+        Set<String> chips = new HashSet<>();
+        Set<String> generators = new HashSet<>();
 
-        void addChip(Chip chip)
+        void addChip(String String)
         {
-            chips.add(chip);
+            chips.add(String);
         }
 
-        void removeChip(Chip chip)
+        void removeChip(String String)
         {
-            chips.remove(chip);
+            chips.remove(String);
         }
 
-        void addGenerator(Generator gen)
+        void addGenerator(String gen)
         {
             generators.add(gen);
         }
 
-        void removeGenerator(Generator gen)
+        void removeGenerator(String gen)
         {
             generators.remove(gen);
         }
@@ -463,60 +491,6 @@ public class Day11 {
             floor.chips.addAll(chips);
             floor.generators.addAll(generators);
             return floor;
-        }
-    }
-
-    private static class Chip
-    {
-        public String name;
-        Chip(String name)
-        {
-            this.name=name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Chip chip = (Chip) o;
-            return Objects.equals(name, chip.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name);
-        }
-
-        @Override
-        public String toString() {
-            return "chip {"+ name + '}';
-        }
-    }
-
-    private static class Generator
-    {
-        public String name;
-        Generator(String name)
-        {
-            this.name=name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Generator generator = (Generator) o;
-            return Objects.equals(name, generator.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(name);
-        }
-
-        @Override
-        public String toString() {
-            return "gen {"+ name + '}';
         }
     }
 }
