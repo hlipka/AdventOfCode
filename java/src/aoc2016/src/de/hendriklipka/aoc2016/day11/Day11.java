@@ -1,5 +1,6 @@
 package de.hendriklipka.aoc2016.day11;
 
+import de.hendriklipka.aoc.search.BestFirstParallelSearch;
 import de.hendriklipka.aoc.search.BestFirstSearch;
 import de.hendriklipka.aoc.search.SearchState;
 import de.hendriklipka.aoc.search.SearchWorld;
@@ -39,7 +40,7 @@ public class Day11 {
     {
         BuildingWorld world = new BuildingWorld(startState);
 
-        BestFirstSearch<BuildingWorld, RTGState> search = new BestFirstSearch<>(world);
+        BestFirstParallelSearch<BuildingWorld, RTGState> search = new BestFirstParallelSearch<>(world);
         search.search();
         return world.bestMoves;
     }
@@ -126,6 +127,8 @@ public class Day11 {
                         targetStates.add(target);
                 }
             }
+            // pre-cache the state key so it is done in a separate thread instead of during the (synchronized) insert
+            targetStates.forEach(RTGState::calculateStateKey);
             return targetStates;
         }
 
@@ -268,6 +271,7 @@ public class Day11 {
         Floor[] floors = {new Floor(), new Floor(), new Floor(), new Floor()};
         Elevator elevator= new Elevator();
         private int _score=Integer.MIN_VALUE;
+        private String cachedKey=null;
 
         @Override
         public boolean equals(Object o) {
@@ -305,6 +309,8 @@ public class Day11 {
 
         @Override
         public String calculateStateKey() {
+            if (null!=cachedKey)
+                return cachedKey;
             // create string of the form 'floor thing_type thing_name'
             // this includes the stuff from the elevator (using its current floor)
             // that way we have a canonical, unique list for the states
@@ -348,7 +354,8 @@ public class Day11 {
             }
             keys.add("e"+elevator.floorNum);
             keys.sort(String::compareTo);
-            return StringUtils.join(keys,",");
+            cachedKey = StringUtils.join(keys, ",");
+            return cachedKey;
         }
 
         public int stateScore()
