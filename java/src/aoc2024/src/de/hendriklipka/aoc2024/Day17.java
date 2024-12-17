@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Day17 extends AocPuzzle
 {
@@ -28,25 +27,77 @@ public class Day17 extends AocPuzzle
     @Override
     protected Object solvePartB() throws IOException
     {
-        final long startTime=System.currentTimeMillis();
         final List<String> lines = data.getLines();
         Computer parsed = new Computer(lines);
-        List<String> empty=new ArrayList<>();
-        return Stream.iterate(0L, i -> i + 1L).parallel().filter(i->{
-            if (0==(i%100000000))
-            {
-                long time=System.currentTimeMillis()-startTime;
-                if (time>0)
-                System.out.println(i+" / "+time+"ms / "+(i/time)+" iter/ms");
-            }
-            Computer c = new Computer(empty);
-            c.dayB=true;
-            c.program = parsed.program;
-            c.regA= i;
-            c.run();
-            return c.output.equals(c.program);
 
-        }).findFirst().orElse(-1L);
+        // from observing how fast we get new digits in the result, this is the first with full 16 output values
+        // the digits appear at 1/8/64/512 and so on
+        // (got these by printing out the results and the start values)
+        // from observation we also know that the periods for each digit are 1/8/64/512 and so on
+        // so we need to know when the periods start, and which digits never change
+        // (the periods are how long each numbers stays the same, not when it appears again)
+
+        // when we start at the above value, and log whenever a digit changes for the first time (and to which value)
+        // we that:
+        // - the start values are 7,7,7,7,7,7,7,7,7,7,7,7,7,7,3,7
+        // - the values for the first digit are 7,7,5,4,3,2,1,0, 3,7,4,6,3,2,1,0,7,7,7,0,3,3,1,0
+        // - we also see that the periods are, again 1/8/64/512
+        //   (but they look twice as big since they see twice the same number at the start
+        // - it seems that all follow the same number sequence that the first digit does
+
+        // with the above progression of the digits, and the period of the digits, the last digit can only advance 8 times until we get another digit
+
+        // question: does the second-to-last-digit ever change?
+
+        // find the range where the last digit is valid
+        // at the start, look at the value of the previous digit
+        // if it does not match, jump forward (by its period) until we have a matching value
+        //   - we need to stay in the period of the current digit
+        // recursively go to the left
+        // either we find a full match (then it's the first one)
+        // if not, go up and jump forward until we find the next matching number
+
+        return findStartValue(parsed, 35184372088832L, 15);
+
+    }
+
+    private long findStartValue(final Computer parsed, final long rangeStart, final int digit)
+    {
+        if (digit==-1)
+            return rangeStart;
+        final long programDigit = parsed.program.get(digit);
+        final long period = getPeriod(digit);
+        for (int i=0; i<8; i++)
+        {
+            final long currentRangeStart = rangeStart + (long) i * period;
+            final List<Long> result = runComputer(parsed, currentRangeStart);
+            final Long currentResultDigit = result.get(digit);
+            if (currentResultDigit == programDigit)
+            {
+                long innerStartValue=findStartValue(parsed, currentRangeStart, digit-1);
+                if (0!=innerStartValue)
+                    return innerStartValue;
+            }
+        }
+        return 0;
+    }
+
+    private static long getPeriod(final int digit)
+    {
+        long result=1;
+        for (int i=0; i<digit; i++)
+            result *=8;
+        return result;
+    }
+
+    private static List<Long> runComputer(final Computer parsed, final long currentRegA)
+    {
+        Computer computer = new Computer(new ArrayList<>());
+        computer.dayB=true;
+        computer.program = parsed.program;
+        computer.regA= currentRegA;
+        computer.run();
+        return computer.output;
     }
 
     private static class Computer
@@ -94,16 +145,7 @@ public class Day17 extends AocPuzzle
                     case 4: regB=regB^regC;
                         break;
                     case 5:
-                        final long value = combo(operand) % 8;
-                        output.add(value);
-                        if (dayB) // for partB we check whether we can exit already
-                        {
-                            final int size = output.size();
-                            if (program.get(size-1)!=value) // wrote a wrong value
-                                return;
-                            if (size == program.size()) // output size reached
-                                return;
-                        }
+                        output.add(combo(operand) % 8);
                         break;
                     case 6: regB=divide(combo(operand));
                         break;
