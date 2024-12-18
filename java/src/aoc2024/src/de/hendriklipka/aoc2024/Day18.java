@@ -5,7 +5,7 @@ import de.hendriklipka.aoc.AocPuzzle;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
 import de.hendriklipka.aoc.search.AStarSearch;
-import de.hendriklipka.aoc.search.ArrayWorld;
+import de.hendriklipka.aoc.search.CharArrayWorld;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +38,7 @@ public class Day18 extends AocPuzzle
         }
 
         data.getLines().stream().limit(lines).forEach(l->setMemory(memory, l));
-        AStarSearch search=new AStarSearch(new MemoryWorld(memory, start, end));
+        AStarSearch search=new AStarSearch(new CharArrayWorld(memory, start, end, '#'));
         return search.findPath();
     }
 
@@ -64,73 +64,24 @@ public class Day18 extends AocPuzzle
             memory = CharMatrix.filledMatrix(71,71,'.', '#');
             end=new Position(70,70);
         }
-        List<String> bytes=data.getLines();
-        final MemoryWorld world = new MemoryWorld(memory, start, end);
-        for (int i=0;i<bytes.size();i++)
+        List<String> addresses=data.getLines();
+        final CharArrayWorld world = new CharArrayWorld(memory, start, end, '#');
+        // lets just brute-force all paths
+        // we should start after the first 1024 lines, but this still runs in under 1 minute
+        // optimization: check whether the next byte would land on the current shortest path, if not we can skip it
+        // (but the current AStarSearch cannot return the path)
+        // we also could do a binary search, which would be even faster
+        for (String address : addresses)
         {
-            setMemory(memory, bytes.get(i));
-            AStarSearch search=new AStarSearch(world);
-            if (search.findPath()==Integer.MAX_VALUE)
+            setMemory(memory, address);
+            AStarSearch search = new AStarSearch(world);
+            search.findPath();
+            if (search.didFoundTarget())
             {
-                return bytes.get(i);
+                return address;
             }
         }
-        return -1;
+        return "none";
     }
 
-    private static class MemoryWorld implements ArrayWorld
-    {
-        private final CharMatrix _memory;
-        private final Position _start;
-        private final Position _end;
-
-        public MemoryWorld(final CharMatrix memory, Position start, Position end)
-        {
-            _memory=memory;
-            _start=start;
-            _end=end;
-        }
-
-        @Override
-        public int getWidth()
-        {
-            return _memory.cols();
-        }
-
-        @Override
-        public int getHeight()
-        {
-            return _memory.rows();
-        }
-
-        @Override
-        public int getStartX()
-        {
-            return _start.col;
-        }
-
-        @Override
-        public int getStartY()
-        {
-            return _start.row;
-        }
-
-        @Override
-        public int getEndX()
-        {
-            return _end.col;
-        }
-
-        @Override
-        public int getEndY()
-        {
-            return _end.row;
-        }
-
-        @Override
-        public boolean canMoveTo(final int oldX, final int oldY, final int x, final int y)
-        {
-            return _memory.at(y,x)!='#';
-        }
-    }
 }
