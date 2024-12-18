@@ -5,7 +5,6 @@ import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
 import de.hendriklipka.aoc.search.BestFirstSearch;
-import de.hendriklipka.aoc.search.DepthFirstSearch;
 import de.hendriklipka.aoc.search.SearchState;
 import de.hendriklipka.aoc.search.SearchWorld;
 
@@ -38,12 +37,15 @@ public class Day16 extends AocPuzzle
         search.search();
         int bestScore= world.bestScore;
 
+        // once we know the best score, we search again, but this time enforce looking at all paths
+        // we prune by the known best score so only the exact best paths should finish
+        // the prune function in 'ForestWorld' will keep all paths which are as good as the current best path
+        // (instead of insisting on being better) so we finish all best path until the end (and collect them there)
+        // potentially we can even skip this second search, and filter all the collected paths by the ones with the best score
         forest = data.getLinesAsCharMatrix('#');
         world = new ForestWorld(forest, forest.findFirst('S'), forest.findFirst('E'));
         world.bestScore = bestScore;
-        // once we know the best score, we search again, but this time enforce looking at all paths
-        // we prune by the known best score so only the exact best paths should finish
-        DepthFirstSearch<ForestWorld, ForestState> search2 = new DepthFirstSearch<>(world);
+        BestFirstSearch<ForestWorld, ForestState> search2 = new BestFirstSearch<>(world);
         search2.search();
         // go through all the best paths, and collect unique positions
         Set<Position> paths = new HashSet<>();
