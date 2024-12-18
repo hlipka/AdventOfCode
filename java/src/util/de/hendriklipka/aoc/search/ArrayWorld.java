@@ -45,4 +45,16 @@ public interface ArrayWorld
      */
     boolean canMoveTo(int oldX, int oldY, int x, int y);
 
+    /**
+     * Returns the projected cost to get from the provided position to the end. Lower position means better.
+     * The default implementation uses manhattan distance
+     *
+     * @param x x of the position
+     * @param y y of the position
+     * @return cost (lower is better)
+     */
+    default int remainingCost(int x, int y)
+    {
+        return Math.abs(getEndX() - x) + Math.abs(getEndY() - y);
+    }
 }

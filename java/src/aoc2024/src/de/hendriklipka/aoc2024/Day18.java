@@ -4,6 +4,7 @@ import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.AocPuzzle;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
+import de.hendriklipka.aoc.search.AStarPrioritizedSearch;
 import de.hendriklipka.aoc.search.AStarSearch;
 import de.hendriklipka.aoc.search.CharArrayWorld;
 
@@ -38,7 +39,8 @@ public class Day18 extends AocPuzzle
         }
 
         data.getLines().stream().limit(lines).forEach(l->setMemory(memory, l));
-        AStarSearch search=new AStarSearch(new CharArrayWorld(memory, start, end, '#'));
+        //AStarSearch search=new AStarSearch(new CharArrayWorld(memory, start, end, '#'));
+        AStarPrioritizedSearch search = new AStarPrioritizedSearch(new CharArrayWorld(memory, start, end, '#')); // simple manhattan distance as heuristic
         return search.findPath();
     }
 
@@ -74,9 +76,9 @@ public class Day18 extends AocPuzzle
         for (String address : addresses)
         {
             setMemory(memory, address);
-            AStarSearch search = new AStarSearch(world);
+            AStarPrioritizedSearch search = new AStarPrioritizedSearch(world); // simple manhattan distance as heuristic
             search.findPath();
-            if (search.didFoundTarget())
+            if (!search.didFoundTarget())
             {
                 return address;
             }
