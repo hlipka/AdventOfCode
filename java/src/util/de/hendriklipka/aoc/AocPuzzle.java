@@ -6,6 +6,7 @@ public abstract class AocPuzzle
 {
     private final String _year;
     private final String _day;
+    protected boolean isExample=false;
 
     protected AocDataFileUtils data;
 
@@ -36,6 +37,7 @@ public abstract class AocPuzzle
             {
                 if (doExamples)
                 {
+                    isExample=true;
                     data = new AocDataFileUtils(_year, "ex"+_day);
                     startTime = System.currentTimeMillis();
                     final Object resultExampleA = solvePartA();
@@ -43,6 +45,7 @@ public abstract class AocPuzzle
                     System.out.println("example A:\n" + resultExampleA);
                     System.out.println("took " + (endTime - startTime) + "ms");
                 }
+                isExample=false;
                 data = new AocDataFileUtils(_year, "day" +_day);
                 startTime = System.currentTimeMillis();
                 final Object resultA = solvePartA();
@@ -55,6 +58,7 @@ public abstract class AocPuzzle
             }
             if (doExamples)
             {
+                isExample=true;
                 data = new AocDataFileUtils(_year, "ex" +_day);
                 startTime = System.currentTimeMillis();
                 final Object resultExampleB = solvePartB();
@@ -62,6 +66,7 @@ public abstract class AocPuzzle
                 System.out.println("example B:\n" + resultExampleB);
                 System.out.println("took " + (endTime - startTime) + "ms");
             }
+            isExample=false;
             data = new AocDataFileUtils(_year, "day" +_day);
             startTime = System.currentTimeMillis();
             final Object resultB = solvePartB();
