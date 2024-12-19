@@ -95,6 +95,16 @@ public class AocDataFileUtils
                 .collect(Collectors.toList());
     }
 
+    public static List<List<Long>> getLineLongs(final String yearName, final String dayName, final String separator) throws IOException
+    {
+        List<String> lines = FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8);
+        return lines.stream()
+                .filter(StringUtils::isNotBlank)
+                .map(l -> Arrays.stream(StringUtils.split(l, separator)).map(Long::parseLong).collect(
+                        Collectors.toList()))
+                .collect(Collectors.toList());
+    }
+
     public static List<String> getLines(final String yearName, final String dayName) throws IOException
     {
         return FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).collect(
@@ -233,6 +243,11 @@ public class AocDataFileUtils
     public List<List<Integer>> getLineIntegers(final String separator) throws IOException
     {
         return getLineIntegers(yearName, dayName, separator);
+    }
+
+    public List<List<Long>> getLineLongs(final String separator) throws IOException
+    {
+        return getLineLongs(yearName, dayName, separator);
     }
 
     public List<String> getLines() throws IOException
