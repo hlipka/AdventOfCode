@@ -1,5 +1,8 @@
 package de.hendriklipka.aoc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * User: hli
  * Date: 25.12.22
@@ -131,5 +134,25 @@ public class Position implements Keyable
     public String getKey()
     {
         return row+","+col;
+    }
+
+    /**
+     * Gets all positions, relative to the position, which are exactly at the provided
+     * manhattan distance (no closer positions are included). No guarantee abut the order is given.
+     *
+     * @param dist the manhattan distance
+     * @return list of all positions at this distance
+     */
+    public List<Position> getWithinDistance(final int dist)
+    {
+        final List<Position> result = new ArrayList<>();
+        for (int x=0;x<dist;x++)
+        {
+            result.add(updated(x, dist-x));
+            result.add(updated(-x, -(dist-x)));
+            result.add(updated(-(dist-x), x));
+            result.add(updated(dist-x, -x));
+        }
+        return result;
     }
 }

@@ -70,6 +70,7 @@ public class AStarPrioritizedSearch
             if (current.equals(end))
             {
                 foundTarget=true;
+                lastState=state;
                 return; // stop at the first path
             }
 
@@ -87,6 +88,11 @@ public class AStarPrioritizedSearch
     public boolean didFoundTarget()
     {
         return foundTarget;
+    }
+
+    public int getPathLength(final Position p)
+    {
+        return path.at(p);
     }
 
     private class State
