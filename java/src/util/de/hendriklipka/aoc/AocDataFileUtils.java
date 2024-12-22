@@ -158,6 +158,12 @@ public class AocDataFileUtils
                 Integer::parseInt).toList());
     }
 
+    public static List<Long> getLinesAsLong(final String yearName, final String dayName) throws IOException
+    {
+        return new ArrayList<>(FileUtils.readLines(getDataFileName(yearName, dayName), StandardCharsets.UTF_8).stream().filter(StringUtils::isNotBlank).map(
+                Long::parseLong).toList());
+    }
+
     public static Map<String, List<String>> getLinesIntoStringMap(final String yearName, final String dayName, char partSeparator, char listSeparator) throws
             IOException
     {
@@ -288,6 +294,11 @@ public class AocDataFileUtils
     public List<Integer> getLinesAsInt() throws IOException
     {
         return getLinesAsInt(yearName, dayName);
+    }
+
+    public List<Long> getLinesAsLong() throws IOException
+    {
+        return getLinesAsLong(yearName, dayName);
     }
 
     public Map<String, List<String>> getLinesIntoStringMap(char partSeparator, char listSeparator) throws IOException
