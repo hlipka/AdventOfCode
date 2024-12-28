@@ -315,6 +315,8 @@ public class CharMatrix
         while (!toVisit.isEmpty())
         {
             Position currentPosition = toVisit.remove(0);
+            if (positions.contains(currentPosition))
+                continue;
             positions.add(currentPosition);
             for (Direction d: Direction.values())
             {
