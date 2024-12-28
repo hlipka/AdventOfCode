@@ -1,5 +1,7 @@
 package de.hendriklipka.aoc2016.day12;
 
+import de.hendriklipka.aoc2016.Day23;
+
 import java.util.List;
 
 /**
@@ -34,6 +36,10 @@ public class CommandParser
         if (line.startsWith("jnz"))
         {
             return new JumpCommand(line.substring(4));
+        }
+        if (line.startsWith("tgl"))
+        {
+            return new ToggleCommand(line.substring(4));
         }
         throw new IllegalArgumentException("unknown command in " + line);
     }
