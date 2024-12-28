@@ -1,5 +1,7 @@
 package de.hendriklipka.aoc.search;
 
+import de.hendriklipka.aoc.Position;
+
 /**
  * Class for a generic A* search in an array-based world
  */
@@ -71,5 +73,10 @@ public class AStarSearch
     public boolean didFoundTarget()
     {
         return foundTarget;
+    }
+
+    public int getPathLength(final Position p)
+    {
+        return path[p.col][p.row];
     }
 }
