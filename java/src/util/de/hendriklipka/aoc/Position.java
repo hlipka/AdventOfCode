@@ -155,4 +155,18 @@ public class Position implements Keyable
         }
         return result;
     }
+
+    // for a hex grid, each column has only every second row set - the other rows are then in the next column
+    public Position updated(HexDirection direction)
+    {
+        return switch (direction)
+        {
+            case N -> new Position(row - 2, col);
+            case S -> new Position(row + 2, col);
+            case NE -> new Position(row - 1, col + 1);
+            case NW -> new Position(row - 1, col - 1);
+            case SE -> new Position(row + 1, col + 1);
+            case SW -> new Position(row + 1, col - 1);
+        };
+    }
 }
