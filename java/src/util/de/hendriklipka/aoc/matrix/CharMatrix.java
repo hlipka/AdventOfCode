@@ -19,14 +19,17 @@ public class CharMatrix
     public CharMatrix(List<List<Character>> data, char defaultChar)
     {
         _rows = data.size();
-        _cols = data.get(0).size();
+        _cols = data.stream().mapToInt(List::size).max().orElse(0);
         _data = new char[_rows][_cols];
         for (int r = 0; r < _data.length; r++)
         {
             List<Character> row = data.get(r);
-            for (int c = 0; c < row.size(); c++)
+            for (int c = 0; c < _cols; c++)
             {
-                _data[r][c] = row.get(c);
+                if (c< row.size())
+                    _data[r][c] = row.get(c);
+                else
+                    _data[r][c]=defaultChar;
             }
         }
         _defaultChar = defaultChar;
