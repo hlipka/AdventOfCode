@@ -53,4 +53,14 @@ public class MathUtils
             return null;
         }
     }
+
+    public static int mod(int a, int b)
+    {
+        return ((a % b) + b) % b;
+    }
+
+    public static long mod(long a, long b)
+    {
+        return ((a % b) + b) % b;
+    }
 }
