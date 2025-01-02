@@ -169,4 +169,9 @@ public class Position implements Keyable
             case SW -> new Position(row + 1, col - 1);
         };
     }
+
+    public Position updated(final Position other)
+    {
+        return new Position(row + other.row, col + other.col);
+    }
 }

@@ -3,6 +3,7 @@ package de.hendriklipka.aoc.matrix;
 import de.hendriklipka.aoc.DiagonalDirections;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -39,7 +40,9 @@ public class CharMatrix
     {
         _rows = data.length;
         _cols = data[0].length;
-        _data = data;
+        _data = data.clone();
+        for (int r=0; r < _rows; r++)
+            _data[r]=data[r].clone();
         _defaultChar = defaultChar;
     }
 
@@ -328,5 +331,58 @@ public class CharMatrix
             }
         }
         return positions;
+    }
+
+    /**
+     * get all 8 transformations of this character matrix:
+     * - get original matrix
+     * - in all 4 rotations
+     * - flipped vertically and horizontally
+     * - and the first rotation of each flip
+     * When the numbers of rows and columns do not match, an IllegalStateException is thrown.
+     *
+     * @return the list of transformed matrices
+     */
+    public List<CharMatrix> getTransformations()
+    {
+        if (_rows!=_cols)
+            throw new IllegalStateException();
+
+        CharMatrix r1, r2, r3, fv,fh,fvr,fhr;
+
+        fh=new CharMatrix(_data, _defaultChar);
+        for (int r=0;r<_rows;r++)
+            ArrayUtils.reverse(fh._data[r]);
+
+        fv=new CharMatrix(_data, _defaultChar);
+        for (int r = 0; r < _rows; r++)
+        {
+            for (int c=0;c<_cols;c++)
+            {
+                fv._data[r][c] = _data[_rows-r-1][c];
+                fv._data[_rows-r-1][c] = _data[r][c];
+            }
+        }
+
+        r1=rotate();
+        r2=r1.rotate();
+        r3=r2.rotate();
+        fvr=fv.rotate();
+        fhr=fh.rotate();
+
+        return List.of(this, r1, r2, r3, fv, fh, fvr, fhr);
+    }
+
+    public CharMatrix rotate()
+    {
+        CharMatrix rot = new CharMatrix(_data, _defaultChar);
+        for (int r = 0; r < _rows; r++)
+        {
+            for (int c = 0; c < _cols; c++)
+            {
+                rot._data[r][c] = _data[_cols-c-1][r];
+            }
+        }
+        return rot;
     }
 }
