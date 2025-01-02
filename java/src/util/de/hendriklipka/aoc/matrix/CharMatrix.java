@@ -60,9 +60,8 @@ public class CharMatrix
     public static CharMatrix filledMatrix(int rows, int cols, char fillChar, char defaultChar)
     {
         final char[][] data = new char[rows][cols];
-        for (int r = 0; r < data.length; r++)
+        for (char[] currentRow : data)
         {
-            char[] currentRow = data[r];
             Arrays.fill(currentRow, fillChar);
         }
         return new CharMatrix(data, defaultChar);
