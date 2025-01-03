@@ -11,30 +11,15 @@ import java.util.*;
  */
 public class GraphSearch
 {
-    Map<String, Node> nodes = new HashMap<>();
+    final Graph graph;
     Map<String, Integer> pathCostCache = new HashMap<>();
     Map<String, List<String>> pathCache = new HashMap<>();
 
-    public void addNode(String name)
+    public GraphSearch(final Graph graph)
     {
-        nodes.put(name, new Node(name));
+        this.graph = graph;
     }
 
-    public void addEdge(String from, String to, int cost)
-    {
-        Node fromNode = nodes.get(from);
-        if (null == fromNode)
-        {
-            throw new IllegalArgumentException("unknown node " + from);
-        }
-        Node toNode = nodes.get(to);
-        if (null == toNode)
-        {
-            throw new IllegalArgumentException("unknown node " + to);
-        }
-        fromNode.addEdge(to, cost);
-        toNode.addEdge(from, cost);
-    }
 
     public int getPathCost(String from, String to)
     {
@@ -45,48 +30,49 @@ public class GraphSearch
             return cost;
         }
 
-        for (Node node : nodes.values())
+        for (GraphNode node : graph.getNodes())
         {
-            node.init();
+            node.setDistance(Integer.MAX_VALUE);
+            node.setPreviousNode(null);
         }
-        Node start = nodes.get(from);
+        GraphNode start = graph.nodes.get(from);
         if (null == start)
         {
             throw new IllegalArgumentException("unknown node " + from);
         }
-        start.distance = 0;
-        PriorityQueue<Node> allNodes = new PriorityQueue<>(nodes.values());
-        while (!allNodes.isEmpty())
+        start.setDistance(0);
+        PriorityQueue<GraphNode> allGraphNodes = new PriorityQueue<>(graph.nodes.values());
+        while (!allGraphNodes.isEmpty())
         {
-            Node n = allNodes.poll();
+            GraphNode n = allGraphNodes.poll();
             List<Pair<String, Integer>> edges = n.getEdges();
             for (Pair<String, Integer> edge : edges)
             {
-                int newDist = n.distance + edge.getRight();
-                Node other = nodes.get(edge.getLeft());
-                if (allNodes.contains(other))
+                int newDist = n.getDistance() + edge.getRight();
+                GraphNode other = graph.nodes.get(edge.getLeft());
+                if (allGraphNodes.contains(other))
                 {
-                    if (newDist < other.distance)
+                    if (newDist < other.getDistance())
                     {
-                        other.distance = newDist;
-                        other.pre = n.getName();
+                        other.setDistance(newDist);
+                        other.setPreviousNode(n.getName());
                         // we need to re-insert, since we update the value used for sorting
                         //TODO contains and remove are linear-time, so we need something better (for larger graphs)
                         // (potentially use a set of nodes, and maps for the values)
-                        allNodes.remove(other);
-                        allNodes.add(other);
+                        allGraphNodes.remove(other);
+                        allGraphNodes.add(other);
                     }
                 }
             }
         }
-        Node target = nodes.get(to);
-        cost = target.distance;
+        GraphNode target = graph.nodes.get(to);
+        cost = target.getDistance();
         pathCostCache.put(key, cost);
         List<String> path = new ArrayList<>();
         while (target != start)
         {
-            path.add(0, target.name); //TODO: this might be slow with large paths
-            target = nodes.get(target.pre);
+            path.add(0, target.getName()); //TODO: this might be slow with large paths
+            target = graph.nodes.get(target.getPreviousNode());
         }
         path.add(0, from);
         pathCache.put(key, path);
@@ -100,43 +86,4 @@ public class GraphSearch
         return pathCache.get(key);
     }
 
-    static class Node implements Comparable<Node>
-    {
-        private final List<Pair<String, Integer>> egdes = new ArrayList<>();
-        private final String name;
-        private int distance;
-        private String pre;
-
-        public Node(String name)
-        {
-            this.name = name;
-        }
-
-        void addEdge(String to, int cost)
-        {
-            egdes.add(Pair.of(to, cost));
-        }
-
-        List<Pair<String, Integer>> getEdges()
-        {
-            return egdes;
-        }
-
-        void init()
-        {
-            distance = Integer.MAX_VALUE;
-            pre = null;
-        }
-
-        @Override
-        public int compareTo(Node o)
-        {
-            return Integer.compare(distance, o.distance);
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-    }
 }

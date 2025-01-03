@@ -16,15 +16,16 @@ public class _GraphSearch
     @Test
     public void testSimpleGraph()
     {
-        GraphSearch gs = new GraphSearch();
-        gs.addNode("a");
-        gs.addNode("b");
-        gs.addNode("c");
-        gs.addNode("d");
-        gs.addEdge("a", "b", 1);
-        gs.addEdge("a", "c", 2);
-        gs.addEdge("b", "d", 1);
-        gs.addEdge("b", "d", 1);
+        Graph graph = new Graph();
+        GraphSearch gs = new GraphSearch(graph);
+        graph.addNode("a");
+        graph.addNode("b");
+        graph.addNode("c");
+        graph.addNode("d");
+        graph.addEdge("a", "b", 1);
+        graph.addEdge("a", "c", 2);
+        graph.addEdge("b", "d", 1);
+        graph.addEdge("b", "d", 1);
 
         assertThat(gs.getPathCost("a", "b"), is(1));
         assertThat(gs.getPathCost("a", "c"), is(2));
@@ -38,28 +39,29 @@ public class _GraphSearch
     @Test
     public void testLargerGraph()
     {
-        GraphSearch gs = new GraphSearch();
-        gs.addNode("a");
-        gs.addNode("b");
-        gs.addNode("c");
-        gs.addNode("d");
-        gs.addNode("e");
-        gs.addNode("f");
-        gs.addNode("g");
-        gs.addNode("h");
-        gs.addNode("i");
-        gs.addNode("j");
-        gs.addEdge("a", "b", 1);
-        gs.addEdge("b", "c", 3);
-        gs.addEdge("c", "d", 5);
-        gs.addEdge("c", "h", 6);
-        gs.addEdge("a", "i", 2);
-        gs.addEdge("i", "h", 4);
-        gs.addEdge("d", "e", 10);
-        gs.addEdge("e", "f", 11);
-        gs.addEdge("h", "f", 7);
-        gs.addEdge("h", "g", 8);
-        gs.addEdge("g", "j", 9);
+        Graph graph = new Graph();
+        GraphSearch gs = new GraphSearch(graph);
+        graph.addNode("a");
+        graph.addNode("b");
+        graph.addNode("c");
+        graph.addNode("d");
+        graph.addNode("e");
+        graph.addNode("f");
+        graph.addNode("g");
+        graph.addNode("h");
+        graph.addNode("i");
+        graph.addNode("j");
+        graph.addEdge("a", "b", 1);
+        graph.addEdge("b", "c", 3);
+        graph.addEdge("c", "d", 5);
+        graph.addEdge("c", "h", 6);
+        graph.addEdge("a", "i", 2);
+        graph.addEdge("i", "h", 4);
+        graph.addEdge("d", "e", 10);
+        graph.addEdge("e", "f", 11);
+        graph.addEdge("h", "f", 7);
+        graph.addEdge("h", "g", 8);
+        graph.addEdge("g", "j", 9);
 
         assertThat(gs.getPathCost("a", "b"), is(1));
         assertThat(gs.getPathCost("a", "c"), is(4));

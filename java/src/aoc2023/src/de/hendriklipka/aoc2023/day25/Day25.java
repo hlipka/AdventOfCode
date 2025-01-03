@@ -2,6 +2,7 @@ package de.hendriklipka.aoc2023.day25;
 
 import de.hendriklipka.aoc.AocDataFileUtils;
 import de.hendriklipka.aoc.AocParseUtils;
+import de.hendriklipka.aoc.search.Graph;
 import de.hendriklipka.aoc.search.GraphSearch;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -67,15 +68,16 @@ public class Day25
 
     private static GraphSearch createGraph(List<String> allNodes)
     {
-        GraphSearch gs=new GraphSearch();
+        final Graph graph = new Graph();
+        GraphSearch gs=new GraphSearch(graph);
         for (String n: allNodes)
         {
-            gs.addNode(n);
+            graph.addNode(n);
         }
         for (String n : wires.keys())
         {
             for(String w: wires.get(n))
-                gs.addEdge(n, w, 1);
+                graph.addEdge(n, w, 1);
         }
         return gs;
     }
