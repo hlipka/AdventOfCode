@@ -18,6 +18,18 @@ public class Position implements Keyable
         this.col = col;
     }
 
+    public static Position withRowCol(String line, final char separator)
+    {
+        List<Integer> parts=AocParseUtils.splitLineToInts(line, separator);
+        return new Position(parts.get(0), parts.get(1));
+    }
+
+    public static Position withXY(String line, final char separator)
+    {
+        List<Integer> parts=AocParseUtils.splitLineToInts(line, separator);
+        return new Position(parts.get(1), parts.get(0));
+    }
+
     @Override
     public boolean equals(Object o)
     {

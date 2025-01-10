@@ -103,7 +103,7 @@ public class AocParseUtils
         String[] nums = StringUtils.split(line, separator);
         final List<Integer> result=new ArrayList<>(nums.length);
         for (String s: nums)
-            result.add(Integer.parseInt(s));
+            result.add(Integer.parseInt(s.trim()));
         return result;
     }
 
