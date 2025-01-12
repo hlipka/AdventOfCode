@@ -5,6 +5,7 @@ import guru.nidi.graphviz.attribute.Rank;
 import guru.nidi.graphviz.engine.Engine;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.engine.Rasterizer;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.LinkSource;
 import guru.nidi.graphviz.model.Node;
@@ -42,7 +43,7 @@ public class VizUtils
         g=g.with(gn);
         try
         {
-            Graphviz.fromGraph(g).engine(Engine.NEATO).height(2000).render(Format.PNG).toFile(new File(fileName + ".png"));
+            Graphviz.fromGraph(g).engine(Engine.DOT).height(2000).render(Format.PNG).toFile(new File(fileName + ".png"));
             Graphviz.fromGraph(g).render(Format.DOT).toFile(new File(fileName+".dot"));
         }
         catch (IOException e)
