@@ -3,7 +3,6 @@ package de.hendriklipka.aoc2018;
 import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.AocPuzzle;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
