@@ -38,12 +38,21 @@ public abstract class AocPuzzle
                 if (doExamples)
                 {
                     isExample=true;
-                    data = new AocDataFileUtils(_year, "ex"+_day);
-                    startTime = System.currentTimeMillis();
-                    final Object resultExampleA = solvePartA();
-                    endTime = System.currentTimeMillis();
-                    System.out.println("example A:\n" + resultExampleA);
-                    System.out.println("took " + (endTime - startTime) + "ms");
+                    if (AocDataFileUtils.getDataFileName(_year, "ex" + _day).exists())
+                    {
+                        handleExampleFilePartA(_day);
+                    }
+                    else
+                    {
+                        int count=1;
+                        while (AocDataFileUtils.getDataFileName(_year, "ex" + _day+"_"+count).exists())
+                        {
+                            handleExampleFilePartA(_day + "_" + count);
+                            System.out.println("--------------------------------");
+                            System.out.println();
+                            count++;
+                        }
+                    }
                 }
                 isExample=false;
                 data = new AocDataFileUtils(_year, "day" +_day);
@@ -59,12 +68,21 @@ public abstract class AocPuzzle
             if (doExamples)
             {
                 isExample=true;
-                data = new AocDataFileUtils(_year, "ex" +_day);
-                startTime = System.currentTimeMillis();
-                final Object resultExampleB = solvePartB();
-                endTime = System.currentTimeMillis();
-                System.out.println("example B:\n" + resultExampleB);
-                System.out.println("took " + (endTime - startTime) + "ms");
+                if (AocDataFileUtils.getDataFileName(_year, "ex" + _day).exists())
+                {
+                    handleExampleFilePartA(_day);
+                }
+                else
+                {
+                    int count = 1;
+                    while (AocDataFileUtils.getDataFileName(_year, "ex" + _day + "_" + count).exists())
+                    {
+                        handleExampleFilePartB(_day + "_" + count);
+                        System.out.println("--------------------------------");
+                        System.out.println();
+                        count++;
+                    }
+                }
             }
             isExample=false;
             data = new AocDataFileUtils(_year, "day" +_day);
@@ -79,6 +97,30 @@ public abstract class AocPuzzle
         {
             throw new RuntimeException(e);
         }
+    }
+
+    private void handleExampleFilePartA(final String day) throws IOException
+    {
+        long startTime;
+        long endTime;
+        data = new AocDataFileUtils(_year, "ex" + day);
+        startTime = System.currentTimeMillis();
+        final Object resultExampleA = solvePartA();
+        endTime = System.currentTimeMillis();
+        System.out.println("example A ("+day+"):\n" + resultExampleA);
+        System.out.println("took " + (endTime - startTime) + "ms");
+    }
+
+    private void handleExampleFilePartB(final String day) throws IOException
+    {
+        long startTime;
+        long endTime;
+        data = new AocDataFileUtils(_year, "ex" + day);
+        startTime = System.currentTimeMillis();
+        final Object resultExampleA = solvePartB();
+        endTime = System.currentTimeMillis();
+        System.out.println("example B ("+day+"):\n" + resultExampleA);
+        System.out.println("took " + (endTime - startTime) + "ms");
     }
 
     protected abstract Object solvePartA() throws IOException;

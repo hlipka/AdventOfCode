@@ -43,7 +43,7 @@ public class AocDataFileUtils
         return blocks;
     }
 
-    private static File getDataFileName(final String yearName, final String dayName)
+    public static File getDataFileName(final String yearName, final String dayName)
     {
         return new File("../data/" + yearName + "/" + dayName + ".txt");
     }
