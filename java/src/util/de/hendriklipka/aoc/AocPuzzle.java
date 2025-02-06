@@ -76,7 +76,7 @@ public abstract class AocPuzzle
                 isExample=true;
                 if (AocDataFileUtils.getDataFileName(_year, "ex" + _day).exists())
                 {
-                    handleExampleFilePartA(_day);
+                    handleExampleFilePartB(_day);
                 }
                 else
                 {
