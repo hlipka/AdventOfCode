@@ -22,6 +22,7 @@ public abstract class AocPuzzle
     protected void doPuzzle(final String[] args)
     {
         boolean doExamples=true;
+        boolean doReal=true;
         boolean doPartA=true;
         for (String arg : args)
         {
@@ -29,6 +30,8 @@ public abstract class AocPuzzle
                 doPartA=false;
             if (arg.equals("skipX"))
                 doExamples=false;
+            if (arg.equals("skipR"))
+                doReal=false;
         }
         try
         {
@@ -54,15 +57,18 @@ public abstract class AocPuzzle
                         }
                     }
                 }
-                isExample=false;
-                data = new AocDataFileUtils(_year, "day" +_day);
-                startTime = System.currentTimeMillis();
-                final Object resultA = solvePartA();
-                endTime = System.currentTimeMillis();
-                System.out.println("result A:\n" + resultA);
-                System.out.println("======================");
-                System.out.println("took " + (endTime - startTime) + "ms");
-                System.out.println();
+                if(doReal)
+                {
+                    isExample = false;
+                    data = new AocDataFileUtils(_year, "day" + _day);
+                    startTime = System.currentTimeMillis();
+                    final Object resultA = solvePartA();
+                    endTime = System.currentTimeMillis();
+                    System.out.println("result A:\n" + resultA);
+                    System.out.println("======================");
+                    System.out.println("took " + (endTime - startTime) + "ms");
+                    System.out.println();
+                }
                 System.out.println();
             }
             if (doExamples)
@@ -84,14 +90,17 @@ public abstract class AocPuzzle
                     }
                 }
             }
-            isExample=false;
-            data = new AocDataFileUtils(_year, "day" +_day);
-            startTime = System.currentTimeMillis();
-            final Object resultB = solvePartB();
-            endTime = System.currentTimeMillis();
-            System.out.println("result B:\n" + resultB);
-            System.out.println("======================");
-            System.out.println("took " + (endTime - startTime) + "ms");
+            if (doReal)
+            {
+                isExample = false;
+                data = new AocDataFileUtils(_year, "day" + _day);
+                startTime = System.currentTimeMillis();
+                final Object resultB = solvePartB();
+                endTime = System.currentTimeMillis();
+                System.out.println("result B:\n" + resultB);
+                System.out.println("======================");
+                System.out.println("took " + (endTime - startTime) + "ms");
+            }
         }
         catch (IOException e)
         {

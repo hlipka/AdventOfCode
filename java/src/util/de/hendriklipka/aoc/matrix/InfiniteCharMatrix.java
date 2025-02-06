@@ -4,6 +4,7 @@ import de.hendriklipka.aoc.Position;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * User: hli
@@ -97,5 +98,20 @@ public class InfiniteCharMatrix
             if (expanded.at(p)!=defaultChar)
                 set(pos.updated(p), expanded.at(p));
         }
+    }
+
+    public int getMinRow()
+    {
+        return data.keySet().stream().mapToInt(p->p.row).min().orElseThrow();
+    }
+
+    public int getMaxRow()
+    {
+        return data.keySet().stream().mapToInt(p->p.row).max().orElseThrow();
+    }
+
+    public Set<Position> allKnownTiles()
+    {
+        return data.keySet();
     }
 }
