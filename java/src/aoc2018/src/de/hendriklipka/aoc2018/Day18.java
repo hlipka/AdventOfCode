@@ -3,10 +3,9 @@ import de.hendriklipka.aoc.AocPuzzle;
 import de.hendriklipka.aoc.DiagonalDirections;
 import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.CharMatrix;
+import de.hendriklipka.aoc.search.LoopFinder;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Day18 extends AocPuzzle {
     public static void main(String[] args)
@@ -59,25 +58,7 @@ public class Day18 extends AocPuzzle {
     protected Object solvePartB() throws IOException
     {
         CharMatrix area=data.getLinesAsCharMatrix('.');
-        Map<CharMatrix, Integer> knownAreas=new HashMap<>();
-        knownAreas.put(area, 0);
-        final int target = 1000000000;
-        for (int i = 0; i < target; i++)
-        {
-            area=simulateStep(area);
-            if (knownAreas.containsKey(area))
-            {
-                final Integer lastRound = knownAreas.get(area);
-                System.out.println("found loop at " + i + ", last was " + lastRound);
-                int loopSize=i-lastRound;
-                while (i+loopSize<target)
-                {
-                    i+=loopSize;
-                }
-                knownAreas.clear(); // let us simulate the remaining steps normally
-            }
-            knownAreas.put(area, i);
-        }
-        return area.allMatchingPositions('|').size()*area.allMatchingPositions('#').size();
+        CharMatrix lastRound= new LoopFinder<>(this::simulateStep).findLastValue(area, 1000000000);
+        return lastRound.allMatchingPositions('|').size() * lastRound.allMatchingPositions('#').size();
     }
 }
