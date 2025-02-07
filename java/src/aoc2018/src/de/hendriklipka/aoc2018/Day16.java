@@ -44,7 +44,7 @@ public class Day16 extends AocPuzzle
     private static boolean commandMatchesExample(final List<Integer> startRegs, String cmd, final List<Integer> command, final List<Integer> endRegs)
     {
         Machine m=new Machine(new ArrayList<>(startRegs));
-        m.runCommand(cmd, command);
+        m.runCommand(cmd, command.get(1), command.get(2), command.get(3));
         return m.getRegs().equals(endRegs);
     }
 
@@ -91,7 +91,7 @@ public class Day16 extends AocPuzzle
                     List<Integer> command =
                             new ArrayList<>(
                                     AocParseUtils.parsePartsFromString(line, "(\\d+) (\\d+) (\\d+) (\\d+)").stream().map(Integer::parseInt).toList());
-                    m.runCommand(commandMap.get(command.get(0)).get(0), command);
+                    m.runCommand(commandMap.get(command.get(0)).get(0), command.get(1), command.get(2), command.get(3));
                 }
                 return m.getRegs().get(0);
             }
@@ -99,7 +99,7 @@ public class Day16 extends AocPuzzle
         return -1;
     }
 
-    private static class Machine
+    public static class Machine
     {
         private final List<Integer> regs;
 
@@ -113,11 +113,8 @@ public class Day16 extends AocPuzzle
             return regs;
         }
 
-        public void runCommand(final String command, final List<Integer> args)
+        public void runCommand(final String command, final Integer argA, final Integer argB, final Integer argC)
         {
-            final var argA = args.get(1);
-            final var argB = args.get(2);
-            final var argC = args.get(3);
             switch(command)
             {
                 case "addr": regs.set(argC, regs.get(argA) + regs.get(argB)); break;
