@@ -91,6 +91,11 @@ public class InfiniteCharMatrix
         return highestRow-lowestRow+1;
     }
 
+    public int columns()
+    {
+        return highestColumn-lowestColumn+1;
+    }
+
     public void set(final Position pos, final CharMatrix expanded)
     {
         for (Position p: expanded.allPositions())

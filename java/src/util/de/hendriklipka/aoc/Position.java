@@ -52,6 +52,11 @@ public class Position implements Keyable
         return updated(dir, 1);
     }
 
+    public Position updated(CardinalDirection dir)
+    {
+        return updated(dir, 1);
+    }
+
     public Position updated(DiagonalDirections dir)
     {
         return updated(dir, 1);
@@ -74,6 +79,30 @@ public class Position implements Keyable
                 return new Position(row, col - count);
             }
             case RIGHT ->
+            {
+                return new Position(row, col + count);
+            }
+        }
+        return null;
+    }
+
+    public Position updated(CardinalDirection dir, int count)
+    {
+        switch (dir)
+        {
+            case N ->
+            {
+                return new Position(row - count, col);
+            }
+            case S ->
+            {
+                return new Position(row + count, col);
+            }
+            case W ->
+            {
+                return new Position(row, col - count);
+            }
+            case E ->
             {
                 return new Position(row, col + count);
             }

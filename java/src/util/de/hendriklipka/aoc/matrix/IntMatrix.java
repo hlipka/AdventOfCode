@@ -244,6 +244,13 @@ public class IntMatrix
                 _data[r][col]=_data[r][col]+other._data[r][col];
     }
 
+    /**
+     * Flood-fills the matrix starting at the given position, to find all reachable places.
+     *
+     * @param start where to start the fill
+     * @param canMove predicate whether a move (from one position to another) is allowed
+     * @return set of positions that are reachable from the start position
+     */
     public Set<Position> floodFill(Position start, BiPredicate<Position, Position> canMove)
     {
         final Set<Position> positions = new HashSet<>(_rows * _cols);
