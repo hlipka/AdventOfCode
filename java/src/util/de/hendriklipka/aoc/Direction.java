@@ -5,6 +5,31 @@ import java.util.List;
 public enum Direction implements Keyable
 {
     UP, DOWN, LEFT, RIGHT;
+
+    public static Direction of(final String dir)
+    {
+        return switch(dir)
+        {
+            case "U"->UP;
+            case "D"->DOWN;
+            case "L"->LEFT;
+            case "R"->RIGHT;
+            default->throw new IllegalArgumentException("Invalid direction: " + dir);
+        };
+    }
+
+    public static Direction of(final char dir)
+    {
+        return switch(dir)
+        {
+            case 'U'->UP;
+            case 'D'->DOWN;
+            case 'L'->LEFT;
+            case 'R'->RIGHT;
+            default->throw new IllegalArgumentException("Invalid direction: " + dir);
+        };
+    }
+
     public Direction opposite()
     {
         return switch(this)

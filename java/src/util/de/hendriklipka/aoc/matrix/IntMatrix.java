@@ -4,10 +4,7 @@ import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -54,6 +51,16 @@ public class IntMatrix
             }
         }
         _defaultInt = defaultValue;
+    }
+
+    public static IntMatrix filledMatrix(int rows, int cols, int fillChar, int defaultChar)
+    {
+        final int[][] data = new int[rows][cols];
+        for (int[] currentRow : data)
+        {
+            Arrays.fill(currentRow, fillChar);
+        }
+        return new IntMatrix(data, defaultChar);
     }
 
     public int at(Position pos)

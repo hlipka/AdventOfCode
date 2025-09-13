@@ -215,4 +215,9 @@ public class Position implements Keyable
     {
         return new Position(row + other.row, col + other.col);
     }
+
+    public int distance()
+    {
+        return Math.abs(row)+Math.abs(col);
+    }
 }
