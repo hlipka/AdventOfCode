@@ -8,17 +8,17 @@ import java.util.*;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-public class IntMatrix
+public class LongMatrix
 {
-    int[][] _data;
-    int _defaultInt;
+    long[][] _data;
+    long _defaultInt;
     int _rows;
     int _cols;
-    public IntMatrix(List<List<Integer>> data, int defaultInt)
+    public LongMatrix(List<List<Integer>> data, long defaultInt)
     {
         _rows = data.size();
         _cols = data.get(0).size();
-        _data = new int[_rows][_cols];
+        _data = new long[_rows][_cols];
         for (int r = 0; r < _data.length; r++)
         {
             List<Integer> row = data.get(r);
@@ -30,7 +30,7 @@ public class IntMatrix
         _defaultInt = defaultInt;
     }
 
-    private IntMatrix(int[][] data, int defaultValue)
+    private LongMatrix(long[][] data, long defaultValue)
     {
         _rows = data.length;
         _cols = data[0].length;
@@ -38,11 +38,11 @@ public class IntMatrix
         _defaultInt = defaultValue;
     }
 
-    public IntMatrix(int rows, int cols, int defaultValue)
+    public LongMatrix(int rows, int cols, long defaultValue)
     {
         _rows = rows;
         _cols = cols;
-        _data = new int[_rows][_cols];
+        _data = new long[_rows][_cols];
         for (int r = 0; r < _data.length; r++)
         {
             for (int c = 0; c < cols; c++)
@@ -53,22 +53,22 @@ public class IntMatrix
         _defaultInt = defaultValue;
     }
 
-    public static IntMatrix filledMatrix(int rows, int cols, int fillChar, int defaultChar)
+    public static LongMatrix filledMatrix(int rows, int cols, long fillChar, long defaultChar)
     {
-        final int[][] data = new int[rows][cols];
-        for (int[] currentRow : data)
+        final long[][] data = new long[rows][cols];
+        for (long[] currentRow : data)
         {
             Arrays.fill(currentRow, fillChar);
         }
-        return new IntMatrix(data, defaultChar);
+        return new LongMatrix(data, defaultChar);
     }
 
-    public int at(Position pos)
+    public long at(Position pos)
     {
         return at(pos.row, pos.col);
     }
 
-    public int at(int row, int col)
+    public long at(int row, int col)
     {
         if (row < 0 || row >= _rows || col < 0 || col >= _cols)
         {
@@ -78,9 +78,9 @@ public class IntMatrix
         return _data[row][col];
     }
 
-    public int[] column(int col)
+    public long[] column(int col)
     {
-        int[] ints = new int[_data.length];
+        long[] ints = new long[_data.length];
         for (int i = 0; i < _data.length; i++)
         {
             ints[i] = at(i, col);
@@ -88,27 +88,27 @@ public class IntMatrix
         return ints;
     }
 
-    public int[] row(int row)
+    public long[] row(int row)
     {
         return _data[row];
     }
 
-    public void set(Position pos, int i)
+    public void set(Position pos, long i)
     {
         _data[pos.row][pos.col] = i;
     }
 
-    public void set(int row, int col, int i)
+    public void set(int row, int col, long i)
     {
         _data[row][col] = i;
     }
 
-    public boolean isSame(IntMatrix other)
+    public boolean isSame(LongMatrix other)
     {
         for (int r = 0; r < _data.length; r++)
         {
-            int[] row = _data[r];
-            int[] otherRow = other._data[r];
+            long[] row = _data[r];
+            long[] otherRow = other._data[r];
             for (int c = 0; c < row.length; c++)
             {
                 if (row[c] != otherRow[c])
@@ -118,15 +118,15 @@ public class IntMatrix
         return true;
     }
 
-    public IntMatrix copyOf()
+    public LongMatrix copyOf()
     {
-        int[][] copy = new int[_data.length][_data[0].length];
+        long[][] copy = new long[_data.length][_data[0].length];
         for (int r = 0; r < _data.length; r++)
         {
-            int[] row = _data[r];
+            long[] row = _data[r];
             System.arraycopy(row, 0, copy[r], 0, row.length);
         }
-        return new IntMatrix(copy, _defaultInt);
+        return new LongMatrix(copy, _defaultInt);
     }
 
     public boolean in(Position pos)
@@ -134,10 +134,10 @@ public class IntMatrix
         return pos.row >= 0 && pos.row < _rows && pos.col >= 0 && pos.col < _cols;
     }
 
-    public int countInRow(int row, int i)
+    public int countInRow(int row, long i)
     {
         int count = 0;
-        int[] r = _data[row];
+        long[] r = _data[row];
         for (int col = 0; col < _cols; col++)
         {
             if (r[col] == i)
@@ -146,7 +146,7 @@ public class IntMatrix
         return count;
     }
 
-    public int countInCol(int col, int i)
+    public int countInCol(int col, long i)
     {
         int count = 0;
         for (int row = 0; row < _rows; col++)
@@ -157,7 +157,7 @@ public class IntMatrix
         return count;
     }
 
-    public int count(int i)
+    public int count(long i)
     {
         int count = 0;
         for (int r = 0; r < _rows; r++)
@@ -169,7 +169,7 @@ public class IntMatrix
         return count;
     }
 
-    public int count(Predicate<Integer> condition)
+    public int count(Predicate<Long> condition)
     {
         int count = 0;
         for (int r = 0; r < _rows; r++)
@@ -194,7 +194,7 @@ public class IntMatrix
         return positions;
     }
 
-    public List<Position> allMatchingPositions(int x)
+    public List<Position> allMatchingPositions(long x)
     {
         final List<Position> positions = new ArrayList<>(_rows * _cols);
         for (int row = 0; row < rows(); row++)
@@ -212,7 +212,7 @@ public class IntMatrix
 
     public void print()
     {
-        for (int[] row : _data)
+        for (long[] row : _data)
         {
             System.out.println(StringUtils.join(row, ';'));
         }
@@ -236,7 +236,7 @@ public class IntMatrix
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        return isSame((IntMatrix) o);
+        return isSame((LongMatrix) o);
     }
 
     @Override
@@ -249,7 +249,7 @@ public class IntMatrix
         return sb.toString().hashCode();
     }
 
-    public void add(IntMatrix other)
+    public void add(LongMatrix other)
     {
         for (int r = 0; r < _rows; r++)
             for (int col = 0; col < _cols; col++)
