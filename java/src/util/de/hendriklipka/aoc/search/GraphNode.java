@@ -7,7 +7,8 @@ import java.util.List;
 
 public class GraphNode implements Comparable<GraphNode>
 {
-    private final List<Pair<String, Integer>> egdes = new ArrayList<>();
+    private final List<Pair<String, Integer>> edges = new ArrayList<>();
+    private final List<String> edgeNames=new ArrayList<>();
     private final String name;
     private int distance;
     private String pre;
@@ -19,12 +20,18 @@ public class GraphNode implements Comparable<GraphNode>
 
     void addEdge(String to, int cost)
     {
-        egdes.add(Pair.of(to, cost));
+        edges.add(Pair.of(to, cost));
+        edgeNames.add(to);
     }
 
     public List<Pair<String, Integer>> getEdges()
     {
-        return egdes;
+        return edges;
+    }
+
+    public int getOrder()
+    {
+        return edges.size();
     }
 
     @Override
@@ -61,5 +68,10 @@ public class GraphNode implements Comparable<GraphNode>
     public void setPreviousNode(final String name)
     {
         pre = name;
+    }
+
+    public List<String> edgeNames()
+    {
+        return edgeNames;
     }
 }
