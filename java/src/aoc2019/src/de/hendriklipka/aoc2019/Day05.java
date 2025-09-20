@@ -3,6 +3,7 @@ package de.hendriklipka.aoc2019;
 import de.hendriklipka.aoc.AocPuzzle;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +18,9 @@ public class Day05 extends AocPuzzle
     protected Object solvePartA() throws IOException
     {
         final List<Integer> code = data.getLineAsInteger(",");
-        IntCode intCode = new IntCode(code);
-        intCode.setDoInput(()->1);
-        final List<Integer> result=new ArrayList<>();
+        IntCode intCode = IntCode.fromIntList(code);
+        intCode.setDoInput(()-> BigInteger.ONE);
+        final List<BigInteger> result=new ArrayList<>();
         intCode.setDoOutput(result::add);
         intCode.execute();
 
@@ -30,9 +31,9 @@ public class Day05 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         final List<Integer> code = data.getLineAsInteger(",");
-        IntCode intCode = new IntCode(code);
-        intCode.setDoInput(() -> 5);
-        final List<Integer> result = new ArrayList<>();
+        IntCode intCode = IntCode.fromIntList(code);
+        intCode.setDoInput(() -> new BigInteger("5"));
+        final List<BigInteger> result = new ArrayList<>();
         intCode.setDoOutput(result::add);
         intCode.execute();
 

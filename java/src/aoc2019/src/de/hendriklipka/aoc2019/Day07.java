@@ -6,6 +6,7 @@ import de.hendriklipka.aoc2019.IntCode.OutputCollector;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -18,16 +19,18 @@ public class Day07 extends AocPuzzle
         new Day07().doPuzzle(args);
     }
 
+    final Object syncObject = new Object();
+
     @Override
     protected Object solvePartA() throws IOException
     {
         if (isExample) return -1;
         final List<Integer> code = data.getLineAsInteger(",");
 
-        List<Integer> phases = List.of(0,1,2,3,4);
-        final Collection<List<Integer>> permutations = CollectionUtils.permutations(phases);
+        List<BigInteger> phases = List.of(new BigInteger("0"), new BigInteger("1"), new BigInteger("2"), new BigInteger("3"), new BigInteger("4"));
+        final Collection<List<BigInteger>> permutations = CollectionUtils.permutations(phases);
         int maxSignal=0;
-        for (List<Integer> permutation : permutations)
+        for (List<BigInteger> permutation : permutations)
         {
             int signal=getSignal(code, permutation);
             if (signal>maxSignal)
@@ -39,50 +42,50 @@ public class Day07 extends AocPuzzle
         return maxSignal;
     }
 
-    private int getSignal(final List<Integer> code, final List<Integer> permutation)
+    private int getSignal(final List<Integer> code, final List<BigInteger> permutation)
     {
-        IntCode a1=new IntCode(code);
-        a1.setDoInput(new InputProvider(permutation.get(0), 0));
+        IntCode a1=IntCode.fromIntList(code);
+        a1.setDoInput(new InputProvider(permutation.get(0), BigInteger.ZERO));
         final OutputCollector oc1=new OutputCollector();
         a1.setDoOutput(oc1);
         a1.execute();
 
-        IntCode a2=new IntCode(code);
+        IntCode a2=IntCode.fromIntList(code);
         a2.setDoInput(new InputProvider(permutation.get(1), oc1.getResult().get(0)));
         final OutputCollector oc2 = new OutputCollector();
         a2.setDoOutput(oc2);
         a2.execute();
 
-        IntCode a3=new IntCode(code);
+        IntCode a3=IntCode.fromIntList(code);
         a3.setDoInput(new InputProvider(permutation.get(2), oc2.getResult().get(0)));
         final OutputCollector oc3 = new OutputCollector();
         a3.setDoOutput(oc3);
         a3.execute();
 
-        IntCode a4=new IntCode(code);
+        IntCode a4=IntCode.fromIntList(code);
         a4.setDoInput(new InputProvider(permutation.get(3), oc3.getResult().get(0)));
         final OutputCollector oc4 = new OutputCollector();
         a4.setDoOutput(oc4);
         a4.execute();
 
-        IntCode a5=new IntCode(code);
+        IntCode a5=IntCode.fromIntList(code);
         a5.setDoInput(new InputProvider(permutation.get(4), oc4.getResult().get(0)));
         final OutputCollector oc5 = new OutputCollector();
         a5.setDoOutput(oc5);
         a5.execute();
 
-        return oc5.getResult().get(0);
+        return oc5.getResult().get(0).intValue();
     }
 
-    private int getSignalFromLoop(final List<Integer> code, final List<Integer> permutation)
+    private int getSignalFromLoop(final List<Integer> code, final List<BigInteger> permutation)
     {
-        ExecutorService e = Executors.newFixedThreadPool(6);
+        ExecutorService e = Executors.newFixedThreadPool(11);
 
-        IntCode a1=new IntCode(code);
-        IntCode a2=new IntCode(code);
-        IntCode a3=new IntCode(code);
-        IntCode a4=new IntCode(code);
-        IntCode a5=new IntCode(code);
+        IntCode a1=IntCode.fromIntList(code);
+        IntCode a2=IntCode.fromIntList(code);
+        IntCode a3=IntCode.fromIntList(code);
+        IntCode a4=IntCode.fromIntList(code);
+        IntCode a5=IntCode.fromIntList(code);
 
         Pipe pipe1in=new Pipe();
         Pipe pipe1to2=new Pipe();
@@ -107,7 +110,7 @@ public class Day07 extends AocPuzzle
         pipe2to3.accept(permutation.get(2));
         pipe3to4.accept(permutation.get(3));
         pipe4to5.accept(permutation.get(4));
-        pipe1in.accept(0);
+        pipe1in.accept(BigInteger.ZERO);
 
         e.execute(a1::execute);
         e.execute(a2::execute);
@@ -115,14 +118,13 @@ public class Day07 extends AocPuzzle
         e.execute(a4::execute);
         e.execute(a5::execute);
 
-        Object o=new Object();
         while (true)
         {
-            synchronized(o)
+            synchronized(syncObject)
             {
                 try
                 {
-                    o.wait(1000);
+                    syncObject.wait(1000);
                 }
                 catch (InterruptedException ex)
                 {
@@ -145,12 +147,12 @@ public class Day07 extends AocPuzzle
     {
         final List<Integer> code = data.getLineAsInteger(",");
 
-        List<Integer> phases = List.of(5, 6, 7, 8, 9);
-        final Collection<List<Integer>> permutations = CollectionUtils.permutations(phases);
+        List<BigInteger> phases = List.of(new BigInteger("5"), new BigInteger("6"), new BigInteger("7"), new BigInteger("8"), new BigInteger("9"));
+        final Collection<List<BigInteger>> permutations = CollectionUtils.permutations(phases);
         int maxSignal = 0;
         System.out.println("permutations: " + permutations.size());
         int count=0;
-        for (List<Integer> permutation : permutations)
+        for (List<BigInteger> permutation : permutations)
         {
             if (0==count%10)
             {
@@ -167,33 +169,31 @@ public class Day07 extends AocPuzzle
         return maxSignal;
     }
 
-    private static class Pipe implements Supplier<Integer>, Consumer<Integer>
+    private static class Pipe implements Supplier<BigInteger>, Consumer<BigInteger>
     {
-        BlockingQueue<Integer> queue=new LinkedBlockingQueue<>();
-        private int lastValue;
+        BlockingQueue<BigInteger> queue=new LinkedBlockingQueue<>();
+        private BigInteger lastValue;
 
         @Override
-        public void accept(final Integer value)
+        public void accept(final BigInteger value)
         {
             if (null==value)
             {
                 throw new  IllegalArgumentException("value is null");
             }
-            queue.offer(value);
+            if (!queue.offer(value))
+            {
+                throw new IllegalStateException("queue is full");
+            }
             lastValue=value;
         }
 
         @Override
-        public Integer get()
+        public BigInteger get()
         {
             try
             {
-                final Integer i = queue.take();
-                if (null==i)
-                {
-                    throw new IllegalArgumentException("got null from the queue");
-                }
-                return i;
+                return queue.take();
             }
             catch (InterruptedException e)
             {
@@ -203,7 +203,7 @@ public class Day07 extends AocPuzzle
 
         public int getLastValue()
         {
-            return lastValue;
+            return lastValue.intValue();
         }
     }
 }

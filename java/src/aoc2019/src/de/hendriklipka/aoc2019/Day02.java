@@ -22,7 +22,7 @@ public class Day02 extends AocPuzzle
             code.set(1, 12);
             code.set(2, 2);
         }
-        IntCode intCode = new IntCode(code);
+        IntCode intCode = IntCode.fromIntList(code);
         intCode.execute();
         return intCode.get(0);
     }
@@ -40,7 +40,7 @@ public class Day02 extends AocPuzzle
                 List<Integer> code= new ArrayList<>(program);
                 code.set(1, noun);
                 code.set(2, verb);
-                IntCode intCode = new IntCode(code);
+                IntCode intCode = IntCode.fromIntList(code);
                 intCode.execute();
                 int result=intCode.get(0);
                 if (result==19690720)
