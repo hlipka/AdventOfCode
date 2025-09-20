@@ -2,7 +2,7 @@ package de.hendriklipka.aoc2019;
 
 import org.apache.commons.collections4.map.LRUMap;
 
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -14,6 +14,7 @@ public class IntCode
 
     Consumer<Integer> _doOutput;
     Supplier<Integer> _doInput;
+    private boolean finished=false;
 
     public IntCode(List<Integer> code)
     {
@@ -29,7 +30,10 @@ public class IntCode
             int opCode = _code[pc];
             IntInstr instr=codeCache.computeIfAbsent(opCode, this::parseInstruction);
             if (instr.isHalt())
+            {
+                finished = true;
                 return;
+            }
             pc=instr.execute(pc, _code);
         }
     }
@@ -63,6 +67,11 @@ public class IntCode
     public int get(int pos)
     {
         return _code[pos];
+    }
+
+    public boolean isFinished()
+    {
+        return finished;
     }
 
     private interface IntInstr
@@ -324,6 +333,38 @@ public class IntCode
         public void set(final int value, int pc, final int[] mem)
         {
             mem[mem[pc + _offset]] = value;
+        }
+    }
+
+    public static class InputProvider implements Supplier<Integer>
+    {
+        Queue<Integer> _values=new ArrayDeque<>();
+        public InputProvider(int... values)
+        {
+            for (int i: values)
+            {
+                _values.add(i);
+            }
+        }
+        @Override
+        public Integer get()
+        {
+            return _values.poll();
+        }
+    }
+
+    public static class OutputCollector implements Consumer<Integer>
+    {
+        private List<Integer> result=new ArrayList<>();
+        @Override
+        public void accept(final Integer integer)
+        {
+            result.add(integer);
+        }
+
+        public List<Integer> getResult()
+        {
+            return result;
         }
     }
 }
