@@ -1,5 +1,7 @@
 package de.hendriklipka.aoc;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -219,5 +221,10 @@ public class Position implements Keyable
     public int distance()
     {
         return Math.abs(row)+Math.abs(col);
+    }
+
+    public Pair<Integer, Integer> diff(final Position other)
+    {
+        return Pair.of(other.row-row, other.col-col);
     }
 }
