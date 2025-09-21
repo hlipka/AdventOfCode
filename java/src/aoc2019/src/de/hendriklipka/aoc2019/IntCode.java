@@ -17,7 +17,9 @@ public class IntCode
     Supplier<BigInteger> _doInput;
     private boolean finished = false;
 
-    private static final BigInteger MAX_OPCODE = new BigInteger("11199");
+    BigInteger relBase = BigInteger.ZERO;
+
+    private static final BigInteger MAX_OPCODE = new BigInteger("22299");
     private static final BigInteger FOUR = new BigInteger("4");
     private static final BigInteger THREE = new BigInteger("3");
 
@@ -67,9 +69,9 @@ public class IntCode
         }
         final var opCodeInt = opCode.intValue();
         int intCode = opCodeInt % 100;
-        Mode mode3 = getMode(opCodeInt > 9999);
-        Mode mode2 = getMode(opCodeInt % 9999 > 999);
-        Mode mode1 = getMode(opCodeInt % 999 > 99);
+        Mode mode3 = getMode(opCodeInt / 10000);
+        Mode mode2 = getMode((opCodeInt % 9999)/1000);
+        Mode mode1 = getMode((opCodeInt % 999)/100);
         return switch (intCode)
         {
             case 1 -> new Add(mode1, mode2, mode3);
@@ -80,17 +82,24 @@ public class IntCode
             case 6 -> new JumpIfFalse(mode1, mode2);
             case 7 -> new LessThan(mode1, mode2, mode3);
             case 8 -> new Equals(mode1, mode2, mode3);
+            case 9 -> new BaseAdjust(mode1);
             case 99 -> new Halt();
             default -> throw new IllegalStateException("cannot parse instruction " + opCode);
         };
     }
 
-    private Mode getMode(final boolean b)
+    private Mode getMode(int mode)
     {
-        return b ? Mode.IMM : Mode.POS;
+        return switch (mode)
+        {
+            case 0 -> Mode.POS;
+            case 1 -> Mode.IMM;
+            case 2 -> Mode.REL;
+            default -> throw new IllegalStateException("cannot parse mode: " + mode);
+        };
     }
 
-    public int get(int pos)
+    public int getMemValue(int pos)
     {
         return memory.get(new BigInteger(Integer.toString(pos))).intValue();
     }
@@ -117,8 +126,8 @@ public class IntCode
 
         public Add(final Mode mode1, final Mode mode2, final Mode mode3)
         {
-            get1 = getAccess(mode1, BigInteger.ONE);
-            get2 = getAccess(mode2, BigInteger.TWO);
+            get1 = getRead(mode1, BigInteger.ONE);
+            get2 = getRead(mode2, BigInteger.TWO);
             set = getWrite(mode3, THREE);
         }
 
@@ -137,8 +146,8 @@ public class IntCode
 
         public Mul(final Mode mode1, final Mode mode2, final Mode mode3)
         {
-            get1 = getAccess(mode1, BigInteger.ONE);
-            get2 = getAccess(mode2, BigInteger.TWO);
+            get1 = getRead(mode1, BigInteger.ONE);
+            get2 = getRead(mode2, BigInteger.TWO);
             set = getWrite(mode3, THREE);
         }
 
@@ -156,8 +165,8 @@ public class IntCode
 
         public JumpIfTrue(final Mode mode1, final Mode mode2)
         {
-            get1 = getAccess(mode1, BigInteger.ONE);
-            get2 = getAccess(mode2, BigInteger.TWO);
+            get1 = getRead(mode1, BigInteger.ONE);
+            get2 = getRead(mode2, BigInteger.TWO);
         }
 
         @Override
@@ -177,8 +186,8 @@ public class IntCode
 
         public JumpIfFalse(final Mode mode1, final Mode mode2)
         {
-            get1 = getAccess(mode1, BigInteger.ONE);
-            get2 = getAccess(mode2, BigInteger.TWO);
+            get1 = getRead(mode1, BigInteger.ONE);
+            get2 = getRead(mode2, BigInteger.TWO);
 
         }
 
@@ -200,8 +209,8 @@ public class IntCode
 
         public LessThan(final Mode mode1, final Mode mode2, final Mode mode3)
         {
-            get1 = getAccess(mode1, BigInteger.ONE);
-            get2 = getAccess(mode2, BigInteger.TWO);
+            get1 = getRead(mode1, BigInteger.ONE);
+            get2 = getRead(mode2, BigInteger.TWO);
             set = getWrite(mode3, THREE);
 
         }
@@ -221,8 +230,8 @@ public class IntCode
 
         public Equals(final Mode mode1, final Mode mode2, final Mode mode3)
         {
-            get1 = getAccess(mode1, BigInteger.ONE);
-            get2 = getAccess(mode2, BigInteger.TWO);
+            get1 = getRead(mode1, BigInteger.ONE);
+            get2 = getRead(mode2, BigInteger.TWO);
             set = getWrite(mode3, THREE);
 
         }
@@ -232,6 +241,23 @@ public class IntCode
         {
             set.set(get1.get(pc, mem).equals(get2.get(pc, mem)) ? BigInteger.ONE : BigInteger.ZERO, pc, mem);
             return pc.add(FOUR);
+        }
+    }
+
+    private class BaseAdjust implements IntInstr
+    {
+        Get get;
+
+        public BaseAdjust(final Mode mode)
+        {
+            get = getRead(mode, BigInteger.ONE);
+        }
+
+        @Override
+        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
+        {
+            relBase = relBase.add(get.get(pc, mem));
+            return pc.add(BigInteger.TWO);
         }
     }
 
@@ -277,7 +303,7 @@ public class IntCode
 
         public Output(final Mode firstMode)
         {
-            get = getAccess(firstMode, BigInteger.ONE);
+            get = getRead(firstMode, BigInteger.ONE);
         }
 
         @Override
@@ -296,7 +322,7 @@ public class IntCode
         }
         else
         {
-            System.out.println(value);
+            System.out.println("output: "+value);
         }
     }
 
@@ -312,15 +338,21 @@ public class IntCode
 
     private Set getWrite(final Mode mode, final BigInteger offset)
     {
-        return new SetPos(offset);
+        return switch (mode)
+        {
+            case POS -> new SetPos(offset);
+            case IMM -> throw new IllegalStateException("Cannot set an immediate value.");
+            case REL -> new SetRel(offset);
+        };
     }
 
-    private Get getAccess(final Mode mode, BigInteger offset)
+    private Get getRead(final Mode mode, BigInteger offset)
     {
         return switch (mode)
         {
             case POS -> new GetPos(offset);
             case IMM -> new GetImm(offset);
+            case REL -> new GetRel(offset);
         };
     }
 
@@ -336,7 +368,7 @@ public class IntCode
 
     private enum Mode
     {
-        IMM, POS
+        IMM, POS, REL
     }
 
     private record GetPos(BigInteger _offset) implements Get
@@ -344,7 +376,7 @@ public class IntCode
         @Override
         public BigInteger get(BigInteger pc, final Map<BigInteger, BigInteger> mem)
         {
-            return mem.get(mem.get(pc.add(_offset)));
+            return mem.getOrDefault(mem.getOrDefault(pc.add(_offset), BigInteger.ZERO), BigInteger.ZERO);
         }
     }
 
@@ -353,7 +385,23 @@ public class IntCode
         @Override
         public BigInteger get(BigInteger pc, final Map<BigInteger, BigInteger> mem)
         {
-            return mem.get(pc.add(_offset));
+            return mem.getOrDefault(pc.add(_offset), BigInteger.ZERO);
+        }
+    }
+
+    private final class GetRel implements Get
+    {
+        private final BigInteger _offset;
+
+        private GetRel(BigInteger _offset)
+        {
+            this._offset = _offset;
+        }
+
+        @Override
+        public BigInteger get(BigInteger pc, final Map<BigInteger, BigInteger> mem)
+        {
+            return mem.getOrDefault(relBase.add(mem.getOrDefault(pc.add(_offset), BigInteger.ZERO)), BigInteger.ZERO);
         }
     }
 
@@ -363,6 +411,22 @@ public class IntCode
         public void set(final BigInteger value, BigInteger pc, final Map<BigInteger, BigInteger> mem)
         {
             mem.put(mem.get(pc.add(_offset)), value);
+        }
+    }
+
+    private final class SetRel implements Set
+    {
+        private final BigInteger _offset;
+
+        private SetRel(BigInteger _offset)
+        {
+            this._offset = _offset;
+        }
+
+        @Override
+        public void set(final BigInteger value, BigInteger pc, final Map<BigInteger, BigInteger> mem)
+        {
+            mem.put(relBase.add(mem.getOrDefault(pc.add(_offset), BigInteger.ZERO)), value);
         }
     }
 

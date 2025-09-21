@@ -24,7 +24,7 @@ public class Day05 extends AocPuzzle
         intCode.setDoOutput(result::add);
         intCode.execute();
 
-        return result.get(0);
+        return result.getLast();
     }
 
     @Override
@@ -37,6 +37,6 @@ public class Day05 extends AocPuzzle
         intCode.setDoOutput(result::add);
         intCode.execute();
 
-        return result.get(0);
+        return result.getLast();
     }
 }

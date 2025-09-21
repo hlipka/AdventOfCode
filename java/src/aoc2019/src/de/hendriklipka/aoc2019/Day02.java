@@ -24,7 +24,7 @@ public class Day02 extends AocPuzzle
         }
         IntCode intCode = IntCode.fromIntList(code);
         intCode.execute();
-        return intCode.get(0);
+        return intCode.getMemValue(0);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Day02 extends AocPuzzle
                 code.set(2, verb);
                 IntCode intCode = IntCode.fromIntList(code);
                 intCode.execute();
-                int result=intCode.get(0);
+                int result=intCode.getMemValue(0);
                 if (result==19690720)
                 {
                     return 100*noun+verb;
