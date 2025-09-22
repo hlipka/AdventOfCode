@@ -385,4 +385,12 @@ public class CharMatrix
         }
         return rot;
     }
+
+    public void replace(final char from, final char to)
+    {
+        for (Position pos: allMatchingPositions(from))
+        {
+            set(pos, to);
+        }
+    }
 }

@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class Day07 extends AocPuzzle
 {
@@ -87,11 +85,11 @@ public class Day07 extends AocPuzzle
         IntCode a4=IntCode.fromIntList(code);
         IntCode a5=IntCode.fromIntList(code);
 
-        Pipe pipe1in=new Pipe();
-        Pipe pipe1to2=new Pipe();
-        Pipe pipe2to3=new Pipe();
-        Pipe pipe3to4=new Pipe();
-        Pipe pipe4to5=new Pipe();
+        IntCode.Pipe pipe1in=new IntCode.Pipe();
+        IntCode.Pipe pipe1to2=new IntCode.Pipe();
+        IntCode.Pipe pipe2to3=new IntCode.Pipe();
+        IntCode.Pipe pipe3to4=new IntCode.Pipe();
+        IntCode.Pipe pipe4to5=new IntCode.Pipe();
 
         a1.setDoInput(pipe1in);
         a2.setDoInput(pipe1to2);
@@ -167,43 +165,5 @@ public class Day07 extends AocPuzzle
         }
 
         return maxSignal;
-    }
-
-    private static class Pipe implements Supplier<BigInteger>, Consumer<BigInteger>
-    {
-        BlockingQueue<BigInteger> queue=new LinkedBlockingQueue<>();
-        private BigInteger lastValue;
-
-        @Override
-        public void accept(final BigInteger value)
-        {
-            if (null==value)
-            {
-                throw new  IllegalArgumentException("value is null");
-            }
-            if (!queue.offer(value))
-            {
-                throw new IllegalStateException("queue is full");
-            }
-            lastValue=value;
-        }
-
-        @Override
-        public BigInteger get()
-        {
-            try
-            {
-                return queue.take();
-            }
-            catch (InterruptedException e)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-
-        public int getLastValue()
-        {
-            return lastValue.intValue();
-        }
     }
 }

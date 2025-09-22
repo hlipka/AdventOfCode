@@ -4,6 +4,8 @@ import org.apache.commons.collections4.map.LRUMap;
 
 import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -117,6 +119,44 @@ public class IntCode
         }
 
         BigInteger execute(BigInteger pc, Map<BigInteger, BigInteger> mem);
+    }
+
+    public static class Pipe implements Supplier<BigInteger>, Consumer<BigInteger>
+    {
+        BlockingQueue<BigInteger> queue=new LinkedBlockingQueue<>();
+        private BigInteger lastValue;
+
+        @Override
+        public void accept(final BigInteger value)
+        {
+            if (null==value)
+            {
+                throw new  IllegalArgumentException("value is null");
+            }
+            if (!queue.offer(value))
+            {
+                throw new IllegalStateException("queue is full");
+            }
+            lastValue=value;
+        }
+
+        @Override
+        public BigInteger get()
+        {
+            try
+            {
+                return queue.take();
+            }
+            catch (InterruptedException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public int getLastValue()
+        {
+            return lastValue.intValue();
+        }
     }
 
     private class Add implements IntInstr
