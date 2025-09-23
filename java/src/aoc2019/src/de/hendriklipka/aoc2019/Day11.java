@@ -3,7 +3,6 @@ package de.hendriklipka.aoc2019;
 import de.hendriklipka.aoc.AocPuzzle;
 import de.hendriklipka.aoc.Direction;
 import de.hendriklipka.aoc.Position;
-import de.hendriklipka.aoc.matrix.CharMatrix;
 import de.hendriklipka.aoc.matrix.InfiniteCharMatrix;
 
 import java.io.IOException;

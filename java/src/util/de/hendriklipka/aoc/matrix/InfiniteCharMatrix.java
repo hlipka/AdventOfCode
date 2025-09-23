@@ -3,6 +3,7 @@ package de.hendriklipka.aoc.matrix;
 import de.hendriklipka.aoc.Position;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -118,5 +119,10 @@ public class InfiniteCharMatrix
     public Set<Position> allKnownTiles()
     {
         return data.keySet();
+    }
+
+    public List<Position> allKnownTiles(final char c)
+    {
+        return data.keySet().stream().filter(p->data.get(p)==c).toList();
     }
 }
