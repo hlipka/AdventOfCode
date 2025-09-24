@@ -1,8 +1,10 @@
 package de.hendriklipka.aoc2019;
 
 import de.hendriklipka.aoc.AocPuzzle;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Day15 extends AocPuzzle
 {
@@ -14,7 +16,10 @@ public class Day15 extends AocPuzzle
     @Override
     protected Object solvePartA() throws IOException
     {
-        return null;
+        List<String> code = data.getFirstLineWords(",");
+        IntCode intCode = IntCode.fromStringList(code);
+        System.out.println(StringUtils.join(intCode.decompile(253),"\n"));
+        return -1;
     }
 
     @Override

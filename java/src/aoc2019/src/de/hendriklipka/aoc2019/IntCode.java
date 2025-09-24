@@ -2,7 +2,6 @@ package de.hendriklipka.aoc2019;
 
 import org.apache.commons.collections4.map.LRUMap;
 
-import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -54,6 +53,38 @@ public class IntCode
             }
             pc = instr.execute(pc, memory);
         }
+    }
+
+    public List<String> decompile(final int maxPC)
+    {
+        Map<Integer, Integer> instSizes=Map.of(1,4, 2,4, 3, 2, 4,2, 5, 3, 6, 3, 7, 4, 8, 4, 9, 2, 99, 1);
+        List<String> result = new ArrayList<>();
+        int pc=0;
+        while(memory.containsKey(pc))
+        {
+            int opCode = memory.get(pc);
+            if (pc<maxPC)
+            {
+                try
+                {
+                    IntInstr instr = codeCache.computeIfAbsent(opCode, this::parseInstruction);
+                    result.add(pc+": "+instr.decompile(pc, memory));
+                    pc += instSizes.get(opCode % 100);
+                }
+                catch (IllegalStateException e)
+                {
+                    result.add(pc + ": " + opCode);
+                    pc++;
+                }
+            }
+            else
+            {
+                result.add(pc + ": " + opCode);
+                pc++;
+            }
+
+        }
+        return result;
     }
 
     private IntInstr parseInstruction(int opCode)
@@ -111,6 +142,8 @@ public class IntCode
         }
 
         int execute(int pc, Map<Integer, Integer> mem);
+
+        String decompile(int pc, Map<Integer, Integer> mem);
     }
 
     private class Add implements IntInstr
@@ -130,6 +163,12 @@ public class IntCode
         {
             set.set(get1.get(pc, mem) + get2.get(pc, mem), pc, mem);
             return pc + 4;
+        }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "add "+get1.decompile(pc, mem)+" + "+get2.decompile(pc, mem)+" -> "+set.decompile(pc, mem);
         }
     }
 
@@ -151,6 +190,12 @@ public class IntCode
             set.set(get1.get(pc, mem) * get2.get(pc, mem), pc, mem);
             return pc + 4;
         }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "mul " + get1.decompile(pc, mem) + " * " + get2.decompile(pc, mem) + " -> " + set.decompile(pc, mem);
+        }
     }
 
     private class JumpIfTrue implements IntInstr
@@ -171,6 +216,12 @@ public class IntCode
                 return get2.get(pc, mem);
             }
             return pc + 3;
+        }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "j_if_ne_0 " + get1.decompile(pc, mem) + "? ->" + get2.decompile(pc, mem);
         }
     }
 
@@ -194,6 +245,12 @@ public class IntCode
             }
             return pc + 3;
         }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "j_if_eq_0 " + get1.decompile(pc, mem) + "? ->" + get2.decompile(pc, mem);
+        }
     }
 
     private class LessThan implements IntInstr
@@ -214,6 +271,12 @@ public class IntCode
         {
             set.set(get1.get(pc, mem) < get2.get(pc, mem) ? 1 : 0, pc, mem);
             return pc + 4;
+        }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "less_than " + get1.decompile(pc, mem) + "<" + get2.decompile(pc, mem) + "? ->" + set.decompile(pc, mem);
         }
     }
 
@@ -236,6 +299,12 @@ public class IntCode
             set.set(get1.get(pc, mem) == get2.get(pc, mem) ? 1 : 0, pc, mem);
             return pc + 4;
         }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "equals " + get1.decompile(pc, mem) + "==" + get2.decompile(pc, mem) + "? ->" + set.decompile(pc, mem);
+        }
     }
 
     private static class Halt implements IntInstr
@@ -250,6 +319,12 @@ public class IntCode
         public int execute(final int pc, final Map<Integer, Integer> mem)
         {
             return -1;
+        }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "halt";
         }
     }
 
@@ -272,6 +347,12 @@ public class IntCode
             set.set(_doInput.get(), pc, mem);
             return pc + 2;
         }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "input -> " + set.decompile(pc, mem);
+        }
     }
 
     private class Output implements IntInstr
@@ -289,6 +370,12 @@ public class IntCode
             doOutput(get.get(pc, mem));
             return pc + 2;
         }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "output <-" + get.decompile(pc, mem);
+        }
     }
 
     private class BaseAdjust implements IntInstr
@@ -305,6 +392,12 @@ public class IntCode
         {
             relBase = relBase+get.get(pc, mem);
             return pc+2;
+        }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "adj_base " + get.decompile(pc, mem);
         }
     }
 
@@ -354,11 +447,15 @@ public class IntCode
     private interface Get
     {
         int get(int pc, Map<Integer, Integer> mem);
+
+        String decompile(int pc, Map<Integer, Integer> mem);
     }
 
     private interface Set
     {
         void set(int value, int pc, Map<Integer, Integer> mem);
+
+        String decompile(int pc, Map<Integer, Integer> mem);
     }
 
     private enum Mode
@@ -373,6 +470,12 @@ public class IntCode
         {
             return mem.getOrDefault(mem.getOrDefault(pc+_offset, 0), 0);
         }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "("+ mem.getOrDefault(pc + _offset, 0)+")";
+        }
     }
 
     private record GetImm(int _offset) implements Get
@@ -381,6 +484,12 @@ public class IntCode
         public int get(int pc, final Map<Integer, Integer> mem)
         {
             return mem.getOrDefault(pc + _offset, 0);
+        }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return ""+mem.getOrDefault(pc + _offset, 0);
         }
     }
 
@@ -398,6 +507,12 @@ public class IntCode
         {
             return mem.getOrDefault(relBase+mem.getOrDefault(pc+_offset, 0), 0);
         }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "(rel+ " + mem.getOrDefault(pc + _offset, 0) + ")";
+        }
     }
 
 
@@ -407,6 +522,12 @@ public class IntCode
         public void set(final int value, int pc, final Map<Integer, Integer> mem)
         {
             mem.put(mem.get(pc+_offset), value);
+        }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "(" + mem.getOrDefault(pc + _offset, 0) + ")";
         }
     }
 
@@ -423,6 +544,12 @@ public class IntCode
         public void set(final int value, int pc, final Map<Integer, Integer> mem)
         {
             mem.put(relBase+mem.getOrDefault(pc+_offset, 0), value);
+        }
+
+        @Override
+        public String decompile(int pc, Map<Integer, Integer> mem)
+        {
+            return "(rel+ " + mem.getOrDefault(pc + _offset, 0) + ")";
         }
     }
 
