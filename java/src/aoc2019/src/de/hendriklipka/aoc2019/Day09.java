@@ -18,7 +18,7 @@ public class Day09 extends AocPuzzle
     protected Object solvePartA() throws IOException
     {
         List<String> code=data.getFirstLineWords(",");
-        IntCode intCode=IntCode.fromStringList(code);
+        BigIntCode intCode=BigIntCode.fromStringList(code);
         intCode.setDoInput(() -> new BigInteger("1"));
         final List<BigInteger> result = new ArrayList<>();
         intCode.setDoOutput(result::add);
@@ -30,7 +30,7 @@ public class Day09 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         List<String> code = data.getFirstLineWords(",");
-        IntCode intCode = IntCode.fromStringList(code);
+        BigIntCode intCode = BigIntCode.fromStringList(code);
         intCode.setDoInput(() -> new BigInteger("2"));
         final List<BigInteger> result = new ArrayList<>();
         intCode.setDoOutput(result::add);

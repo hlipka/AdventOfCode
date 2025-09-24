@@ -11,48 +11,41 @@ import java.util.function.Supplier;
 
 public class IntCode
 {
-    private final Map<BigInteger, BigInteger> memory = new HashMap<>();
+    private final Map<Integer, Integer> memory = new HashMap<>();
 
-    LRUMap<BigInteger, IntInstr> codeCache;
+    LRUMap<Integer, IntInstr> codeCache;
 
-    Consumer<BigInteger> _doOutput;
-    Supplier<BigInteger> _doInput;
+    int relBase = 0;
+
+    Consumer<Integer> _doOutput;
+    Supplier<Integer> _doInput;
     private boolean finished = false;
 
-    BigInteger relBase = BigInteger.ZERO;
-
-    private static final BigInteger MAX_OPCODE = new BigInteger("22299");
-    private static final BigInteger FOUR = new BigInteger("4");
-    private static final BigInteger THREE = new BigInteger("3");
-
-    public static IntCode fromIntList(List<Integer> code)
-    {
-        return new IntCode(code.stream().map(i ->
-        {
-            return new BigInteger(Integer.toString(i));
-        }).toList());
-    }
-
-    public static IntCode fromStringList(List<String> code)
-    {
-        return new IntCode(code.stream().map(BigInteger::new).toList());
-    }
-
-    private IntCode(List<BigInteger> code)
+    public IntCode(List<Integer> code)
     {
         for (int i = 0; i < code.size(); i++)
         {
-            memory.put(new BigInteger(Integer.toString(i)), code.get(i));
+            memory.put(i, code.get(i));
         }
         codeCache = new LRUMap<>(code.size());
     }
 
+    public static IntCode fromIntList(List<Integer> code)
+    {
+        return new IntCode(code);
+    }
+
+    public static IntCode fromStringList(List<String> code)
+    {
+        return new IntCode(code.stream().map(Integer::parseInt).toList());
+    }
+
     public void execute()
     {
-        BigInteger pc = BigInteger.ZERO;
+        int pc = 0;
         while (true)
         {
-            BigInteger opCode = memory.get(pc);
+            int opCode = memory.get(pc);
             IntInstr instr = codeCache.computeIfAbsent(opCode, this::parseInstruction);
             if (instr.isHalt())
             {
@@ -63,17 +56,16 @@ public class IntCode
         }
     }
 
-    private IntInstr parseInstruction(BigInteger opCode)
+    private IntInstr parseInstruction(int opCode)
     {
-        if (opCode.compareTo(MAX_OPCODE) > 0)
+        int intCode = opCode % 100;
+        if (opCode>22299)
         {
             throw new IllegalArgumentException("opcode is too large: " + opCode);
         }
-        final var opCodeInt = opCode.intValue();
-        int intCode = opCodeInt % 100;
-        Mode mode3 = getMode(opCodeInt / 10000);
-        Mode mode2 = getMode((opCodeInt % 9999)/1000);
-        Mode mode1 = getMode((opCodeInt % 999)/100);
+        Mode mode3 = getMode(opCode / 10000);
+        Mode mode2 = getMode((opCode % 9999) / 1000);
+        Mode mode1 = getMode((opCode % 999) / 100);
         return switch (intCode)
         {
             case 1 -> new Add(mode1, mode2, mode3);
@@ -101,9 +93,9 @@ public class IntCode
         };
     }
 
-    public int getMemValue(int pos)
+    public int get(int pos)
     {
-        return memory.get(new BigInteger(Integer.toString(pos))).intValue();
+        return memory.get(pos);
     }
 
     public boolean isFinished()
@@ -118,30 +110,378 @@ public class IntCode
             return false;
         }
 
-        BigInteger execute(BigInteger pc, Map<BigInteger, BigInteger> mem);
+        int execute(int pc, Map<Integer, Integer> mem);
     }
 
-    public static class Pipe implements Supplier<BigInteger>, Consumer<BigInteger>
+    private class Add implements IntInstr
     {
-        BlockingQueue<BigInteger> queue=new LinkedBlockingQueue<>();
-        private BigInteger lastValue;
+        Get get1, get2;
+        Set set;
+
+        public Add(final Mode mode1, final Mode mode2, final Mode mode3)
+        {
+            get1 = getRead(mode1, 1);
+            get2 = getRead(mode2, 2);
+            set = getWrite(mode3, 3);
+        }
 
         @Override
-        public void accept(final BigInteger value)
+        public int execute(final int pc, final Map<Integer, Integer> mem)
         {
-            if (null==value)
+            set.set(get1.get(pc, mem) + get2.get(pc, mem), pc, mem);
+            return pc + 4;
+        }
+    }
+
+    private class Mul implements IntInstr
+    {
+        Get get1, get2;
+        Set set;
+
+        public Mul(final Mode mode1, final Mode mode2, final Mode mode3)
+        {
+            get1 = getRead(mode1, 1);
+            get2 = getRead(mode2, 2);
+            set = getWrite(mode3, 3);
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            set.set(get1.get(pc, mem) * get2.get(pc, mem), pc, mem);
+            return pc + 4;
+        }
+    }
+
+    private class JumpIfTrue implements IntInstr
+    {
+        Get get1, get2;
+
+        public JumpIfTrue(final Mode mode1, final Mode mode2)
+        {
+            get1 = getRead(mode1, 1);
+            get2 = getRead(mode2, 2);
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            if (get1.get(pc, mem) != 0)
             {
-                throw new  IllegalArgumentException("value is null");
+                return get2.get(pc, mem);
+            }
+            return pc + 3;
+        }
+    }
+
+    private class JumpIfFalse implements IntInstr
+    {
+        Get get1, get2;
+
+        public JumpIfFalse(final Mode mode1, final Mode mode2)
+        {
+            get1 = getRead(mode1, 1);
+            get2 = getRead(mode2, 2);
+
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            if (get1.get(pc, mem) == 0)
+            {
+                return get2.get(pc, mem);
+            }
+            return pc + 3;
+        }
+    }
+
+    private class LessThan implements IntInstr
+    {
+        Get get1, get2;
+        Set set;
+
+        public LessThan(final Mode mode1, final Mode mode2, final Mode mode3)
+        {
+            get1 = getRead(mode1, 1);
+            get2 = getRead(mode2, 2);
+            set = getWrite(mode3, 3);
+
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            set.set(get1.get(pc, mem) < get2.get(pc, mem) ? 1 : 0, pc, mem);
+            return pc + 4;
+        }
+    }
+
+    private class Equals implements IntInstr
+    {
+        Get get1, get2;
+        Set set;
+
+        public Equals(final Mode mode1, final Mode mode2, final Mode mode3)
+        {
+            get1 = getRead(mode1, 1);
+            get2 = getRead(mode2, 2);
+            set = getWrite(mode3, 3);
+
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            set.set(get1.get(pc, mem) == get2.get(pc, mem) ? 1 : 0, pc, mem);
+            return pc + 4;
+        }
+    }
+
+    private static class Halt implements IntInstr
+    {
+        @Override
+        public boolean isHalt()
+        {
+            return true;
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            return -1;
+        }
+    }
+
+    private class Input implements IntInstr
+    {
+        Set set;
+
+        public Input(final Mode firstMode)
+        {
+            set = getWrite(firstMode, 1);
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            if (null == _doInput)
+            {
+                throw new IllegalStateException("cannot read input, no provider available.");
+            }
+            set.set(_doInput.get(), pc, mem);
+            return pc + 2;
+        }
+    }
+
+    private class Output implements IntInstr
+    {
+        Get get;
+
+        public Output(final Mode firstMode)
+        {
+            get = getRead(firstMode, 1);
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            doOutput(get.get(pc, mem));
+            return pc + 2;
+        }
+    }
+
+    private class BaseAdjust implements IntInstr
+    {
+        Get get;
+
+        public BaseAdjust(final Mode mode)
+        {
+            get = getRead(mode, 1);
+        }
+
+        @Override
+        public int execute(final int pc, final Map<Integer, Integer> mem)
+        {
+            relBase = relBase+get.get(pc, mem);
+            return pc+2;
+        }
+    }
+
+
+    private void doOutput(final int value)
+    {
+        if (null != _doOutput)
+        {
+            _doOutput.accept(value);
+        }
+        else
+        {
+            System.out.println(value);
+        }
+    }
+
+    public void setDoOutput(final Consumer<Integer> doOutput)
+    {
+        _doOutput = doOutput;
+    }
+
+    public void setDoInput(final Supplier<Integer> doInput)
+    {
+        _doInput = doInput;
+    }
+
+    private Set getWrite(final Mode mode, final Integer offset)
+    {
+        return switch (mode)
+        {
+            case POS -> new SetPos(offset);
+            case IMM -> throw new IllegalStateException("Cannot set an immediate value.");
+            case REL -> new SetRel(offset);
+        };
+    }
+
+    private Get getRead(final Mode mode, Integer offset)
+    {
+        return switch (mode)
+        {
+            case POS -> new GetPos(offset);
+            case IMM -> new GetImm(offset);
+            case REL -> new GetRel(offset);
+        };
+    }
+
+    private interface Get
+    {
+        int get(int pc, Map<Integer, Integer> mem);
+    }
+
+    private interface Set
+    {
+        void set(int value, int pc, Map<Integer, Integer> mem);
+    }
+
+    private enum Mode
+    {
+        IMM, POS, REL
+    }
+
+    private record GetPos(int _offset) implements Get
+    {
+        @Override
+        public int get(int pc, final Map<Integer, Integer> mem)
+        {
+            return mem.getOrDefault(mem.getOrDefault(pc+_offset, 0), 0);
+        }
+    }
+
+    private record GetImm(int _offset) implements Get
+    {
+        @Override
+        public int get(int pc, final Map<Integer, Integer> mem)
+        {
+            return mem.getOrDefault(pc + _offset, 0);
+        }
+    }
+
+    private final class GetRel implements Get
+    {
+        private final int _offset;
+
+        private GetRel(int _offset)
+        {
+            this._offset = _offset;
+        }
+
+        @Override
+        public int get(int pc, final Map<Integer, Integer> mem)
+        {
+            return mem.getOrDefault(relBase+mem.getOrDefault(pc+_offset, 0), 0);
+        }
+    }
+
+
+    private record SetPos(int _offset) implements Set
+    {
+        @Override
+        public void set(final int value, int pc, final Map<Integer, Integer> mem)
+        {
+            mem.put(mem.get(pc+_offset), value);
+        }
+    }
+
+    private final class SetRel implements Set
+    {
+        private final Integer _offset;
+
+        private SetRel(Integer _offset)
+        {
+            this._offset = _offset;
+        }
+
+        @Override
+        public void set(final int value, int pc, final Map<Integer, Integer> mem)
+        {
+            mem.put(relBase+mem.getOrDefault(pc+_offset, 0), value);
+        }
+    }
+
+    public static class InputProvider implements Supplier<Integer>
+    {
+        Queue<Integer> _values = new ArrayDeque<>();
+
+        public InputProvider(int... values)
+        {
+            for (int i : values)
+            {
+                _values.add(i);
+            }
+        }
+
+        @Override
+        public Integer get()
+        {
+            return _values.poll();
+        }
+    }
+
+    public static class OutputCollector implements Consumer<Integer>
+    {
+        private List<Integer> result = new ArrayList<>();
+
+        @Override
+        public void accept(final Integer integer)
+        {
+            result.add(integer);
+        }
+
+        public List<Integer> getResult()
+        {
+            return result;
+        }
+    }
+
+    public static class Pipe implements Supplier<Integer>, Consumer<Integer>
+    {
+        BlockingQueue<Integer> queue = new LinkedBlockingQueue<>();
+        private int lastValue;
+
+        @Override
+        public void accept(final Integer value)
+        {
+            if (null == value)
+            {
+                throw new IllegalArgumentException("value is null");
             }
             if (!queue.offer(value))
             {
                 throw new IllegalStateException("queue is full");
             }
-            lastValue=value;
+            lastValue = value;
         }
 
         @Override
-        public BigInteger get()
+        public Integer get()
         {
             try
             {
@@ -155,350 +495,7 @@ public class IntCode
 
         public int getLastValue()
         {
-            return lastValue.intValue();
-        }
-    }
-
-    private class Add implements IntInstr
-    {
-        Get get1, get2;
-        Set set;
-
-        public Add(final Mode mode1, final Mode mode2, final Mode mode3)
-        {
-            get1 = getRead(mode1, BigInteger.ONE);
-            get2 = getRead(mode2, BigInteger.TWO);
-            set = getWrite(mode3, THREE);
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            set.set(get1.get(pc, mem).add(get2.get(pc, mem)), pc, mem);
-            return pc.add(FOUR);
-        }
-    }
-
-    private class Mul implements IntInstr
-    {
-        Get get1, get2;
-        Set set;
-
-        public Mul(final Mode mode1, final Mode mode2, final Mode mode3)
-        {
-            get1 = getRead(mode1, BigInteger.ONE);
-            get2 = getRead(mode2, BigInteger.TWO);
-            set = getWrite(mode3, THREE);
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            set.set(get1.get(pc, mem).multiply(get2.get(pc, mem)), pc, mem);
-            return pc.add(FOUR);
-        }
-    }
-
-    private class JumpIfTrue implements IntInstr
-    {
-        Get get1, get2;
-
-        public JumpIfTrue(final Mode mode1, final Mode mode2)
-        {
-            get1 = getRead(mode1, BigInteger.ONE);
-            get2 = getRead(mode2, BigInteger.TWO);
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            if (!get1.get(pc, mem).equals(BigInteger.ZERO))
-            {
-                return get2.get(pc, mem);
-            }
-            return pc.add(THREE);
-        }
-    }
-
-    private class JumpIfFalse implements IntInstr
-    {
-        Get get1, get2;
-
-        public JumpIfFalse(final Mode mode1, final Mode mode2)
-        {
-            get1 = getRead(mode1, BigInteger.ONE);
-            get2 = getRead(mode2, BigInteger.TWO);
-
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            if (get1.get(pc, mem).equals(BigInteger.ZERO))
-            {
-                return get2.get(pc, mem);
-            }
-            return pc.add(THREE);
-        }
-    }
-
-    private class LessThan implements IntInstr
-    {
-        Get get1, get2;
-        Set set;
-
-        public LessThan(final Mode mode1, final Mode mode2, final Mode mode3)
-        {
-            get1 = getRead(mode1, BigInteger.ONE);
-            get2 = getRead(mode2, BigInteger.TWO);
-            set = getWrite(mode3, THREE);
-
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            set.set((get1.get(pc, mem).compareTo(get2.get(pc, mem))<0) ? BigInteger.ONE : BigInteger.ZERO, pc, mem);
-            return pc.add(FOUR);
-        }
-    }
-
-    private class Equals implements IntInstr
-    {
-        Get get1, get2;
-        Set set;
-
-        public Equals(final Mode mode1, final Mode mode2, final Mode mode3)
-        {
-            get1 = getRead(mode1, BigInteger.ONE);
-            get2 = getRead(mode2, BigInteger.TWO);
-            set = getWrite(mode3, THREE);
-
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            set.set(get1.get(pc, mem).equals(get2.get(pc, mem)) ? BigInteger.ONE : BigInteger.ZERO, pc, mem);
-            return pc.add(FOUR);
-        }
-    }
-
-    private class BaseAdjust implements IntInstr
-    {
-        Get get;
-
-        public BaseAdjust(final Mode mode)
-        {
-            get = getRead(mode, BigInteger.ONE);
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            relBase = relBase.add(get.get(pc, mem));
-            return pc.add(BigInteger.TWO);
-        }
-    }
-
-    private static class Halt implements IntInstr
-    {
-        @Override
-        public boolean isHalt()
-        {
-            return true;
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            return BigInteger.ZERO;
-        }
-    }
-
-    private class Input implements IntInstr
-    {
-        Set set;
-
-        public Input(final Mode firstMode)
-        {
-            set = getWrite(firstMode, BigInteger.ONE);
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            if (null == _doInput)
-            {
-                throw new IllegalStateException("cannot read input, no provider available.");
-            }
-            set.set(_doInput.get(), pc, mem);
-            return pc.add(BigInteger.TWO);
-        }
-    }
-
-    private class Output implements IntInstr
-    {
-        Get get;
-
-        public Output(final Mode firstMode)
-        {
-            get = getRead(firstMode, BigInteger.ONE);
-        }
-
-        @Override
-        public BigInteger execute(final BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            doOutput(get.get(pc, mem));
-            return pc.add(BigInteger.TWO);
-        }
-    }
-
-    private void doOutput(final BigInteger value)
-    {
-        if (null != _doOutput)
-        {
-            _doOutput.accept(value);
-        }
-        else
-        {
-            System.out.println("output: "+value);
-        }
-    }
-
-    public void setDoOutput(final Consumer<BigInteger> doOutput)
-    {
-        _doOutput = doOutput;
-    }
-
-    public void setDoInput(final Supplier<BigInteger> doInput)
-    {
-        _doInput = doInput;
-    }
-
-    private Set getWrite(final Mode mode, final BigInteger offset)
-    {
-        return switch (mode)
-        {
-            case POS -> new SetPos(offset);
-            case IMM -> throw new IllegalStateException("Cannot set an immediate value.");
-            case REL -> new SetRel(offset);
-        };
-    }
-
-    private Get getRead(final Mode mode, BigInteger offset)
-    {
-        return switch (mode)
-        {
-            case POS -> new GetPos(offset);
-            case IMM -> new GetImm(offset);
-            case REL -> new GetRel(offset);
-        };
-    }
-
-    private interface Get
-    {
-        BigInteger get(BigInteger pc, Map<BigInteger, BigInteger> mem);
-    }
-
-    private interface Set
-    {
-        void set(BigInteger value, BigInteger pc, Map<BigInteger, BigInteger> mem);
-    }
-
-    private enum Mode
-    {
-        IMM, POS, REL
-    }
-
-    private record GetPos(BigInteger _offset) implements Get
-    {
-        @Override
-        public BigInteger get(BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            return mem.getOrDefault(mem.getOrDefault(pc.add(_offset), BigInteger.ZERO), BigInteger.ZERO);
-        }
-    }
-
-    private record GetImm(BigInteger _offset) implements Get
-    {
-        @Override
-        public BigInteger get(BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            return mem.getOrDefault(pc.add(_offset), BigInteger.ZERO);
-        }
-    }
-
-    private final class GetRel implements Get
-    {
-        private final BigInteger _offset;
-
-        private GetRel(BigInteger _offset)
-        {
-            this._offset = _offset;
-        }
-
-        @Override
-        public BigInteger get(BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            return mem.getOrDefault(relBase.add(mem.getOrDefault(pc.add(_offset), BigInteger.ZERO)), BigInteger.ZERO);
-        }
-    }
-
-    private record SetPos(BigInteger _offset) implements Set
-    {
-        @Override
-        public void set(final BigInteger value, BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            mem.put(mem.get(pc.add(_offset)), value);
-        }
-    }
-
-    private final class SetRel implements Set
-    {
-        private final BigInteger _offset;
-
-        private SetRel(BigInteger _offset)
-        {
-            this._offset = _offset;
-        }
-
-        @Override
-        public void set(final BigInteger value, BigInteger pc, final Map<BigInteger, BigInteger> mem)
-        {
-            mem.put(relBase.add(mem.getOrDefault(pc.add(_offset), BigInteger.ZERO)), value);
-        }
-    }
-
-    public static class InputProvider implements Supplier<BigInteger>
-    {
-        Queue<BigInteger> _values = new ArrayDeque<>();
-
-        public InputProvider(BigInteger... values)
-        {
-            Collections.addAll(_values, values);
-        }
-
-        @Override
-        public BigInteger get()
-        {
-            return _values.poll();
-        }
-    }
-
-    public static class OutputCollector implements Consumer<BigInteger>
-    {
-        private final List<BigInteger> result = new ArrayList<>();
-
-        @Override
-        public void accept(final BigInteger integer)
-        {
-            result.add(integer);
-        }
-
-        public List<BigInteger> getResult()
-        {
-            return result;
+            return lastValue;
         }
     }
 }

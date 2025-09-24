@@ -21,8 +21,8 @@ public class Day11 extends AocPuzzle
     protected Object solvePartA() throws IOException
     {
         List<String> code = data.getFirstLineWords(",");
-        IntCode intCode = IntCode.fromStringList(code);
-        IntCode.Pipe pipe=new IntCode.Pipe();
+        BigIntCode intCode = BigIntCode.fromStringList(code);
+        BigIntCode.Pipe pipe=new BigIntCode.Pipe();
         intCode.setDoInput(pipe);
         Painter painter=new Painter(pipe, 'b');
         intCode.setDoOutput(painter);
@@ -34,8 +34,8 @@ public class Day11 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         List<String> code = data.getFirstLineWords(",");
-        IntCode intCode = IntCode.fromStringList(code);
-        IntCode.Pipe pipe = new IntCode.Pipe();
+        BigIntCode intCode = BigIntCode.fromStringList(code);
+        BigIntCode.Pipe pipe = new BigIntCode.Pipe();
         intCode.setDoInput(pipe);
         Painter painter = new Painter(pipe, 'w');
         intCode.setDoOutput(painter);
@@ -49,10 +49,10 @@ public class Day11 extends AocPuzzle
         InfiniteCharMatrix hull;
         Position pos=new Position(0, 0);
         Direction direction=Direction.UP;
-        private final IntCode.Pipe _pipe;
+        private final BigIntCode.Pipe _pipe;
         boolean doPaint=true;
 
-        public Painter(final IntCode.Pipe pipe, final char startPanel)
+        public Painter(final BigIntCode.Pipe pipe, final char startPanel)
         {
             _pipe = pipe;
             hull = new InfiniteCharMatrix(startPanel);

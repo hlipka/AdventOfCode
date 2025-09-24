@@ -6,7 +6,6 @@ import de.hendriklipka.aoc2019.IntCode.OutputCollector;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -25,10 +24,10 @@ public class Day07 extends AocPuzzle
         if (isExample) return -1;
         final List<Integer> code = data.getLineAsInteger(",");
 
-        List<BigInteger> phases = List.of(new BigInteger("0"), new BigInteger("1"), new BigInteger("2"), new BigInteger("3"), new BigInteger("4"));
-        final Collection<List<BigInteger>> permutations = CollectionUtils.permutations(phases);
+        List<Integer> phases = List.of(0,1,2,3,4);
+        final Collection<List<Integer>> permutations = CollectionUtils.permutations(phases);
         int maxSignal=0;
-        for (List<BigInteger> permutation : permutations)
+        for (List<Integer> permutation : permutations)
         {
             int signal=getSignal(code, permutation);
             if (signal>maxSignal)
@@ -40,42 +39,42 @@ public class Day07 extends AocPuzzle
         return maxSignal;
     }
 
-    private int getSignal(final List<Integer> code, final List<BigInteger> permutation)
+    private int getSignal(final List<Integer> code, final List<Integer> permutation)
     {
         IntCode a1=IntCode.fromIntList(code);
-        a1.setDoInput(new InputProvider(permutation.get(0), BigInteger.ZERO));
+        a1.setDoInput(new InputProvider(permutation.getFirst(), 0));
         final OutputCollector oc1=new OutputCollector();
         a1.setDoOutput(oc1);
         a1.execute();
 
         IntCode a2=IntCode.fromIntList(code);
-        a2.setDoInput(new InputProvider(permutation.get(1), oc1.getResult().get(0)));
+        a2.setDoInput(new InputProvider(permutation.get(1), oc1.getResult().getFirst()));
         final OutputCollector oc2 = new OutputCollector();
         a2.setDoOutput(oc2);
         a2.execute();
 
         IntCode a3=IntCode.fromIntList(code);
-        a3.setDoInput(new InputProvider(permutation.get(2), oc2.getResult().get(0)));
+        a3.setDoInput(new InputProvider(permutation.get(2), oc2.getResult().getFirst()));
         final OutputCollector oc3 = new OutputCollector();
         a3.setDoOutput(oc3);
         a3.execute();
 
         IntCode a4=IntCode.fromIntList(code);
-        a4.setDoInput(new InputProvider(permutation.get(3), oc3.getResult().get(0)));
+        a4.setDoInput(new InputProvider(permutation.get(3), oc3.getResult().getFirst()));
         final OutputCollector oc4 = new OutputCollector();
         a4.setDoOutput(oc4);
         a4.execute();
 
         IntCode a5=IntCode.fromIntList(code);
-        a5.setDoInput(new InputProvider(permutation.get(4), oc4.getResult().get(0)));
+        a5.setDoInput(new InputProvider(permutation.get(4), oc4.getResult().getFirst()));
         final OutputCollector oc5 = new OutputCollector();
         a5.setDoOutput(oc5);
         a5.execute();
 
-        return oc5.getResult().get(0).intValue();
+        return oc5.getResult().getFirst();
     }
 
-    private int getSignalFromLoop(final List<Integer> code, final List<BigInteger> permutation)
+    private int getSignalFromLoop(final List<Integer> code, final List<Integer> permutation)
     {
         ExecutorService e = Executors.newFixedThreadPool(11);
 
@@ -108,7 +107,7 @@ public class Day07 extends AocPuzzle
         pipe2to3.accept(permutation.get(2));
         pipe3to4.accept(permutation.get(3));
         pipe4to5.accept(permutation.get(4));
-        pipe1in.accept(BigInteger.ZERO);
+        pipe1in.accept(0);
 
         e.execute(a1::execute);
         e.execute(a2::execute);
@@ -145,12 +144,12 @@ public class Day07 extends AocPuzzle
     {
         final List<Integer> code = data.getLineAsInteger(",");
 
-        List<BigInteger> phases = List.of(new BigInteger("5"), new BigInteger("6"), new BigInteger("7"), new BigInteger("8"), new BigInteger("9"));
-        final Collection<List<BigInteger>> permutations = CollectionUtils.permutations(phases);
+        List<Integer> phases = List.of(5,6,7,8,9);
+        final Collection<List<Integer>> permutations = CollectionUtils.permutations(phases);
         int maxSignal = 0;
         System.out.println("permutations: " + permutations.size());
         int count=0;
-        for (List<BigInteger> permutation : permutations)
+        for (List<Integer> permutation : permutations)
         {
             if (0==count%10)
             {

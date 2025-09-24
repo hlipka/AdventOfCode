@@ -5,7 +5,6 @@ import de.hendriklipka.aoc.Position;
 import de.hendriklipka.aoc.matrix.InfiniteCharMatrix;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -50,15 +49,15 @@ public class Day13 extends AocPuzzle
         return player.getScore();
     }
 
-    private static class Painter implements Consumer<BigInteger>
+    private static class Painter implements Consumer<Integer>
     {
         InfiniteCharMatrix matrix=new InfiniteCharMatrix(' ');
         int state=0;
-        BigInteger x=BigInteger.ZERO;
-        BigInteger y=BigInteger.ZERO;
+        int x=0;
+        int y=0;
 
         @Override
-        public void accept(final BigInteger value)
+        public void accept(final Integer value)
         {
             switch (state)
             {
@@ -67,27 +66,26 @@ public class Day13 extends AocPuzzle
                 case 1: y=value;
                         break;
                 case 2:
-                    matrix.set(new Position(y.intValue(),x.intValue()), getTile(value) );
+                    matrix.set(new Position(y,x), getTile(value) );
             }
             state=(state+1)%3;
         }
     }
 
-    private static class Player implements Consumer<BigInteger>, Supplier<BigInteger>
+    private static class Player implements Consumer<Integer>, Supplier<Integer>
     {
         InfiniteCharMatrix matrix=new InfiniteCharMatrix(' ');
         int state=0;
-        BigInteger x=BigInteger.ZERO;
-        BigInteger y=BigInteger.ZERO;
+        int x=0;
+        int y=0;
 
-        BigInteger M1=new BigInteger("-1");
-        private BigInteger score;
+        private int score;
 
-        BigInteger paddleX=BigInteger.ZERO;
-        private BigInteger ballX;
+        int paddleX=0;
+        private int ballX;
 
         @Override
-        public void accept(final BigInteger value)
+        public void accept(final Integer value)
         {
             switch (state)
             {
@@ -97,7 +95,7 @@ public class Day13 extends AocPuzzle
                         break;
                 case 2:
                     // track the score
-                    if (x.equals(M1) && y.equals(BigInteger.ZERO))
+                    if (x==-1 && y==0)
                     {
                         score=value;
                     }
@@ -106,7 +104,7 @@ public class Day13 extends AocPuzzle
 
                         final var tile = getTile(value);
                         // not exactly needed, but it allows us to se whether we finished properly
-                        matrix.set(new Position(y.intValue(), x.intValue()), tile);
+                        matrix.set(new Position(y, x), tile);
                         // track position of paddle and ball
                         if ('o'==tile)
                         {
@@ -121,26 +119,26 @@ public class Day13 extends AocPuzzle
             state=(state+1)%3;
         }
 
-        public BigInteger getScore()
+        public int getScore()
         {
             return score;
         }
 
         // when we get asked for input, move the paddle towards the ball
         @Override
-        public BigInteger get()
+        public Integer get()
         {
-            if (paddleX.equals(ballX))
-                return BigInteger.ZERO;
-            if (paddleX.compareTo(ballX) < 0)
-                return BigInteger.ONE;
-            return M1;
+            if (paddleX==ballX)
+                return 0;
+            if (paddleX < ballX)
+                return 1;
+            return -1;
         }
     }
 
-    private static char getTile(final BigInteger value)
+    private static char getTile(final int value)
     {
-        return switch (value.intValue())
+        return switch (value)
         {
             case 0 -> ' ';
             case 1 -> 'w';
