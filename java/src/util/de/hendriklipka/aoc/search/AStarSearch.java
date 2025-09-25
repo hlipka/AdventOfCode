@@ -75,8 +75,21 @@ public class AStarSearch
         return foundTarget;
     }
 
-    public int getPathLength(final Position p)
+    public int getLargestValue()
     {
-        return path[p.col][p.row];
+        int max=0;
+        for (int x = 0; x < world.getWidth(); x++)
+        {
+            for (int y = 0; y < world.getHeight(); y++)
+            {
+                int len=path[x][y];
+                // all walls will keep MAX_VALUE
+                if (len!= Integer.MAX_VALUE && len>max)
+                {
+                    max=len;
+                }
+            }
+        }
+        return max;
     }
 }
