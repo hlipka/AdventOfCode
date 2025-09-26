@@ -10,8 +10,10 @@ import java.util.function.Supplier;
 
 public class IntCode
 {
-    private final Map<Integer, Integer> memory = new HashMap<>();
+    private final int[] mainMemory;
+    private final Map<Integer, Integer> extendedMemory = new HashMap<>();
 
+    // code cache cannot be shared among all instances - input and output are bound to their instances :-(
     LRUMap<Integer, IntInstr> codeCache;
 
     int relBase = 0;
@@ -19,14 +21,28 @@ public class IntCode
     Consumer<Integer> _doOutput;
     Supplier<Integer> _doInput;
     private boolean finished = false;
+    private final int codeSize;
 
     public IntCode(List<Integer> code)
     {
+        codeSize = code.size();
+        mainMemory=new int[code.size()*2];
         for (int i = 0; i < code.size(); i++)
         {
-            memory.put(i, code.get(i));
+            mainMemory[i]= code.get(i);
         }
         codeCache = new LRUMap<>(code.size());
+    }
+
+    public IntCode(IntCode other)
+    {
+        codeSize = other.codeSize;
+        mainMemory=new int[other.mainMemory.length];
+        System.arraycopy(other.mainMemory,0,mainMemory,0,other.mainMemory.length);
+        extendedMemory.putAll(other.extendedMemory);
+        relBase = other.relBase;
+        codeCache = new LRUMap<>(codeSize);
+        // purposely ignore input and output
     }
 
     public static IntCode fromIntList(List<Integer> code)
@@ -39,12 +55,39 @@ public class IntCode
         return new IntCode(code.stream().map(Integer::parseInt).toList());
     }
 
+    private class Memory
+    {
+        int read(int addr)
+        {
+            if (addr < mainMemory.length)
+            {
+                return mainMemory[addr];
+            }
+            return extendedMemory.getOrDefault(addr, 0);
+        }
+
+        void write(int addr, int value)
+        {
+            if (addr < mainMemory.length)
+            {
+                mainMemory[addr] = value;
+            }
+            else
+            {
+                extendedMemory.put(addr, value);
+            }
+        }
+        
+    }
+    
+    private final Memory memory=new Memory();
+
     public void execute()
     {
         int pc = 0;
         while (true)
         {
-            int opCode = memory.get(pc);
+            int opCode = memory.read(pc);
             IntInstr instr = codeCache.computeIfAbsent(opCode, this::parseInstruction);
             if (instr.isHalt())
             {
@@ -60,9 +103,9 @@ public class IntCode
         Map<Integer, Integer> instSizes=Map.of(1,4, 2,4, 3, 2, 4,2, 5, 3, 6, 3, 7, 4, 8, 4, 9, 2, 99, 1);
         List<String> result = new ArrayList<>();
         int pc=0;
-        while(memory.containsKey(pc))
+        while(pc<codeSize)
         {
-            int opCode = memory.get(pc);
+            int opCode = memory.read(pc);
             if (pc<maxPC)
             {
                 try
@@ -126,17 +169,22 @@ public class IntCode
 
     public int get(int pos)
     {
-        return memory.get(pos);
+        return memory.read(pos);
     }
 
     public void set(int pos, int value)
     {
-        memory.put(pos, value);
+        memory.write(pos, value);
     }
 
     public boolean isFinished()
     {
         return finished;
+    }
+
+    public IntCode createClone()
+    {
+        return new IntCode(this);
     }
 
     private interface IntInstr
@@ -146,9 +194,9 @@ public class IntCode
             return false;
         }
 
-        int execute(int pc, Map<Integer, Integer> mem);
+        int execute(int pc, Memory mem);
 
-        String decompile(int pc, Map<Integer, Integer> mem);
+        String decompile(int pc, Memory mem);
     }
 
     private class Add implements IntInstr
@@ -164,14 +212,14 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             set.set(get1.get(pc, mem) + get2.get(pc, mem), pc, mem);
             return pc + 4;
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "add "+get1.decompile(pc, mem)+" + "+get2.decompile(pc, mem)+" -> "+set.decompile(pc, mem);
         }
@@ -190,14 +238,14 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             set.set(get1.get(pc, mem) * get2.get(pc, mem), pc, mem);
             return pc + 4;
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "mul " + get1.decompile(pc, mem) + " * " + get2.decompile(pc, mem) + " -> " + set.decompile(pc, mem);
         }
@@ -214,7 +262,7 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             if (get1.get(pc, mem) != 0)
             {
@@ -224,7 +272,7 @@ public class IntCode
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "j_if_ne_0 " + get1.decompile(pc, mem) + "? ->" + get2.decompile(pc, mem);
         }
@@ -242,7 +290,7 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             if (get1.get(pc, mem) == 0)
             {
@@ -252,7 +300,7 @@ public class IntCode
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "j_if_eq_0 " + get1.decompile(pc, mem) + "? ->" + get2.decompile(pc, mem);
         }
@@ -272,14 +320,14 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             set.set(get1.get(pc, mem) < get2.get(pc, mem) ? 1 : 0, pc, mem);
             return pc + 4;
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "less_than " + get1.decompile(pc, mem) + "<" + get2.decompile(pc, mem) + "? ->" + set.decompile(pc, mem);
         }
@@ -299,14 +347,14 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             set.set(get1.get(pc, mem) == get2.get(pc, mem) ? 1 : 0, pc, mem);
             return pc + 4;
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "equals " + get1.decompile(pc, mem) + "==" + get2.decompile(pc, mem) + "? ->" + set.decompile(pc, mem);
         }
@@ -321,13 +369,13 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             return -1;
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "halt";
         }
@@ -343,7 +391,7 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             if (null == _doInput)
             {
@@ -354,7 +402,7 @@ public class IntCode
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "input -> " + set.decompile(pc, mem);
         }
@@ -370,14 +418,14 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             doOutput(get.get(pc, mem));
             return pc + 2;
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "output <-" + get.decompile(pc, mem);
         }
@@ -393,14 +441,14 @@ public class IntCode
         }
 
         @Override
-        public int execute(final int pc, final Map<Integer, Integer> mem)
+        public int execute(final int pc, final Memory mem)
         {
             relBase = relBase+get.get(pc, mem);
             return pc+2;
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
             return "adj_base " + get.decompile(pc, mem);
         }
@@ -451,16 +499,16 @@ public class IntCode
 
     private interface Get
     {
-        int get(int pc, Map<Integer, Integer> mem);
+        int get(int pc, Memory mem);
 
-        String decompile(int pc, Map<Integer, Integer> mem);
+        String decompile(int pc, Memory mem);
     }
 
     private interface Set
     {
-        void set(int value, int pc, Map<Integer, Integer> mem);
+        void set(int value, int pc, Memory mem);
 
-        String decompile(int pc, Map<Integer, Integer> mem);
+        String decompile(int pc, Memory mem);
     }
 
     private enum Mode
@@ -471,30 +519,30 @@ public class IntCode
     private record GetPos(int _offset) implements Get
     {
         @Override
-        public int get(int pc, final Map<Integer, Integer> mem)
+        public int get(int pc, final Memory mem)
         {
-            return mem.getOrDefault(mem.getOrDefault(pc+_offset, 0), 0);
+            return mem.read(mem.read(pc + _offset));
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
-            return "("+ mem.getOrDefault(pc + _offset, 0)+")";
+            return "(" + mem.read(pc + _offset) + ")";
         }
     }
 
     private record GetImm(int _offset) implements Get
     {
         @Override
-        public int get(int pc, final Map<Integer, Integer> mem)
+        public int get(int pc, final Memory mem)
         {
-            return mem.getOrDefault(pc + _offset, 0);
+            return mem.read(pc + _offset);
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
-            return ""+mem.getOrDefault(pc + _offset, 0);
+            return ""+mem.read(pc + _offset);
         }
     }
 
@@ -508,15 +556,15 @@ public class IntCode
         }
 
         @Override
-        public int get(int pc, final Map<Integer, Integer> mem)
+        public int get(int pc, final Memory mem)
         {
-            return mem.getOrDefault(relBase+mem.getOrDefault(pc+_offset, 0), 0);
+            return mem.read(relBase + mem.read(pc + _offset));
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
-            return "(rel+ " + mem.getOrDefault(pc + _offset, 0) + ")";
+            return "(rel+ " + mem.read(pc + _offset) + ")";
         }
     }
 
@@ -524,15 +572,15 @@ public class IntCode
     private record SetPos(int _offset) implements Set
     {
         @Override
-        public void set(final int value, int pc, final Map<Integer, Integer> mem)
+        public void set(final int value, int pc, final Memory mem)
         {
-            mem.put(mem.get(pc+_offset), value);
+            mem.write(mem.read(pc + _offset), value);
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
-            return "(" + mem.getOrDefault(pc + _offset, 0) + ")";
+            return "(" + mem.read(pc + _offset) + ")";
         }
     }
 
@@ -546,15 +594,15 @@ public class IntCode
         }
 
         @Override
-        public void set(final int value, int pc, final Map<Integer, Integer> mem)
+        public void set(final int value, int pc, final Memory mem)
         {
-            mem.put(relBase+mem.getOrDefault(pc+_offset, 0), value);
+            mem.write(relBase + mem.read(pc + _offset), value);
         }
 
         @Override
-        public String decompile(int pc, Map<Integer, Integer> mem)
+        public String decompile(int pc, Memory mem)
         {
-            return "(rel+ " + mem.getOrDefault(pc + _offset, 0) + ")";
+            return "(rel+ " + mem.read(pc + _offset) + ")";
         }
     }
 
@@ -579,7 +627,7 @@ public class IntCode
 
     public static class OutputCollector implements Consumer<Integer>
     {
-        private List<Integer> result = new ArrayList<>();
+        private final List<Integer> result = new ArrayList<>();
 
         @Override
         public void accept(final Integer integer)
