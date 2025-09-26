@@ -75,6 +75,11 @@ public class AStarSearch
         return foundTarget;
     }
 
+    public int getPathLength(final Position p)
+    {
+        return path[p.col][p.row];
+    }
+    
     public int getLargestValue()
     {
         int max=0;
