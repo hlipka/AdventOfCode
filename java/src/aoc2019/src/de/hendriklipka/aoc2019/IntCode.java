@@ -129,6 +129,11 @@ public class IntCode
         return memory.get(pos);
     }
 
+    public void set(int pos, int value)
+    {
+        memory.put(pos, value);
+    }
+
     public boolean isFinished()
     {
         return finished;
