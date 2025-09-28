@@ -48,13 +48,17 @@ public class CharMatrix
 
     public static CharMatrix fromStringList(final List<String> strings, char defaultChar)
     {
-        final char[][] data = new char[strings.size()][strings.get(0).length()];
+        final char[][] data = new char[strings.size()][strings.stream().mapToInt(String::length).max().orElseThrow()];
         for (int r = 0; r < data.length; r++)
         {
             String row = strings.get(r);
             for (int c = 0; c < row.length(); c++)
             {
                 data[r][c] = row.charAt(c);
+            }
+            for (int c=row.length();c<data[r].length;c++)
+            {
+                data[r][c] = defaultChar;
             }
         }
         return new CharMatrix(data, defaultChar);

@@ -60,11 +60,6 @@ public class GraphNode implements Comparable<GraphNode>
         this.distance = distance;
     }
 
-    public void setPre(final String pre)
-    {
-        this.pre = pre;
-    }
-
     public void setPreviousNode(final String name)
     {
         pre = name;
@@ -73,5 +68,15 @@ public class GraphNode implements Comparable<GraphNode>
     public List<String> edgeNames()
     {
         return edgeNames;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "GraphNode{" +
+               "name='" + name + '\'' +
+               ", distance=" + distance +
+               ", pre='" + pre + '\'' +
+               '}';
     }
 }

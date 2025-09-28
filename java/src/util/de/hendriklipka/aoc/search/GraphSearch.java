@@ -48,6 +48,9 @@ public class GraphSearch
             List<Pair<String, Integer>> edges = n.getEdges();
             for (Pair<String, Integer> edge : edges)
             {
+                // this node is not reachable at all
+                if (n.getDistance()== Integer.MAX_VALUE)
+                    continue;
                 int newDist = n.getDistance() + edge.getRight();
                 GraphNode other = graph.nodes.get(edge.getLeft());
                 if (allGraphNodes.contains(other))
@@ -67,12 +70,20 @@ public class GraphSearch
         }
         GraphNode target = graph.nodes.get(to);
         cost = target.getDistance();
+        // we did not find a way to the target, so skip the path calculation
+        if (cost== Integer.MAX_VALUE)
+            return cost;
         pathCostCache.put(key, cost);
         List<String> path = new ArrayList<>();
         while (target != start)
         {
             path.add(0, target.getName()); //TODO: this might be slow with large paths
-            target = graph.nodes.get(target.getPreviousNode());
+            to= target.getPreviousNode();
+            target = graph.nodes.get(to);
+            if (null == target)
+            {
+                System.out.println("cannot find node " + to);
+            }
         }
         path.add(0, from);
         pathCache.put(key, path);
