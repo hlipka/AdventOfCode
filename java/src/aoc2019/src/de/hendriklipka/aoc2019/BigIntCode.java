@@ -24,14 +24,7 @@ public class BigIntCode
     private static final BigInteger MAX_OPCODE = new BigInteger("22299");
     private static final BigInteger FOUR = new BigInteger("4");
     private static final BigInteger THREE = new BigInteger("3");
-
-    public static BigIntCode fromIntList(List<Integer> code)
-    {
-        return new BigIntCode(code.stream().map(i ->
-        {
-            return new BigInteger(Integer.toString(i));
-        }).toList());
-    }
+    private boolean _stopped=false;
 
     public static BigIntCode fromStringList(List<String> code)
     {
@@ -47,10 +40,26 @@ public class BigIntCode
         codeCache = new LRUMap<>(code.size());
     }
 
+    @SuppressWarnings("CopyConstructorMissesField")
+    private BigIntCode(BigIntCode other)
+    {
+        memory.putAll(other.memory);
+        relBase = other.relBase;
+        codeCache = new LRUMap<>(Math.max(1000, other.codeCache.size()));
+        // purposely ignore input and output
+    }
+
+
+    public BigIntCode createClone()
+    {
+        return new BigIntCode(this);
+    }
+
+
     public void execute()
     {
         BigInteger pc = BigInteger.ZERO;
-        while (true)
+        while (!_stopped)
         {
             BigInteger opCode = memory.get(pc);
             IntInstr instr = codeCache.computeIfAbsent(opCode, this::parseInstruction);
@@ -109,6 +118,11 @@ public class BigIntCode
     public boolean isFinished()
     {
         return finished;
+    }
+
+    public void stopExecution()
+    {
+        _stopped=true;
     }
 
     private interface IntInstr
