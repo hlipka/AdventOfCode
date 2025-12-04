@@ -316,6 +316,16 @@ public class CharMatrix
         return positions;
     }
 
+    public List<Character> getNeighbours(Position pos)
+    {
+        return Arrays.stream(Direction.values()).map(pos::updated).map(this::at).toList();
+    }
+
+    public List<Character> getDiagonalNeighbours(Position pos)
+    {
+        return Arrays.stream(DiagonalDirections.values()).map(pos::updated).map(this::at).toList();
+    }
+
     public Set<Position> floodFill(Position start, BiPredicate<Position, Position> canMove)
     {
         final Set<Position> positions = new HashSet<>(_rows * _cols);
@@ -323,7 +333,7 @@ public class CharMatrix
         toVisit.add(start);
         while (!toVisit.isEmpty())
         {
-            Position currentPosition = toVisit.remove(0);
+            Position currentPosition = toVisit.removeFirst();
             if (positions.contains(currentPosition))
                 continue;
             positions.add(currentPosition);
