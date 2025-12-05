@@ -1,13 +1,11 @@
 package de.hendriklipka.aoc2025;
 
 
-import de.hendriklipka.aoc.AocParseUtils;
 import de.hendriklipka.aoc.AocPuzzle;
-import org.apache.commons.lang3.tuple.Pair;
+import de.hendriklipka.aoc.RangeLong;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Day05 extends AocPuzzle
@@ -21,11 +19,11 @@ public class Day05 extends AocPuzzle
     protected Object solvePartA() throws IOException
     {
         final List<List<String>> blocks = data.getStringBlocks();
-        List<Pair<Long, Long>> ranges = blocks.getFirst().stream().map(AocParseUtils::parseLongRange).toList();
+        List<RangeLong> ranges = blocks.getFirst().stream().map(RangeLong::new).toList();
         return blocks.get(1).stream().mapToLong(Long::parseLong).filter(i->isFresh(i, ranges)).count();
     }
 
-    private boolean isFresh(final long id, final List<Pair<Long, Long>> ranges)
+    private boolean isFresh(final long id, final List<RangeLong> ranges)
     {
         return ranges.stream().anyMatch(range->isInRange(id, range));
     }
@@ -34,27 +32,27 @@ public class Day05 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         final List<List<String>> blocks = data.getStringBlocks();
-        List<Pair<Long, Long>> ranges = blocks.getFirst().stream().map(AocParseUtils::parseLongRange).toList();
-        return mergeRanges(new ArrayList<>(ranges)).stream().mapToLong(r-> r.getRight() - r.getLeft() + 1).sum();
+        List<RangeLong> ranges = blocks.getFirst().stream().map(RangeLong::new).toList();
+        return mergeRanges(new ArrayList<>(ranges)).stream().mapToLong(r-> r.getTo() - r.getFrom() + 1).sum();
     }
 
-    private List<Pair<Long, Long>> mergeRanges(final List<Pair<Long, Long>> ranges)
+    private List<RangeLong> mergeRanges(final List<RangeLong> ranges)
     {
-        final List<Pair<Long, Long>> result=new ArrayList<>();
+        final List<RangeLong> result=new ArrayList<>();
         while (!ranges.isEmpty())
         {
             // take the first remaining range
-            Pair<Long, Long> range = ranges.removeFirst();
+            RangeLong range = ranges.removeFirst();
             // look if there is _any_ range we can merge this with
             while (true)
             {
                 boolean merged = false;
                 // check all other ranges
                 // when we found something to merge, we always stop and check from the start - there might now be new candidates to also merge
-                for (Pair<Long, Long> other : ranges)
+                for (RangeLong other : ranges)
                 {
                     // the other range is completely inside this range
-                    if (isInRange(other.getLeft(), range) && isInRange(other.getRight(), range))
+                    if (isInRange(other.getFrom(), range) && isInRange(other.getTo(), range))
                     {
                         // just remove it from the list, nothing needs to be done
                         ranges.remove(other);
@@ -62,25 +60,25 @@ public class Day05 extends AocPuzzle
                         break;
                     }
                     // the start of the other range is inside this range
-                    else if (isInRange(other.getLeft(), range))
+                    else if (isInRange(other.getFrom(), range))
                     {
                         // so we extend our range to the right
-                        range=Pair.of(range.getLeft(), other.getRight());
+                        range=new RangeLong(range.getFrom(), other.getTo());
                         ranges.remove(other);
                         merged=true;
                         break;
                     }
                     // the end of the other range is inside this range
-                    else if (isInRange(other.getRight(), range))
+                    else if (isInRange(other.getTo(), range))
                     {
                         // so we extend our range to the left
-                        range=Pair.of(other.getLeft(), range.getRight());
+                        range=new RangeLong(other.getFrom(), range.getTo());
                         ranges.remove(other);
                         merged=true;
                         break;
                     }
                     // the current range is completely inside the other range
-                    if (isInRange(range.getLeft(), other) && isInRange(range.getRight(), other))
+                    if (isInRange(range.getFrom(), other) && isInRange(range.getTo(), other))
                     {
                         // so swap them
                         range=other;
@@ -100,8 +98,8 @@ public class Day05 extends AocPuzzle
         return result;
     }
 
-    private boolean isInRange(final Long id, final Pair<Long, Long> range)
+    private boolean isInRange(final Long id, final RangeLong range)
     {
-        return range.getLeft() <= id && id <= range.getRight();
+        return range.getFrom() <= id && id <= range.getTo();
     }
 }

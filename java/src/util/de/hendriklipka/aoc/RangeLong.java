@@ -5,17 +5,23 @@ package de.hendriklipka.aoc;
  * Date: 04.12.22
  * Time: 20:04
  */
-public class Range
+public class RangeLong
 {
     long from;
     long to;
 
 
-    public Range(String range)
+    public RangeLong(String range)
     {
         String[] ranges = range.split("\\-");
         from = Long.parseLong(ranges[0]);
         to = Long.parseLong(ranges[1]);
+    }
+
+    public RangeLong(long from, long to)
+    {
+        this.from = from;
+        this.to = to;
     }
 
     public long getFrom()
@@ -28,9 +34,14 @@ public class Range
         return to;
     }
 
-    public boolean isInside(final Range other)
+    public boolean isInsideOf(final RangeLong other)
     {
         return from>=other.from && to<=other.to;
+    }
+
+    public boolean insideThisRange(final long value)
+    {
+        return from<=value && value<=to;
     }
 
     @Override
@@ -42,8 +53,8 @@ public class Range
                 '}';
     }
 
-    public boolean isOverlap(final Range other)
+    public boolean overlapsWith(final RangeLong other)
     {
-        return (from>=other.from && from<=other.to)||((to >= other.from && to <= other.to));
+        return insideThisRange(other.from) || insideThisRange(other.to);
     }
 }
