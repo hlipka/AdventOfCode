@@ -1,6 +1,7 @@
 package de.hendriklipka.aoc;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -92,6 +93,19 @@ public class AocParseUtils
 
         return map;
     }
+
+    public static Pair<Long, Long> parseLongRange(String line)
+    {
+        String[] parts=line.split("-");
+        return Pair.of(Long.parseLong(parts[0]), Long.parseLong(parts[1]));
+    }
+
+    public static Pair<Integer, Integer> parseIntRange(String line)
+    {
+        String[] parts=line.split("-");
+        return Pair.of(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]));
+    }
+
 
     public static List<Integer> splitLineToInts(String line)
     {
