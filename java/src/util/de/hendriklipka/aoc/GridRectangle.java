@@ -59,4 +59,20 @@ public class GridRectangle
     {
         return Math.max(y1, y2);
     }
+
+    public long getArea()
+    {
+        return (Math.abs((long)x2 - (long)x1)+1) * (Math.abs((long)y2 - (long)y1)+1);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "GridRectangle{" +
+               "x1=" + x1 +
+               ", y1=" + y1 +
+               ", x2=" + x2 +
+               ", y2=" + y2 +
+               '}';
+    }
 }
