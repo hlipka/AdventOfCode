@@ -3,6 +3,7 @@ package de.hendriklipka.aoc2025;
 import de.hendriklipka.aoc.AocPuzzle;
 import de.hendriklipka.aoc.GridRectangle;
 import de.hendriklipka.aoc.Position;
+import de.hendriklipka.aoc.vizualization.SwingViewer;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
@@ -48,6 +49,14 @@ public class Day09 extends AocPuzzle
             createLine(start, end, lines);
         }
         createLine(tiles.getFirst(), tiles.getLast(), lines);
+
+        new SwingViewer(g ->
+        {
+            for (Pair<Position, Position> line: lines)
+            {
+                g.drawLine(line.getLeft().col/100,  line.getLeft().row / 100, line.getRight().col / 100, line.getRight().row / 100);
+            }
+        });
 
         List<GridRectangle> rects = new ArrayList<>();
         for (int i = 0; i < tiles.size(); i++)
