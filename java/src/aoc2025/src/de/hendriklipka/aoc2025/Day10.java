@@ -29,7 +29,7 @@ public class Day10 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         count=0;
-        return data.getLines().stream().map(Day10::parseMachine).mapToInt(this::solveMachine2).sum();
+        return data.getLines().stream().parallel().map(Day10::parseMachine).mapToInt(this::solveMachine2).sum();
     }
 
     private int solveMachine2(Machine machine)
@@ -73,55 +73,59 @@ public class Day10 extends AocPuzzle
 
             // start with the first light
             Pair<List<Integer>, Integer> pair = buttonsForLights.removeFirst();
-            int bestPresses = handleNextList(pair, new HashMap<Integer, Integer>(), buttonsForLights, 0);
+            int bestPresses = handleNextList(pair, new HashMap<>(), buttonsForLights, 0);
             System.out.println("solved machine " + count++ + " with " + bestPresses);
             return bestPresses;
         }
 
-        private int handleNextList(final Pair<List<Integer>, Integer> pair, final Map<Integer, Integer> buttonsPressed,
+        private int handleNextList(final Pair<List<Integer>, Integer> currentLight, final Map<Integer, Integer> buttonsPressed,
                                    final List<Pair<List<Integer>, Integer>> buttonsForLights, final int currentPresses)
         {
-            if (currentPresses>currentBestPresses)
-                return currentPresses+1;
+            // early exit
+            if (currentPresses>=currentBestPresses)
+                return currentPresses;
             // determine which of the button have no value yet - the pressed ones already have a fixed value
-            Collection<Integer> buttonsLeft = getRemainingButtons(pair, buttonsPressed);
+            Collection<Integer> buttonsLeft = getRemainingButtons(currentLight, buttonsPressed);
             // we are done when there are no buttons left to handle, in that case we go to the next list
             if (buttonsLeft.isEmpty())
             {
-                // verify that the buttons sum up to the needed jolts
+                // verify that the buttons actually sum up to the specified jolts
                 int jolts = 0;
                 for (Map.Entry<Integer, Integer> entry : buttonsPressed.entrySet())
                 {
-                    if (pair.getLeft().contains(entry.getKey()))
+                    if (currentLight.getLeft().contains(entry.getKey()))
                         jolts += entry.getValue();
                 }
-                if (jolts != pair.getRight())
+                // if not, this is an invalid solution
+                if (jolts != currentLight.getRight())
                     return Integer.MAX_VALUE;
-                // if there is no list, we are done
+                // otherwise: if there is no light left, we are done
                 if (buttonsForLights.isEmpty())
                 {
                     if (currentPresses<currentBestPresses)
                         currentBestPresses=currentPresses;
                     return currentPresses;
                 }
+                // select and test the next light
                 return gotoNextLight(buttonsPressed, buttonsForLights, currentPresses);
             }
-            int currentLightJolts = pair.getRight();
-            // we need to remove anything that was pressed already
+
+            int currentLightJolts = currentLight.getRight();
+            // we need to remove all jolts which are provided by the pressed buttons
             for (Map.Entry<Integer, Integer> entry : buttonsPressed.entrySet())
             {
-                // remove any presses
-                if (pair.getLeft().contains(entry.getKey()))
+                if (currentLight.getLeft().contains(entry.getKey()))
                     currentLightJolts -= entry.getValue();
             }
-            // we need at least 'currentLightJolts' presses to reach our goal, so we can check for that
-            if (currentLightJolts+currentPresses>currentBestPresses)
+            // from here, we need at least 'currentLightJolts' presses to reach our goal, so we can check for that
+            if (currentLightJolts+currentPresses>=currentBestPresses)
             {
                 return Integer.MAX_VALUE;
             }
-            // when we have all jolts, we can set all remaining buttons to 0 and go to the next list
+            // when the pressed buttons already provide all the jolts, we can set the remaining buttons to 0 and go to the next list
             if (0 == currentLightJolts)
             {
+                // no lights left -> we are done
                 if (buttonsForLights.isEmpty())
                 {
                     if (currentPresses<currentBestPresses)
@@ -135,8 +139,10 @@ public class Day10 extends AocPuzzle
                 }
                 return gotoNextLight(currentButtonsPressed, buttonsForLights, currentPresses);
             }
+            // when the jolts provided are more than we need this is an invalid solution
             if (currentLightJolts < 0)
                 return Integer.MAX_VALUE;
+            // start with checking the first of the buttons
             return handleNextButton(buttonsLeft, buttonsPressed, buttonsForLights, 0, currentLightJolts, currentPresses);
         }
 
@@ -144,12 +150,14 @@ public class Day10 extends AocPuzzle
                                      final List<Pair<List<Integer>, Integer>> buttonsForLights, final int joltsProvided, final int currentLightJolts,
                                      final int currentPresses)
         {
-            if (currentPresses>currentBestPresses)
+            // check for early exit
+            if (currentPresses>=currentBestPresses)
                 return currentPresses+1;
             final var button = buttonsLeft.iterator().next();
             // this is the only button left, so we know its value
             if (buttonsLeft.size() == 1)
             {
+                // no lights, so we are done
                 if (buttonsForLights.isEmpty())
                 {
                     final int presses = currentPresses + (currentLightJolts - joltsProvided);
@@ -157,16 +165,22 @@ public class Day10 extends AocPuzzle
                         currentBestPresses=presses;
                     return presses;
                 }
+                // otherwise continue with the next light
                 final Map<Integer, Integer> nextButtonsPressed = new HashMap<>(buttonsPressed);
                 nextButtonsPressed.put(button, currentLightJolts - joltsProvided);
                 return gotoNextLight(nextButtonsPressed, buttonsForLights, currentPresses + (currentLightJolts - joltsProvided));
             }
+
+            // go to the next button
             final Map<Integer, Integer> currentButtonsPressed = new HashMap<>(buttonsPressed);
             int bestPresses = Integer.MAX_VALUE;
+            // prepare next state
             Collection<Integer> nextButtonsLeft = new ArrayList<>(buttonsLeft);
             nextButtonsLeft.remove(button);
+            // loop over all remaining jolts for this buttons
             for (int i = currentLightJolts - joltsProvided; i > -1; i--)
             {
+                // simulate the remaining buttons for this light, and find the best solution
                 currentButtonsPressed.put(button, i);
                 int presses = handleNextButton(nextButtonsLeft, currentButtonsPressed, buttonsForLights, i + joltsProvided, currentLightJolts,
                         currentPresses + i);
@@ -189,7 +203,18 @@ public class Day10 extends AocPuzzle
             {
                 int c1 = getRemainingButtons(pair1, buttonsPressed).size();
                 int c2 = getRemainingButtons(pair2, buttonsPressed).size();
-                return Integer.compare(c1, c2);
+                final var compared = Integer.compare(c1, c2);
+                if (0==compared)
+                {
+                    // when both lights have 1 b utton left, use the one with the most jolts - it removes the most steps from the rest
+                    if (1==c1)
+                    {
+                        return Integer.compare(pair2.getRight(), pair1.getRight());
+                    }
+                    // otherwise use the one with the least jolts, as it makes looping faster
+                    return Integer.compare(pair1.getRight(), pair2.getRight());
+                }
+                return compared;
             });
             Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
             return handleNextList(nextPair, buttonsPressed, nextButtonsForLights, globalBestPresses);
