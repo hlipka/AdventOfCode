@@ -42,6 +42,21 @@ public class Day10 extends AocPuzzle
     private static int solveMachine2(Machine machine)
     {
         final MachineWorld2 world = new MachineWorld2(machine);
+        for (int i=0;i<machine._lights.length;i++)
+        {
+            List<Integer> buttons=new ArrayList<>();
+            List<Integer[]> integers = machine._buttons;
+            for (int j = 0; j < integers.size(); j++)
+            {
+                final Integer[] button = integers.get(j);
+                for (int l : button)
+                {
+                    if (l == i)
+                        buttons.add(j);
+                }
+            }
+            System.out.println("Buttons for light "+i+": "+StringUtils.join(buttons, ',')+" = "+machine._jolts[i]);
+        }
         BestFirstSearch<MachineWorld2, MachineState2> search=new BestFirstSearch<>(world);
         search.search();
         System.out.println("solved a machine");
