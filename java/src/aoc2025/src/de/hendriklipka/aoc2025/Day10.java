@@ -29,7 +29,7 @@ public class Day10 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         count=0;
-        return data.getLines().stream().parallel().map(Day10::parseMachine).mapToInt(this::solveMachine2).sum();
+        return data.getLines().stream().map(Day10::parseMachine).mapToInt(this::solveMachine2).sum();
     }
 
     private int solveMachine2(Machine machine)
