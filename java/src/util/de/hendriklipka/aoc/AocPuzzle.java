@@ -45,6 +45,10 @@ public abstract class AocPuzzle
                     {
                         handleExampleFilePartA(_day);
                     }
+                    else if (AocDataFileUtils.getDataFileName(_year, "exA" + _day).exists())
+                    {
+                        handleExampleFilePartA(_day);
+                    }
                     else
                     {
                         int count=1;
@@ -75,6 +79,10 @@ public abstract class AocPuzzle
             {
                 isExample=true;
                 if (AocDataFileUtils.getDataFileName(_year, "ex" + _day).exists())
+                {
+                    handleExampleFilePartB(_day);
+                }
+                else if (AocDataFileUtils.getDataFileName(_year, "exB" + _day).exists())
                 {
                     handleExampleFilePartB(_day);
                 }
