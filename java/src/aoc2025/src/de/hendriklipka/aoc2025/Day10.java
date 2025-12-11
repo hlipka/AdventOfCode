@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Day10 extends AocPuzzle
 {
-    int count=0;
+    static int count=0;
     public static void main(String[] args)
     {
         new Day10().doPuzzle(args);
@@ -32,6 +32,11 @@ public class Day10 extends AocPuzzle
         return data.getLines().stream().parallel().map(Day10::parseMachine).mapToInt(this::solveMachine2).sum();
     }
 
+    private int solveMachine2(Machine machine)
+    {
+        return new MachineSolver().solveMachine2(machine);
+    }
+
     private int solveMachine(Machine machine)
     {
         final MachineWorld world = new MachineWorld(machine);
@@ -40,160 +45,161 @@ public class Day10 extends AocPuzzle
         return world.getToggles();
     }
 
-    private int solveMachine2(Machine machine)
+    private static class MachineSolver
     {
-        // group together all buttons which toggle one light, and what they need to sum up to (the jolts for that light)
-        // so we can transform this into a problem where the toggles for the button affecting a light must sum up to the jolts we need
-        List<Pair<List<Integer>, Integer>> buttonsForLights = new ArrayList<>();
-        for (int i=0;i<machine._lights.length;i++)
+        int currentBestPresses = Integer.MAX_VALUE;
+        private int solveMachine2(Machine machine)
         {
-            List<Integer> buttons=new ArrayList<>();
-            List<Integer[]> integers = machine._buttons;
-            for (int j = 0; j < integers.size(); j++)
+            // group together all buttons which toggle one light, and what they need to sum up to (the jolts for that light)
+            // so we can transform this into a problem where the toggles for the button affecting a light must sum up to the jolts we need
+            List<Pair<List<Integer>, Integer>> buttonsForLights = new ArrayList<>();
+            for (int i = 0; i < machine._lights.length; i++)
             {
-                final Integer[] button = integers.get(j);
-                for (int l : button)
+                List<Integer> buttons = new ArrayList<>();
+                List<Integer[]> integers = machine._buttons;
+                for (int j = 0; j < integers.size(); j++)
                 {
-                    if (l == i)
-                        buttons.add(j);
+                    final Integer[] button = integers.get(j);
+                    for (int l : button)
+                    {
+                        if (l == i)
+                            buttons.add(j);
+                    }
                 }
+                buttonsForLights.add(Pair.of(buttons, machine._jolts[i]));
             }
-            buttonsForLights.add(Pair.of(buttons, machine._jolts[i]));
-            if (isExample)
-            {
-                System.out.println("Buttons for light "+i+": "+StringUtils.join(buttons, ',')+" = "+machine._jolts[i]);
-            }
+            // shortest list first
+            buttonsForLights.sort(Comparator.comparingInt(t -> t.getLeft().size()));
+
+            // start with the first light
+            Pair<List<Integer>, Integer> pair = buttonsForLights.removeFirst();
+            int bestPresses = handleNextList(pair, new HashMap<Integer, Integer>(), buttonsForLights, 0);
+            System.out.println("solved machine " + count++ + " with " + bestPresses);
+            return bestPresses;
         }
-        // shortest list first
-        buttonsForLights.sort(Comparator.comparingInt(t -> t.getLeft().size()));
 
-        // start with the first light
-        Pair<List<Integer>, Integer> pair=buttonsForLights.removeFirst();
-        int bestPresses=handleNextList(pair, new HashMap<Integer, Integer>(), buttonsForLights, 0);
-        System.out.println("solved machine "+count++ +" with " +bestPresses);
-        return bestPresses;
-    }
-
-    private int handleNextList(final Pair<List<Integer>, Integer> pair, final Map<Integer, Integer> buttonsPressed,
-                                      final List<Pair<List<Integer>, Integer>> buttonsForLights, final int globalBestPresses)
-    {
-        // determine which of the button have no value yet - the pressed ones already have a fixed value
-        Collection<Integer> buttonsLeft = getRemainingButtons(pair, buttonsPressed);
-        // we are done when there are no buttons left to handle, in that case we go to the next list
-        if (buttonsLeft.isEmpty())
+        private int handleNextList(final Pair<List<Integer>, Integer> pair, final Map<Integer, Integer> buttonsPressed,
+                                   final List<Pair<List<Integer>, Integer>> buttonsForLights, final int currentPresses)
         {
-            // verify that the buttons sum up to the needed jolts
-            int jolts=0;
+            if (currentPresses>currentBestPresses)
+                return currentPresses+1;
+            // determine which of the button have no value yet - the pressed ones already have a fixed value
+            Collection<Integer> buttonsLeft = getRemainingButtons(pair, buttonsPressed);
+            // we are done when there are no buttons left to handle, in that case we go to the next list
+            if (buttonsLeft.isEmpty())
+            {
+                // verify that the buttons sum up to the needed jolts
+                int jolts = 0;
+                for (Map.Entry<Integer, Integer> entry : buttonsPressed.entrySet())
+                {
+                    if (pair.getLeft().contains(entry.getKey()))
+                        jolts += entry.getValue();
+                }
+                if (jolts != pair.getRight())
+                    return Integer.MAX_VALUE;
+                // if there is no list, we are done
+                if (buttonsForLights.isEmpty())
+                {
+                    if (currentPresses<currentBestPresses)
+                        currentBestPresses=currentPresses;
+                    return currentPresses;
+                }
+                return gotoNextLight(buttonsPressed, buttonsForLights, currentPresses);
+            }
+            int currentLightJolts = pair.getRight();
+            // we need to remove anything that was pressed already
             for (Map.Entry<Integer, Integer> entry : buttonsPressed.entrySet())
             {
+                // remove any presses
                 if (pair.getLeft().contains(entry.getKey()))
-                    jolts+=entry.getValue();
+                    currentLightJolts -= entry.getValue();
             }
-            if (jolts != pair.getRight())
+            // we need at least 'currentLightJolts' presses to reach our goal, so we can check for that
+            if (currentLightJolts+currentPresses>currentBestPresses)
+            {
                 return Integer.MAX_VALUE;
-            // if there is no list, we are done
-            if (buttonsForLights.isEmpty())
-                return globalBestPresses;
-            return gotoNextList(buttonsPressed, buttonsForLights, globalBestPresses);
+            }
+            // when we have all jolts, we can set all remaining buttons to 0 and go to the next list
+            if (0 == currentLightJolts)
+            {
+                if (buttonsForLights.isEmpty())
+                {
+                    if (currentPresses<currentBestPresses)
+                        currentBestPresses=currentPresses;
+                    return currentPresses;
+                }
+                final Map<Integer, Integer> currentButtonsPressed = new HashMap<>(buttonsPressed);
+                for (int btn : buttonsLeft)
+                {
+                    currentButtonsPressed.put(btn, 0);
+                }
+                return gotoNextLight(currentButtonsPressed, buttonsForLights, currentPresses);
+            }
+            if (currentLightJolts < 0)
+                return Integer.MAX_VALUE;
+            return handleNextButton(buttonsLeft, buttonsPressed, buttonsForLights, 0, currentLightJolts, currentPresses);
         }
-        int currentLightJolts=pair.getRight();
-        // we need to remove anything that was pressed already
-        for (Map.Entry<Integer, Integer> entry : buttonsPressed.entrySet())
+
+        private int handleNextButton(final Collection<Integer> buttonsLeft, final Map<Integer, Integer> buttonsPressed,
+                                     final List<Pair<List<Integer>, Integer>> buttonsForLights, final int joltsProvided, final int currentLightJolts,
+                                     final int currentPresses)
         {
-            // remove any presses
-            if (pair.getLeft().contains(entry.getKey()))
-                currentLightJolts-=entry.getValue();
-        }
-        // when we have all jolts, we can set all remaining buttons to 0 and go to the next list
-        if (0==currentLightJolts)
-        {
-            if (buttonsForLights.isEmpty())
-                return globalBestPresses;
+            if (currentPresses>currentBestPresses)
+                return currentPresses+1;
+            final var button = buttonsLeft.iterator().next();
+            // this is the only button left, so we know its value
+            if (buttonsLeft.size() == 1)
+            {
+                if (buttonsForLights.isEmpty())
+                {
+                    final int presses = currentPresses + (currentLightJolts - joltsProvided);
+                    if (presses<currentBestPresses)
+                        currentBestPresses=presses;
+                    return presses;
+                }
+                final Map<Integer, Integer> nextButtonsPressed = new HashMap<>(buttonsPressed);
+                nextButtonsPressed.put(button, currentLightJolts - joltsProvided);
+                return gotoNextLight(nextButtonsPressed, buttonsForLights, currentPresses + (currentLightJolts - joltsProvided));
+            }
             final Map<Integer, Integer> currentButtonsPressed = new HashMap<>(buttonsPressed);
-            for (int btn: buttonsLeft)
+            int bestPresses = Integer.MAX_VALUE;
+            Collection<Integer> nextButtonsLeft = new ArrayList<>(buttonsLeft);
+            nextButtonsLeft.remove(button);
+            for (int i = currentLightJolts - joltsProvided; i > -1; i--)
             {
-                currentButtonsPressed.put(btn, 0);
+                currentButtonsPressed.put(button, i);
+                int presses = handleNextButton(nextButtonsLeft, currentButtonsPressed, buttonsForLights, i + joltsProvided, currentLightJolts,
+                        currentPresses + i);
+                if (presses < bestPresses)
+                {
+                    bestPresses = presses;
+                }
             }
-            return gotoNextList(currentButtonsPressed, buttonsForLights, globalBestPresses);
+            if (bestPresses<currentBestPresses)
+                currentBestPresses=bestPresses;
+            return bestPresses;
         }
-        if (currentLightJolts < 0)
-            return Integer.MAX_VALUE;
-        return handleNextButton(buttonsLeft, buttonsPressed, buttonsForLights, 0, currentLightJolts, globalBestPresses);
-    }
 
-    private static Collection<Integer> getRemainingButtons(final Pair<List<Integer>, Integer> pair, final Map<Integer, Integer> buttonsPressed)
-    {
-        return CollectionUtils.removeAll(pair.getLeft(), buttonsPressed.keySet());
-    }
-
-    private int gotoNextList(final Map<Integer, Integer> buttonsPressed, final List<Pair<List<Integer>, Integer>> buttonsForLights, final int globalBestPresses)
-    {
-        List<Pair<List<Integer>, Integer>> nextButtonsForLights = new ArrayList<>(buttonsForLights);
-        // sort so the light with the fewest unknown buttons comes first
-        nextButtonsForLights.sort(new Comparator<Pair<List<Integer>, Integer>>()
+        private int gotoNextLight(final Map<Integer, Integer> buttonsPressed, final List<Pair<List<Integer>, Integer>> buttonsForLights,
+                                  final int globalBestPresses)
         {
-            @Override
-            public int compare(final Pair<List<Integer>, Integer> pair1, final Pair<List<Integer>, Integer> pair2)
+            List<Pair<List<Integer>, Integer>> nextButtonsForLights = new ArrayList<>(buttonsForLights);
+            // sort so the light with the fewest unknown buttons comes first
+            nextButtonsForLights.sort((pair1, pair2) ->
             {
-                int c1=getRemainingButtons(pair1, buttonsPressed).size();
-                int c2=getRemainingButtons(pair2, buttonsPressed).size();
-                return Integer.compare(c1,c2);
-            }
-        });
-        Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
-        return handleNextList(nextPair, buttonsPressed, nextButtonsForLights, globalBestPresses);
-    }
-
-    private int handleNextButton(final Collection<Integer> buttonsLeft, final Map<Integer, Integer> buttonsPressed,
-                                        final List<Pair<List<Integer>, Integer>> buttonsForLights, final int joltsProvided, final int currentLightJolts,
-                                        final int globalBestPresses)
-    {
-        final var button = buttonsLeft.iterator().next();
-        // this is the only button left, so we know its value
-        if (buttonsLeft.size()==1)
-        {
-            if (buttonsForLights.isEmpty())
-            {
-                return globalBestPresses+(currentLightJolts - joltsProvided);
-            }
-            return gotoNextLight2(buttonsPressed, buttonsForLights, joltsProvided, currentLightJolts, globalBestPresses, button);
+                int c1 = getRemainingButtons(pair1, buttonsPressed).size();
+                int c2 = getRemainingButtons(pair2, buttonsPressed).size();
+                return Integer.compare(c1, c2);
+            });
+            Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
+            return handleNextList(nextPair, buttonsPressed, nextButtonsForLights, globalBestPresses);
         }
-        final Map<Integer, Integer> currentButtonsPressed = new HashMap<>(buttonsPressed);
-        int bestPresses = Integer.MAX_VALUE;
-        Collection<Integer> nextButtonsLeft = new ArrayList<>(buttonsLeft);
-        nextButtonsLeft.remove(button);
-        for (int i = currentLightJolts - joltsProvided; i > -1; i--)
-        {
-            currentButtonsPressed.put(button, i);
-            int presses = handleNextButton(nextButtonsLeft, currentButtonsPressed, buttonsForLights, i+joltsProvided, currentLightJolts, globalBestPresses + i);
-            if (presses < bestPresses)
-            {
-                bestPresses = presses;
-            }
 
+        private static Collection<Integer> getRemainingButtons(final Pair<List<Integer>, Integer> pair, final Map<Integer, Integer> buttonsPressed)
+        {
+            return CollectionUtils.removeAll(pair.getLeft(), buttonsPressed.keySet());
         }
-        return bestPresses;
-    }
 
-    private int gotoNextLight2(final Map<Integer, Integer> buttonsPressed, final List<Pair<List<Integer>, Integer>> buttonsForLights, final int joltsProvided,
-                          final int currentLightJolts, final int globalBestPresses, final Integer button)
-    {
-        List<Pair<List<Integer>, Integer>> nextButtonsForLights = new ArrayList<>(buttonsForLights);
-        // sort so the light with the fewest unknown buttons comes first
-        nextButtonsForLights.sort(new Comparator<Pair<List<Integer>, Integer>>()
-        {
-            @Override
-            public int compare(final Pair<List<Integer>, Integer> pair1, final Pair<List<Integer>, Integer> pair2)
-            {
-                int c1=getRemainingButtons(pair1, buttonsPressed).size();
-                int c2=getRemainingButtons(pair2, buttonsPressed).size();
-                return Integer.compare(c1,c2);
-            }
-        });
-        Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
-        final Map<Integer, Integer> nextButtonsPressed = new HashMap<>(buttonsPressed);
-        nextButtonsPressed.put(button, currentLightJolts - joltsProvided);
-        return handleNextList(nextPair, nextButtonsPressed, nextButtonsForLights, globalBestPresses + (currentLightJolts - joltsProvided));
     }
 
     private static Machine parseMachine(String line)
