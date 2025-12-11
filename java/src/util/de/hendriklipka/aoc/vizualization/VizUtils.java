@@ -1,11 +1,9 @@
 package de.hendriklipka.aoc.vizualization;
 
-import guru.nidi.graphviz.attribute.Font;
-import guru.nidi.graphviz.attribute.Rank;
+import guru.nidi.graphviz.attribute.*;
 import guru.nidi.graphviz.engine.Engine;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.engine.Rasterizer;
 import guru.nidi.graphviz.model.Graph;
 import guru.nidi.graphviz.model.LinkSource;
 import guru.nidi.graphviz.model.Node;
@@ -15,6 +13,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static guru.nidi.graphviz.model.Factory.graph;
 import static guru.nidi.graphviz.model.Factory.node;
@@ -22,6 +21,11 @@ import static guru.nidi.graphviz.model.Factory.node;
 public class VizUtils
 {
     public static void visualizeGraph(String fileName, Map<String, ? extends VizNode> nodes)
+    {
+        visualizeGraph(fileName, nodes, null);
+    }
+
+    public static void visualizeGraph(String fileName, Map<String, ? extends VizNode> nodes, Function<String, Attributes<ForAll>[]> attrProvider)
     {
         Graph g=graph("graph")
                 .directed()
@@ -32,7 +36,24 @@ public class VizUtils
         List<LinkSource> gn=new LinkedList<>();
         for (VizNode vn: nodes.values())
         {
-            Node n = node(vn.getNodeName());
+            Node n=null;
+            if (null != attrProvider)
+            {
+                final var attrs = attrProvider.apply(vn.getNodeName());
+                if (null!=attrs)
+                {
+                    n=node(vn.getNodeName()).with(attrs[0]);
+                }
+                else
+                {
+                    n = node(vn.getNodeName());
+                }
+            }
+            else
+            {
+                n= node(vn.getNodeName());
+            }
+
             for (String tn: vn.getNodeTargets())
             {
                 VizNode target=nodes.get(tn);
