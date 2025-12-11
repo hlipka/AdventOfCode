@@ -29,7 +29,7 @@ public class Day10 extends AocPuzzle
     protected Object solvePartB() throws IOException
     {
         count=0;
-        return data.getLines().stream().map(Day10::parseMachine).mapToInt(this::solveMachine2).sum();
+        return data.getLines().stream().parallel().map(Day10::parseMachine).mapToInt(this::solveMachine2).sum();
     }
 
     private int solveMachine(Machine machine)
@@ -59,7 +59,7 @@ public class Day10 extends AocPuzzle
                 }
             }
             buttonsForLights.add(Pair.of(buttons, machine._jolts[i]));
-            //if (isExample)
+            if (isExample)
             {
                 System.out.println("Buttons for light "+i+": "+StringUtils.join(buttons, ',')+" = "+machine._jolts[i]);
             }
@@ -78,7 +78,7 @@ public class Day10 extends AocPuzzle
                                       final List<Pair<List<Integer>, Integer>> buttonsForLights, final int globalBestPresses)
     {
         // determine which of the button have no value yet - the pressed ones already have a fixed value
-        Collection<Integer> buttonsLeft = CollectionUtils.removeAll(pair.getLeft(), buttonsPressed.keySet());
+        Collection<Integer> buttonsLeft = getRemainingButtons(pair, buttonsPressed);
         // we are done when there are no buttons left to handle, in that case we go to the next list
         if (buttonsLeft.isEmpty())
         {
@@ -94,9 +94,7 @@ public class Day10 extends AocPuzzle
             // if there is no list, we are done
             if (buttonsForLights.isEmpty())
                 return globalBestPresses;
-            List<Pair<List<Integer>, Integer>> nextButtonsForLights = new ArrayList<>(buttonsForLights);
-            Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
-            return handleNextList(nextPair, buttonsPressed, nextButtonsForLights, globalBestPresses);
+            return gotoNextList(buttonsPressed, buttonsForLights, globalBestPresses);
         }
         int currentLightJolts=pair.getRight();
         // we need to remove anything that was pressed already
@@ -116,13 +114,34 @@ public class Day10 extends AocPuzzle
             {
                 currentButtonsPressed.put(btn, 0);
             }
-            List<Pair<List<Integer>, Integer>> nextButtonsForLights = new ArrayList<>(buttonsForLights);
-            Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
-            return handleNextList(nextPair, currentButtonsPressed, nextButtonsForLights, globalBestPresses);
+            return gotoNextList(currentButtonsPressed, buttonsForLights, globalBestPresses);
         }
         if (currentLightJolts < 0)
             return Integer.MAX_VALUE;
         return handleNextButton(buttonsLeft, buttonsPressed, buttonsForLights, 0, currentLightJolts, globalBestPresses);
+    }
+
+    private static Collection<Integer> getRemainingButtons(final Pair<List<Integer>, Integer> pair, final Map<Integer, Integer> buttonsPressed)
+    {
+        return CollectionUtils.removeAll(pair.getLeft(), buttonsPressed.keySet());
+    }
+
+    private int gotoNextList(final Map<Integer, Integer> buttonsPressed, final List<Pair<List<Integer>, Integer>> buttonsForLights, final int globalBestPresses)
+    {
+        List<Pair<List<Integer>, Integer>> nextButtonsForLights = new ArrayList<>(buttonsForLights);
+        // sort so the light with the fewest unknown buttons comes first
+        nextButtonsForLights.sort(new Comparator<Pair<List<Integer>, Integer>>()
+        {
+            @Override
+            public int compare(final Pair<List<Integer>, Integer> pair1, final Pair<List<Integer>, Integer> pair2)
+            {
+                int c1=getRemainingButtons(pair1, buttonsPressed).size();
+                int c2=getRemainingButtons(pair2, buttonsPressed).size();
+                return Integer.compare(c1,c2);
+            }
+        });
+        Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
+        return handleNextList(nextPair, buttonsPressed, nextButtonsForLights, globalBestPresses);
     }
 
     private int handleNextButton(final Collection<Integer> buttonsLeft, final Map<Integer, Integer> buttonsPressed,
@@ -137,11 +156,7 @@ public class Day10 extends AocPuzzle
             {
                 return globalBestPresses+(currentLightJolts - joltsProvided);
             }
-            List<Pair<List<Integer>, Integer>> nextButtonsForLights=new ArrayList<>(buttonsForLights);
-            Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
-            final Map<Integer, Integer> nextButtonsPressed = new HashMap<>(buttonsPressed);
-            nextButtonsPressed.put(button, currentLightJolts - joltsProvided);
-            return handleNextList(nextPair, nextButtonsPressed, nextButtonsForLights, globalBestPresses + (currentLightJolts - joltsProvided));
+            return gotoNextLight2(buttonsPressed, buttonsForLights, joltsProvided, currentLightJolts, globalBestPresses, button);
         }
         final Map<Integer, Integer> currentButtonsPressed = new HashMap<>(buttonsPressed);
         int bestPresses = Integer.MAX_VALUE;
@@ -150,7 +165,7 @@ public class Day10 extends AocPuzzle
         for (int i = currentLightJolts - joltsProvided; i > -1; i--)
         {
             currentButtonsPressed.put(button, i);
-            int presses = handleNextButton(nextButtonsLeft, currentButtonsPressed, buttonsForLights, i, currentLightJolts, globalBestPresses + i);
+            int presses = handleNextButton(nextButtonsLeft, currentButtonsPressed, buttonsForLights, i+joltsProvided, currentLightJolts, globalBestPresses + i);
             if (presses < bestPresses)
             {
                 bestPresses = presses;
@@ -158,6 +173,27 @@ public class Day10 extends AocPuzzle
 
         }
         return bestPresses;
+    }
+
+    private int gotoNextLight2(final Map<Integer, Integer> buttonsPressed, final List<Pair<List<Integer>, Integer>> buttonsForLights, final int joltsProvided,
+                          final int currentLightJolts, final int globalBestPresses, final Integer button)
+    {
+        List<Pair<List<Integer>, Integer>> nextButtonsForLights = new ArrayList<>(buttonsForLights);
+        // sort so the light with the fewest unknown buttons comes first
+        nextButtonsForLights.sort(new Comparator<Pair<List<Integer>, Integer>>()
+        {
+            @Override
+            public int compare(final Pair<List<Integer>, Integer> pair1, final Pair<List<Integer>, Integer> pair2)
+            {
+                int c1=getRemainingButtons(pair1, buttonsPressed).size();
+                int c2=getRemainingButtons(pair2, buttonsPressed).size();
+                return Integer.compare(c1,c2);
+            }
+        });
+        Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
+        final Map<Integer, Integer> nextButtonsPressed = new HashMap<>(buttonsPressed);
+        nextButtonsPressed.put(button, currentLightJolts - joltsProvided);
+        return handleNextList(nextPair, nextButtonsPressed, nextButtonsForLights, globalBestPresses + (currentLightJolts - joltsProvided));
     }
 
     private static Machine parseMachine(String line)
