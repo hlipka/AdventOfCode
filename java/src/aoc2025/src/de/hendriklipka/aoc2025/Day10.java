@@ -13,7 +13,9 @@ import java.util.*;
 
 public class Day10 extends AocPuzzle
 {
-    static int count=0;
+    static boolean[] _done=new boolean[0];
+    static long _start=0;
+
     public static void main(String[] args)
     {
         new Day10().doPuzzle(args);
@@ -28,13 +30,12 @@ public class Day10 extends AocPuzzle
     @Override
     protected Object solvePartB() throws IOException
     {
-        count=0;
-        return data.getLines().stream().parallel().map(Day10::parseMachine).mapToInt(this::solveMachine2).sum();
-    }
-
-    private int solveMachine2(Machine machine)
-    {
-        return new MachineSolver().solveMachine2(machine);
+        final int[] count = {1};
+        _done=new boolean[data.getLines().size()+1];
+        Arrays.fill(_done,false);
+        final List<MachineSolver> machines = data.getLines().stream().map(Day10::parseMachine).map(m->new MachineSolver(m, count[0]++)).toList();
+        _start=System.currentTimeMillis();
+        return machines.stream().parallel().mapToInt(MachineSolver::solve).sum();
     }
 
     private int solveMachine(Machine machine)
@@ -45,10 +46,35 @@ public class Day10 extends AocPuzzle
         return world.getToggles();
     }
 
+    static void checkSolved()
+    {
+        System.out.println("took "+(System.currentTimeMillis()-_start)/1000+"s");
+        List<Integer> open=new ArrayList<>();
+        for (int i=1;i<_done.length;i++)
+        {
+            if (!_done[i])
+                open.add(i);
+        }
+        System.out.println(open.size()+" problems left");
+        if (open.size()<10)
+        {
+            System.out.println("open lines: "+StringUtils.join(open,","));
+        }
+    }
+
     private static class MachineSolver
     {
+        private final Machine machine;
         int currentBestPresses = Integer.MAX_VALUE;
-        private int solveMachine2(Machine machine)
+        private int _count;
+
+        public MachineSolver(final Machine machine, final int count)
+        {
+            this.machine = machine;
+            _count = count;
+        }
+
+        private int solve()
         {
             // group together all buttons which toggle one light, and what they need to sum up to (the jolts for that light)
             // so we can transform this into a problem where the toggles for the button affecting a light must sum up to the jolts we need
@@ -73,8 +99,10 @@ public class Day10 extends AocPuzzle
 
             // start with the first light
             Pair<List<Integer>, Integer> pair = buttonsForLights.removeFirst();
-            int bestPresses = handleNextList(pair, new HashMap<Integer, Integer>(), buttonsForLights, 0);
-            System.out.println("solved machine " + count++ + " with " + bestPresses);
+            int bestPresses = handleNextList(pair, new HashMap<>(), buttonsForLights, 0);
+            System.out.println("solved machine " + _count + " with " + bestPresses);
+            _done[_count] = true;
+            checkSolved();
             return bestPresses;
         }
 
@@ -189,7 +217,22 @@ public class Day10 extends AocPuzzle
             {
                 int c1 = getRemainingButtons(pair1, buttonsPressed).size();
                 int c2 = getRemainingButtons(pair2, buttonsPressed).size();
-                return Integer.compare(c1, c2);
+                final var compared = Integer.compare(c1, c2);
+                if (c1==1||c2==1)
+                {
+                    // choose the formula with one buttons left - when both are short use up the most jolts
+                    if (0==compared)
+                    {
+                        return -Integer.compare(pair1.getValue(), pair2.getValue());
+                    }
+                }
+                // when both formulas are equal length, take the one with less jolts (faster to loop through)
+                if (0 == compared)
+                {
+                    return Integer.compare(pair1.getValue(), pair2.getValue());
+                }
+                // prefer the one with fewer free buttons
+                return compared;
             });
             Pair<List<Integer>, Integer> nextPair = nextButtonsForLights.removeFirst();
             return handleNextList(nextPair, buttonsPressed, nextButtonsForLights, globalBestPresses);
