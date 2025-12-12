@@ -11,12 +11,6 @@ import java.util.stream.Collectors;
 
 public class Day12 extends AocPuzzle
 {
-    int fitCount = 0;
-
-    public Day12()
-    {
-    }
-
     public static void main(String[] args)
     {
         new Day12().doPuzzle(args);
@@ -25,41 +19,62 @@ public class Day12 extends AocPuzzle
     @Override
     protected Object solvePartA() throws IOException
     {
-        fitCount=0;
         final List<List<String>> problem = data.getStringBlocks();
-        final List<String> giftData = problem.removeLast();
-        List<CharMatrix> treeData = problem.stream().map(this::parseTree).toList();
-        giftData.forEach(line -> handleGift(line, treeData));
-        return fitCount;
+        final List<String> treeData = problem.removeLast();
+        List<CharMatrix> giftShapes = problem.stream().map(this::parseTree).toList();
+        List<String> solved=new ArrayList<>();
+        List<String> unsolvable=new ArrayList<>();
+        List<String> todo=new ArrayList<>();
+        // first check how many tress we actually need to solve
+        treeData.forEach(line -> handleGift(line, giftShapes, solved, unsolvable, todo));
+        if (todo.isEmpty())
+            return solved.size();
+        return null;
     }
 
-    private void handleGift(String line, final List<CharMatrix> treeData)
+    private void handleGift(final String tree, final List<CharMatrix> giftShapes, final List<String> solved, final List<String> unsolvable,
+                            final List<String> todo)
     {
-        String[] parts1 = line.split(":");
+        // parse the tree data
+        String[] parts1 = tree.split(":");
         String[] parts2 = parts1[0].split("x");
         String[] parts3 = parts1[1].trim().split(" ");
         int width = Integer.parseInt(parts2[0]);
         int height = Integer.parseInt(parts2[1]);
         List<Integer> counts = new ArrayList<>();
+        int totalGifts=0;
         for (String s : parts3)
         {
             Integer parseInt = Integer.parseInt(s.trim());
             counts.add(parseInt);
+            totalGifts+=parseInt;
         }
         int neededSize = 0;
 
-        // count how many grid positions each gift needs as minimum, and from there calculate the minimum space all gifts need
+        // upper bound: how many 3x3 packages (all gifts are at most this size) can we fit into the area without _any_ packaging / shuffling?
+        int boxCount = width / 3 * height / 3;
+
+        // lower bound: how much space do these gifts actually need at least (counting the '#' as used space)?
         for (int i = 0; i < counts.size(); i++)
         {
-            final int size = getGiftSize(treeData, i);
+            final int size = giftShapes.get(i).allMatchingPositions('#').size();
             neededSize += counts.get(i) * size;
         }
 
-        // check if the tree has enough space
-        // it really is as simple as this
-        if (width * height >= neededSize)
+        // when the tree has not enough space to fit all the '#' into it, we know this tree will _never_ fit all gifts
+        if (width * height < neededSize)
         {
-            fitCount++;
+            unsolvable.add(tree);
+        }
+        // when there are enough 3x3 spaces available, we know we can fit _all_ gifts without further arrangements
+        else if (boxCount>=totalGifts)
+        {
+            solved.add(tree);
+        }
+        // only when we are in between we need to look at some packaging
+        else
+        {
+            todo.add(tree);
         }
     }
 
