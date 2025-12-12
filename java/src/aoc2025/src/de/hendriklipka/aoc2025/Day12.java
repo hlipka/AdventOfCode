@@ -26,7 +26,6 @@ public class Day12 extends AocPuzzle
     protected Object solvePartA() throws IOException
     {
         fitCount=0;
-        notFitCount=0;
         final List<List<String>> problem = data.getStringBlocks();
         final List<String> giftData = problem.removeLast();
         List<CharMatrix> treeData = problem.stream().map(this::parseTree).toList();
