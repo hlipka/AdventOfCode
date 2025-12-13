@@ -41,11 +41,7 @@ public abstract class AocPuzzle
                 if (doExamples)
                 {
                     isExample=true;
-                    if (AocDataFileUtils.getDataFileName(_year, "ex" + _day).exists())
-                    {
-                        handleExampleFilePartA(_day);
-                    }
-                    else if (AocDataFileUtils.getDataFileName(_year, "exA" + _day).exists())
+                    if (AocDataFileUtils.getDataFileName(_year, "exA" + _day).exists() || AocDataFileUtils.getDataFileName(_year, "ex" + _day).exists())
                     {
                         handleExampleFilePartA(_day);
                     }
@@ -78,11 +74,7 @@ public abstract class AocPuzzle
             if (doExamples)
             {
                 isExample=true;
-                if (AocDataFileUtils.getDataFileName(_year, "ex" + _day).exists())
-                {
-                    handleExampleFilePartB(_day);
-                }
-                else if (AocDataFileUtils.getDataFileName(_year, "exB" + _day).exists())
+                if (AocDataFileUtils.getDataFileName(_year, "exB" + _day).exists() || AocDataFileUtils.getDataFileName(_year, "ex" + _day).exists())
                 {
                     handleExampleFilePartB(_day);
                 }
@@ -120,7 +112,15 @@ public abstract class AocPuzzle
     {
         long startTime;
         long endTime;
-        data = new AocDataFileUtils(_year, "ex" + day);
+        if (AocDataFileUtils.getDataFileName(_year, "exA" + _day).exists())
+        {
+            data = new AocDataFileUtils(_year, "exA" + day);
+        }
+        else
+        {
+            data = new AocDataFileUtils(_year, "ex" + day);
+        }
+
         startTime = System.currentTimeMillis();
         final Object resultExampleA = solvePartA();
         endTime = System.currentTimeMillis();
@@ -132,7 +132,14 @@ public abstract class AocPuzzle
     {
         long startTime;
         long endTime;
-        data = new AocDataFileUtils(_year, "ex" + day);
+        if (AocDataFileUtils.getDataFileName(_year, "exB" + _day).exists())
+        {
+            data = new AocDataFileUtils(_year, "exB" + day);
+        }
+        else
+        {
+            data = new AocDataFileUtils(_year, "ex" + day);
+        }
         startTime = System.currentTimeMillis();
         final Object resultExampleA = solvePartB();
         endTime = System.currentTimeMillis();
