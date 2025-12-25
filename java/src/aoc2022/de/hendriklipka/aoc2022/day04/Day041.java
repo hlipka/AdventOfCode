@@ -1,7 +1,7 @@
 package de.hendriklipka.aoc2022.day04;
 
 import de.hendriklipka.aoc.AocDataFileUtils;
-import de.hendriklipka.aoc.RangeLong;
+import de.hendriklipka.aoc.Range;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -29,17 +29,17 @@ public class Day041
         }
     }
 
-    private static boolean isOverlap(final Pair<RangeLong, RangeLong> r)
+    private static boolean isOverlap(final Pair<Range, Range> r)
     {
-        final RangeLong left = r.getLeft();
-        final RangeLong right = r.getRight();
+        final Range left = r.getLeft();
+        final Range right = r.getRight();
         return left.isInsideOf(right) || right.isInsideOf(left);
     }
 
-    private static Pair<RangeLong, RangeLong> getRanges(final String s)
+    private static Pair<Range, Range> getRanges(final String s)
     {
         String[] ranges = s.split(",");
-        final ImmutablePair<RangeLong, RangeLong> pair = new ImmutablePair<>(new RangeLong(ranges[0]), new RangeLong(ranges[1]));
+        final ImmutablePair<Range, Range> pair = new ImmutablePair<>(new Range(ranges[0]), new Range(ranges[1]));
         System.out.println(pair);
         return pair;
     }
