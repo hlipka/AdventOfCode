@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="aocutil" />
+    <orderEntry type="library" name="tools.aqua.z3.turnkey" level="project" />
   </component>
 </module>
