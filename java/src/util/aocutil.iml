@@ -30,7 +30,6 @@
     </orderEntry>
     <orderEntry type="library" exported="" name="apache.commons.math3" level="project" />
     <orderEntry type="library" name="commons.codec" level="project" />
-    <orderEntry type="library" exported="" name="guru.nidi.graphviz.java" level="project" />
     <orderEntry type="library" name="slf4j.api" level="project" />
     <orderEntry type="library" name="apache.logging.log4j.core" level="project" />
     <orderEntry type="library" name="apache.logging.log4j.slf4j.impl" level="project" />
@@ -50,5 +49,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="tools.aqua.z3.turnkey" level="project" />
+    <orderEntry type="library" name="guru.nidi.graphviz.java.all.j2v8" level="project" />
   </component>
 </module>
