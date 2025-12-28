@@ -49,7 +49,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="tools.aqua.z3.turnkey" level="project" />
+    <orderEntry type="library" exported="" name="tools.aqua.z3.turnkey" level="project" />
     <orderEntry type="library" name="guru.nidi.graphviz.java.all.j2v8" level="project" />
   </component>
 </module>
